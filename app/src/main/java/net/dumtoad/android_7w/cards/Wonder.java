@@ -11,11 +11,26 @@ public class Wonder {
     private ArrayList<Card> stagesA;
     private ArrayList<Card> stagesB;
     private boolean side;
+    private Card.Resource resource;
 
-    public Wonder(Enum name, ArrayList<Card> stagesA, ArrayList<Card> stagesB) {
+    public Wonder(Enum name) {
         this.name = name;
+    }
+
+    public void setStagesA(ArrayList<Card> stagesA) {
         this.stagesA = stagesA;
+    }
+
+    public void setStagesB(ArrayList<Card> stagesB) {
         this.stagesB = stagesB;
+    }
+
+    public void setResource(Card.Resource resource) {
+        this.resource = resource;
+    }
+
+    public Card.Resource getResource(){
+        return resource;
     }
 
     public String getNameString() {

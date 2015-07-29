@@ -695,42 +695,91 @@ public class Generate {
         ArrayList<Wonder> wonders = new ArrayList<>();
         Wonder wonder;
         Card card;
-        ArrayList<Card> stagesA;
-        ArrayList<Card> stagesB;
+        ArrayList<Card> stages;
 
         //Rhodes
-        stagesA = new ArrayList<>();
+        wonder = new Wonder(Wonders.The_Colossus_of_Rhodes);
+        wonder.setResource(Card.Resource.ORE);
+        stages = new ArrayList<>();
         card = new Card(Card.Type.STAGE, WonderStages.Stage_1);
         card.setCost(Card.Resource.WOOD, 2);
         card.setProducts(Card.Product.VP, 3);
-        stagesA.add(card);
+        stages.add(card);
 
         card = new Card(Card.Type.STAGE, WonderStages.Stage_2);
         card.setCost(Card.Resource.CLAY, 3);
         card.setProducts(Card.Product.SHIELD, 2);
-        stagesA.add(card);
+        stages.add(card);
 
         card = new Card(Card.Type.STAGE, WonderStages.Stage_3);
         card.setCost(Card.Resource.ORE, 4);
         card.setProducts(Card.Product.VP, 7);
-        stagesA.add(card);
+        stages.add(card);
+        wonder.setStagesA(stages);
 
-        stagesB = new ArrayList<>();
+        stages = new ArrayList<>();
         card = new Card(Card.Type.STAGE, WonderStages.Stage_1);
         card.setCost(Card.Resource.STONE, 3);
         card.setProducts(Card.Product.SHIELD, 1);
         card.setProducts(Card.Product.VP, 3);
         card.setProducts(Card.Product.GOLD, 3);
-        stagesB.add(card);
+        stages.add(card);
 
         card = new Card(Card.Type.STAGE, WonderStages.Stage_2);
         card.setCost(Card.Resource.ORE, 4);
         card.setProducts(Card.Product.SHIELD, 1);
         card.setProducts(Card.Product.VP, 4);
         card.setProducts(Card.Product.GOLD, 4);
-        stagesB.add(card);
+        stages.add(card);
+        wonder.setStagesB(stages);
+        wonders.add(wonder);
 
-        wonders.add(new Wonder(Wonders.The_Colossus_of_Rhodes, stagesA, stagesB));
+
+        //Alexandria
+        wonder = new Wonder(Wonders.The_Lighthouse_of_Alexandria);
+        wonder.setResource(Card.Resource.GLASS);
+        stages = new ArrayList<>();
+        card = new Card(Card.Type.STAGE, WonderStages.Stage_1);
+        card.setCost(Card.Resource.STONE, 2);
+        card.setProducts(Card.Product.VP, 3);
+        stages.add(card);
+
+        card = new Card(Card.Type.STAGE, WonderStages.Stage_2);
+        card.setCost(Card.Resource.ORE, 2);
+        card.setProducts(Card.Product.CLAY, 1);
+        card.setProducts(Card.Product.ORE, 1);
+        card.setProducts(Card.Product.WOOD, 1);
+        card.setProducts(Card.Product.STONE, 1);
+        stages.add(card);
+
+        card = new Card(Card.Type.STAGE, WonderStages.Stage_3);
+        card.setCost(Card.Resource.GLASS, 2);
+        card.setProducts(Card.Product.VP, 7);
+        stages.add(card);
+        wonder.setStagesA(stages);
+
+        stages = new ArrayList<>();
+        card = new Card(Card.Type.STAGE, WonderStages.Stage_1);
+        card.setCost(Card.Resource.CLAY, 2);
+        card.setProducts(Card.Product.CLAY, 1);
+        card.setProducts(Card.Product.ORE, 1);
+        card.setProducts(Card.Product.WOOD, 1);
+        card.setProducts(Card.Product.STONE, 1);
+        stages.add(card);
+
+        card = new Card(Card.Type.STAGE, WonderStages.Stage_2);
+        card.setCost(Card.Resource.WOOD, 2);
+        card.setProducts(Card.Product.GLASS, 1);
+        card.setProducts(Card.Product.CLOTH, 1);
+        card.setProducts(Card.Product.PAPER, 1);
+        stages.add(card);
+
+        card = new Card(Card.Type.STAGE, WonderStages.Stage_3);
+        card.setCost(Card.Resource.STONE, 3);
+        card.setProducts(Card.Product.VP, 7);
+        stages.add(card);
+        wonder.setStagesB(stages);
+        wonders.add(wonder);
 
 
         return wonders;
