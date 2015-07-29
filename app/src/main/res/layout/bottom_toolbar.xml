@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.Toolbar
+    android:id="@+id/bottom_toolbar"
+    android:layout_width="match_parent"
+    android:layout_height="40dp"
+    android:minHeight="40dp"
+    android:layout_alignParentBottom="true"
+    android:background="@color/darkblue"
+    app:contentInsetEnd="0dp"
+    app:contentInsetStart="0dp"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:theme="@style/Theme.7w">
+
+</android.support.v7.widget.Toolbar>
