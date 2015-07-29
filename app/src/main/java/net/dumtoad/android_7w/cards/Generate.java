@@ -18,6 +18,8 @@ public class Generate {
         era2 = getEra2Cards();
         era3 = getEra3Cards();
         couponCards(); //Adds coupons now that all cards are instantiated
+
+        wonders = getWonders_private();
     }
 
     public static Deck getEra1Deck(int numPlayers) {
@@ -42,6 +44,10 @@ public class Generate {
             deck.add(findCardByName(cardNames[i]).getCopy());
         }
         return deck;
+    }
+
+    public static ArrayList<Wonder> getWonders() {
+        return wonders;
     }
 
     private static void couponCards() {
@@ -691,7 +697,7 @@ public class Generate {
         return cards;
     }
 
-    private static ArrayList<Wonder> getWonders() {
+    private static ArrayList<Wonder> getWonders_private() {
         ArrayList<Wonder> wonders = new ArrayList<>();
         Wonder wonder;
         Card card;
@@ -781,6 +787,224 @@ public class Generate {
         wonder.setStagesB(stages);
         wonders.add(wonder);
 
+
+        //Ephesus
+        wonder = new Wonder(Wonders.The_Temple_of_Artemis_in_Ephesus);
+        wonder.setResource(Card.Resource.PAPER);
+        stages = new ArrayList<>();
+        card = new Card(Card.Type.STAGE, WonderStages.Stage_1);
+        card.setCost(Card.Resource.STONE, 2);
+        card.setProducts(Card.Product.VP, 3);
+        stages.add(card);
+
+        card = new Card(Card.Type.STAGE, WonderStages.Stage_2);
+        card.setCost(Card.Resource.WOOD, 2);
+        card.setProducts(Card.Product.GOLD, 9);
+        stages.add(card);
+
+        card = new Card(Card.Type.STAGE, WonderStages.Stage_3);
+        card.setCost(Card.Resource.PAPER, 2);
+        card.setProducts(Card.Product.VP, 7);
+        stages.add(card);
+        wonder.setStagesA(stages);
+
+        stages = new ArrayList<>();
+        card = new Card(Card.Type.STAGE, WonderStages.Stage_1);
+        card.setCost(Card.Resource.STONE, 2);
+        card.setProducts(Card.Product.VP, 2);
+        card.setProducts(Card.Product.GOLD, 4);
+        stages.add(card);
+
+        card = new Card(Card.Type.STAGE, WonderStages.Stage_2);
+        card.setCost(Card.Resource.WOOD, 2);
+        card.setProducts(Card.Product.VP, 3);
+        card.setProducts(Card.Product.GOLD, 4);
+        stages.add(card);
+
+        card = new Card(Card.Type.STAGE, WonderStages.Stage_3);
+        card.setCost(Card.Resource.GLASS, 1);
+        card.setCost(Card.Resource.CLOTH, 1);
+        card.setCost(Card.Resource.PAPER, 1);
+        card.setProducts(Card.Product.VP, 5);
+        card.setProducts(Card.Product.GOLD, 4);
+        stages.add(card);
+        wonder.setStagesB(stages);
+        wonders.add(wonder);
+
+
+        //Babylon
+        wonder = new Wonder(Wonders.The_Hanging_Gardens_of_Babylon);
+        wonder.setResource(Card.Resource.CLAY);
+        stages = new ArrayList<>();
+        card = new Card(Card.Type.STAGE, WonderStages.Stage_1);
+        card.setCost(Card.Resource.CLAY, 2);
+        card.setProducts(Card.Product.VP, 3);
+        stages.add(card);
+
+        card = new Card(Card.Type.STAGE, WonderStages.Stage_2);
+        card.setCost(Card.Resource.WOOD, 3);
+        card.setProducts(Card.Product.TABLET, 1);
+        card.setProducts(Card.Product.COMPASS, 1);
+        card.setProducts(Card.Product.GEAR, 1);
+        stages.add(card);
+
+        card = new Card(Card.Type.STAGE, WonderStages.Stage_3);
+        card.setCost(Card.Resource.CLAY, 4);
+        card.setProducts(Card.Product.VP, 7);
+        stages.add(card);
+        wonder.setStagesA(stages);
+
+        stages = new ArrayList<>();
+        card = new Card(Card.Type.STAGE, WonderStages.Stage_1);
+        card.setCost(Card.Resource.CLAY, 1);
+        card.setCost(Card.Resource.CLOTH, 1);
+        card.setProducts(Card.Product.VP, 3);
+        stages.add(card);
+
+        card = new Card(Card.Type.STAGE, WonderStages.Stage_2);
+        card.setCost(Card.Resource.WOOD, 2);
+        card.setCost(Card.Resource.GLASS, 1);
+        card.setMessage("Can now play 7th age card rather than discarding it.");
+        stages.add(card);
+
+        card = new Card(Card.Type.STAGE, WonderStages.Stage_3);
+        card.setCost(Card.Resource.CLAY, 3);
+        card.setCost(Card.Resource.PAPER, 1);
+        card.setProducts(Card.Product.TABLET, 1);
+        card.setProducts(Card.Product.COMPASS, 1);
+        card.setProducts(Card.Product.GEAR, 1);
+        stages.add(card);
+        wonder.setStagesB(stages);
+        wonders.add(wonder);
+
+
+        //Olympia
+        wonder = new Wonder(Wonders.The_Statue_of_Zeus_in_Olympia);
+        wonder.setResource(Card.Resource.WOOD);
+        stages = new ArrayList<>();
+        card = new Card(Card.Type.STAGE, WonderStages.Stage_1);
+        card.setCost(Card.Resource.WOOD, 2);
+        card.setProducts(Card.Product.VP, 3);
+        stages.add(card);
+
+        card = new Card(Card.Type.STAGE, WonderStages.Stage_2);
+        card.setCost(Card.Resource.STONE, 2);
+        card.setMessage("Once per age can build a card for free.");
+        stages.add(card);
+
+        card = new Card(Card.Type.STAGE, WonderStages.Stage_3);
+        card.setCost(Card.Resource.ORE, 2);
+        card.setProducts(Card.Product.VP, 7);
+        stages.add(card);
+        wonder.setStagesA(stages);
+
+        stages = new ArrayList<>();
+        card = new Card(Card.Type.STAGE, WonderStages.Stage_1);
+        card.setCost(Card.Resource.WOOD, 2);
+        card.setMessage("Can trade 1 coin for resources with adjacent players.");
+        stages.add(card);
+
+        card = new Card(Card.Type.STAGE, WonderStages.Stage_2);
+        card.setCost(Card.Resource.STONE, 2);
+        card.setProducts(Card.Product.VP, 5);
+        stages.add(card);
+
+        card = new Card(Card.Type.STAGE, WonderStages.Stage_3);
+        card.setCost(Card.Resource.ORE, 2);
+        card.setCost(Card.Resource.CLOTH, 1);
+        card.setMessage("Can copy one Guild card built by an adjacent player.");
+        stages.add(card);
+        wonder.setStagesB(stages);
+        wonders.add(wonder);
+
+
+        //Halicarnassus
+        wonder = new Wonder(Wonders.The_Mausoleum_of_Halicarnassus);
+        wonder.setResource(Card.Resource.CLOTH);
+        stages = new ArrayList<>();
+        card = new Card(Card.Type.STAGE, WonderStages.Stage_1);
+        card.setCost(Card.Resource.CLAY, 2);
+        card.setProducts(Card.Product.VP, 3);
+        stages.add(card);
+
+        card = new Card(Card.Type.STAGE, WonderStages.Stage_2);
+        card.setCost(Card.Resource.ORE, 3);
+        card.setMessage("Can look through all discards since the beginning of the game, pick one, and build it for free.");
+        stages.add(card);
+
+        card = new Card(Card.Type.STAGE, WonderStages.Stage_3);
+        card.setCost(Card.Resource.CLOTH, 2);
+        card.setProducts(Card.Product.VP, 7);
+        stages.add(card);
+        wonder.setStagesA(stages);
+
+        stages = new ArrayList<>();
+        card = new Card(Card.Type.STAGE, WonderStages.Stage_1);
+        card.setCost(Card.Resource.ORE, 2);
+        card.setProducts(Card.Product.VP, 2);
+        card.setMessage("Can look through all discards since the beginning of the game, pick one, and build it for free.");
+        stages.add(card);
+
+        card = new Card(Card.Type.STAGE, WonderStages.Stage_2);
+        card.setCost(Card.Resource.CLAY, 3);
+        card.setProducts(Card.Product.VP, 1);
+        card.setMessage("Can look through all discards since the beginning of the game, pick one, and build it for free.");
+
+        stages.add(card);
+
+        card = new Card(Card.Type.STAGE, WonderStages.Stage_3);
+        card.setCost(Card.Resource.CLOTH, 1);
+        card.setCost(Card.Resource.PAPER, 1);
+        card.setCost(Card.Resource.GLASS, 1);
+        card.setMessage("Can look through all discards since the beginning of the game, pick one, and build it for free.");
+        stages.add(card);
+        wonder.setStagesB(stages);
+        wonders.add(wonder);
+
+
+        //Giza
+        wonder = new Wonder(Wonders.The_Pyrimids_of_Giza);
+        wonder.setResource(Card.Resource.STONE);
+        stages = new ArrayList<>();
+        card = new Card(Card.Type.STAGE, WonderStages.Stage_1);
+        card.setCost(Card.Resource.STONE, 2);
+        card.setProducts(Card.Product.VP, 3);
+        stages.add(card);
+
+        card = new Card(Card.Type.STAGE, WonderStages.Stage_2);
+        card.setCost(Card.Resource.WOOD, 3);
+        card.setProducts(Card.Product.VP, 5);
+        stages.add(card);
+
+        card = new Card(Card.Type.STAGE, WonderStages.Stage_3);
+        card.setCost(Card.Resource.STONE, 4);
+        card.setProducts(Card.Product.VP, 7);
+        stages.add(card);
+        wonder.setStagesA(stages);
+
+        stages = new ArrayList<>();
+        card = new Card(Card.Type.STAGE, WonderStages.Stage_1);
+        card.setCost(Card.Resource.WOOD, 2);
+        card.setProducts(Card.Product.VP, 3);
+        stages.add(card);
+
+        card = new Card(Card.Type.STAGE, WonderStages.Stage_2);
+        card.setCost(Card.Resource.STONE, 3);
+        card.setProducts(Card.Product.VP, 5);
+        stages.add(card);
+
+        card = new Card(Card.Type.STAGE, WonderStages.Stage_3);
+        card.setCost(Card.Resource.CLAY, 3);
+        card.setProducts(Card.Product.VP, 5);
+        stages.add(card);
+
+        card = new Card(Card.Type.STAGE, WonderStages.Stage_4);
+        card.setCost(Card.Resource.STONE, 4);
+        card.setCost(Card.Resource.PAPER, 1);
+        card.setProducts(Card.Product.VP, 7);
+        stages.add(card);
+        wonder.setStagesB(stages);
+        wonders.add(wonder);
 
         return wonders;
     }
