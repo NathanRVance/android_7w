@@ -1,17 +1,12 @@
 package net.dumtoad.android_7w.fragment;
 
 import android.app.Activity;
-import android.app.Fragment;
-import android.content.Context;
 import android.os.Bundle;
-import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.CheckBox;
 import android.widget.LinearLayout;
-import android.widget.TextView;
 
 import net.dumtoad.android_7w.MainActivity;
 import net.dumtoad.android_7w.R;
@@ -23,7 +18,7 @@ import java.util.ArrayList;
 /**
  * Created by nathav63 on 7/28/15.
  */
-public class SetupFragment extends Fragment {
+public class SetupFragment extends AbstractFragment {
 
     private MasterViewController mvc;
     private int numPlayers = 3;
@@ -31,6 +26,8 @@ public class SetupFragment extends Fragment {
     private String[] names;
     private boolean[] ais;
     private LinearLayout playerSelectLayout;
+    private Button addButton;
+    private Button subtractButton;
 
     @Override
     public void onAttach(Activity activity) {
@@ -41,10 +38,6 @@ public class SetupFragment extends Fragment {
     @Override
     public View onCreateView(final LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
     {
-        if(mvc == null) {
-            this.mvc = ((MainActivity) getActivity()).getMasterViewController();
-        }
-
         final View view = inflater.inflate(R.layout.setup, container, false);
         playerSelectLayout = (LinearLayout) view.findViewById(R.id.player_select_layout);
 
@@ -57,8 +50,8 @@ public class SetupFragment extends Fragment {
         numPlayers = 3;
         setupItems = new ArrayList<>();
 
-        final Button addButton = (Button) view.findViewById(R.id.add_button);
-        final Button subtractButton = (Button) view.findViewById(R.id.subtract_button);
+        addButton = (Button) view.findViewById(R.id.add_button);
+        subtractButton = (Button) view.findViewById(R.id.subtract_button);
 
         addButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -111,6 +104,9 @@ public class SetupFragment extends Fragment {
         names = savedInstanceState.getStringArray("names");
         ais = savedInstanceState.getBooleanArray("ais");
         numPlayers = savedInstanceState.getInt("numPlayers");
+
+        addButton.setEnabled(numPlayers < 7);
+        subtractButton.setEnabled(numPlayers > 3);
 
         for(int i = 0; i < numPlayers; i++) {
             addSetupItem();

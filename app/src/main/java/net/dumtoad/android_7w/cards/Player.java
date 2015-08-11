@@ -1,5 +1,6 @@
 package net.dumtoad.android_7w.cards;
 
+import net.dumtoad.android_7w.ai.AI;
 import net.dumtoad.android_7w.controller.MasterViewController;
 import net.dumtoad.android_7w.controller.TableController;
 
@@ -10,16 +11,39 @@ import java.util.ArrayList;
  */
 public class Player {
 
-    private Wonder wonder;
     private Hand hand;
     private ArrayList<Card> playedCards;
     private MasterViewController mvc;
-    private TableController tc;
+    private final String name;
+    private Wonder wonder;
+    private final boolean isAI;
+    private AI ai;
 
-    public Player(MasterViewController mvc, TableController tc) {
+    public Player(MasterViewController mvc, boolean isAI, String name) {
         this.mvc = mvc;
-        this.tc = tc;
         playedCards = new ArrayList<>();
+        this.isAI = isAI;
+        this.name = name;
+    }
+
+    public void setWonder(Wonder wonder) {
+        this.wonder = wonder;
+    }
+
+    public boolean isAI() {
+        return isAI;
+    }
+
+    public void setAI(AI ai) {
+        this.ai = ai;
+    }
+
+    public AI getAI() {
+        return ai;
+    }
+
+    public String getName() {
+        return name;
     }
 
     public void setHand(Hand hand) {
@@ -41,7 +65,7 @@ public class Player {
 
     public void discardCard(Card card) {
         hand.remove(card);
-
+        mvc.getTableController().discard(card);
     }
 
 }
