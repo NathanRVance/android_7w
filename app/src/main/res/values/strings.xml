@@ -4,4 +4,6 @@
     <string name="subtract_button">-</string>
     <string name="ai_checkbox">ai</string>
     <string name="ok">OK</string>
+    <string name="wonder_side_a">A</string>
+    <string name="wonder_side_b">B</string>
 </resources>

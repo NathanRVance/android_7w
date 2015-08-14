@@ -24,7 +24,7 @@ public class WonderSelectFragment extends AbstractFragment {
         int playerNum = getArguments().getInt("PlayerNum");
         Player player = mvc.getPlayer(playerNum);
 
-        final View view = inflater.inflate(R.layout.setup, container, false);
+        final View view = inflater.inflate(R.layout.wonder_select, container, false);
 
         return view;
     }
