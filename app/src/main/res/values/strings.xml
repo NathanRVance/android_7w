@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">7w</string>
-    <string name="add_button">+</string>
-    <string name="subtract_button">-</string>
+    <string name="add_button">Add Player</string>
+    <string name="subtract_button">Remove Player</string>
     <string name="ai_checkbox">ai</string>
     <string name="ok">OK</string>
     <string name="wonder_side_a">A</string>

@@ -111,6 +111,8 @@ public class SetupFragment extends AbstractFragment {
         for(int i = 0; i < numPlayers; i++) {
             addSetupItem();
         }
+
+        this.mvc = ((MainActivity) getActivity()).getMasterViewController();
     }
 
     @Override
@@ -123,7 +125,7 @@ public class SetupFragment extends AbstractFragment {
 
     private void addSetupItem() {
         final int index = setupItems.size();
-        String name = "Player " + setupItems.size();
+        String name = "Player " + setupItems.size() + " ai?";
         names[index] = name;
 
         SetupPlayerItem item = new SetupPlayerItem(getActivity(), names, ais, setupItems.size());

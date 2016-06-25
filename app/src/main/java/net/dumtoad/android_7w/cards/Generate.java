@@ -2,36 +2,33 @@ package net.dumtoad.android_7w.cards;
 
 import java.util.ArrayList;
 
-/**
- * Created by nathav63 on 7/27/15.
- */
 public class Generate {
 
+    private static ArrayList<Card> era0;
     private static ArrayList<Card> era1;
     private static ArrayList<Card> era2;
-    private static ArrayList<Card> era3;
 
     private static ArrayList<Wonder> wonders;
 
     public static void generateCards() {
+        era0 = getEra0Cards();
         era1 = getEra1Cards();
         era2 = getEra2Cards();
-        era3 = getEra3Cards();
         couponCards(); //Adds coupons now that all cards are instantiated
 
         wonders = getWonders_private();
+    }
+
+    public static Deck getEra0Deck(int numPlayers) {
+        return getDeck(era0deck, numPlayers * 7);
     }
 
     public static Deck getEra1Deck(int numPlayers) {
         return getDeck(era1deck, numPlayers * 7);
     }
 
-    public static Deck getEra2Deck(int numPlayers) {
-        return getDeck(era2deck, numPlayers * 7);
-    }
-
-    public static Deck getEra3Cards(int numPlayers) {
-        return getDeck(era3deck, numPlayers * 6 - 2);
+    public static Deck getEra2Cards(int numPlayers) {
+        return getDeck(era2deck, numPlayers * 6 - 2);
     }
 
     public static Deck getGuildCards() {
@@ -41,7 +38,7 @@ public class Generate {
     private static Deck getDeck(Enum[] cardNames, int numCards) {
         Deck deck = new Deck();
         for(int i = 0; i < numCards; i++) {
-            deck.add(findCardByName(cardNames[i]).getCopy());
+            deck.add(findCardByName(cardNames[i]));
         }
         return deck;
     }
@@ -51,48 +48,48 @@ public class Generate {
     }
 
     private static void couponCards() {
-        findCardByName(Era1.Baths).couponFor(findCardByName(Era2.Aqueduct));
-        findCardByName(Era1.Altar).couponFor(findCardByName(Era2.Temple));
-        findCardByName(Era1.Theater).couponFor(findCardByName(Era2.Statue));
-        findCardByName(Era1.East_Trading_Post).couponFor(findCardByName(Era2.Forum));
-        findCardByName(Era1.West_Trading_Post).couponFor(findCardByName(Era2.Forum));
-        findCardByName(Era1.Marketplace).couponFor(findCardByName(Era2.Caravansery));
-        findCardByName(Era1.Apothecary).couponFor(findCardByName(Era2.Stables));
-        findCardByName(Era1.Apothecary).couponFor(findCardByName(Era2.Dispensary));
-        findCardByName(Era1.Workshop).couponFor(findCardByName(Era2.Archery_Range));
-        findCardByName(Era1.Workshop).couponFor(findCardByName(Era2.Laboratory));
-        findCardByName(Era1.Scriptorium).couponFor(findCardByName(Era2.Courthouse));
-        findCardByName(Era1.Scriptorium).couponFor(findCardByName(Era2.Library));
-        findCardByName(Era2.Temple).couponFor(findCardByName(Era3.Pantheon));
-        findCardByName(Era2.Statue).couponFor(findCardByName(Era3.Gardens));
-        findCardByName(Era2.Forum).couponFor(findCardByName(Era3.Haven));
-        findCardByName(Era2.Caravansery).couponFor(findCardByName(Era3.Lighthouse));
-        findCardByName(Era2.Walls).couponFor(findCardByName(Era3.Fortifications));
-        findCardByName(Era2.Training_Ground).couponFor(findCardByName(Era3.Circus));
-        findCardByName(Era2.Dispensary).couponFor(findCardByName(Era3.Lodge));
-        findCardByName(Era2.Dispensary).couponFor(findCardByName(Era3.Arena));
-        findCardByName(Era2.Laboratory).couponFor(findCardByName(Era3.Siege_Workshop));
-        findCardByName(Era2.Laboratory).couponFor(findCardByName(Era3.Observatory));
-        findCardByName(Era2.Library).couponFor(findCardByName(Era3.Senate));
-        findCardByName(Era2.Library).couponFor(findCardByName(Era3.University));
-        findCardByName(Era2.School).couponFor(findCardByName(Era3.Academy));
-        findCardByName(Era2.School).couponFor(findCardByName(Era3.Study));
+        findCardByName(Era0.Baths).couponFor(findCardByName(Era1.Aqueduct));
+        findCardByName(Era0.Altar).couponFor(findCardByName(Era1.Temple));
+        findCardByName(Era0.Theater).couponFor(findCardByName(Era1.Statue));
+        findCardByName(Era0.East_Trading_Post).couponFor(findCardByName(Era1.Forum));
+        findCardByName(Era0.West_Trading_Post).couponFor(findCardByName(Era1.Forum));
+        findCardByName(Era0.Marketplace).couponFor(findCardByName(Era1.Caravansery));
+        findCardByName(Era0.Apothecary).couponFor(findCardByName(Era1.Stables));
+        findCardByName(Era0.Apothecary).couponFor(findCardByName(Era1.Dispensary));
+        findCardByName(Era0.Workshop).couponFor(findCardByName(Era1.Archery_Range));
+        findCardByName(Era0.Workshop).couponFor(findCardByName(Era1.Laboratory));
+        findCardByName(Era0.Scriptorium).couponFor(findCardByName(Era1.Courthouse));
+        findCardByName(Era0.Scriptorium).couponFor(findCardByName(Era1.Library));
+        findCardByName(Era1.Temple).couponFor(findCardByName(Era2.Pantheon));
+        findCardByName(Era1.Statue).couponFor(findCardByName(Era2.Gardens));
+        findCardByName(Era1.Forum).couponFor(findCardByName(Era2.Haven));
+        findCardByName(Era1.Caravansery).couponFor(findCardByName(Era2.Lighthouse));
+        findCardByName(Era1.Walls).couponFor(findCardByName(Era2.Fortifications));
+        findCardByName(Era1.Training_Ground).couponFor(findCardByName(Era2.Circus));
+        findCardByName(Era1.Dispensary).couponFor(findCardByName(Era2.Lodge));
+        findCardByName(Era1.Dispensary).couponFor(findCardByName(Era2.Arena));
+        findCardByName(Era1.Laboratory).couponFor(findCardByName(Era2.Siege_Workshop));
+        findCardByName(Era1.Laboratory).couponFor(findCardByName(Era2.Observatory));
+        findCardByName(Era1.Library).couponFor(findCardByName(Era2.Senate));
+        findCardByName(Era1.Library).couponFor(findCardByName(Era2.University));
+        findCardByName(Era1.School).couponFor(findCardByName(Era2.Academy));
+        findCardByName(Era1.School).couponFor(findCardByName(Era2.Study));
     }
 
     private static Card findCardByName(Enum name) {
+        for(Card card : era0)
+            if(card.getName().equals(name))
+                return card;
         for(Card card : era1)
             if(card.getName().equals(name))
                 return card;
         for(Card card : era2)
             if(card.getName().equals(name))
                 return card;
-        for(Card card : era3)
-            if(card.getName().equals(name))
-                return card;
-        return null;
+        throw new RuntimeException("That shouldn't have happended!");
     }
 
-    public enum Era1 {
+    public enum Era0 {
         Lumber_Yard,
         Stone_Pit,
         Clay_Pool,
@@ -122,14 +119,14 @@ public class Generate {
         Scriptorium
     }
 
-    private static final Enum[] era1deck = { Era1.Lumber_Yard, Era1.Stone_Pit, Era1.Clay_Pool, Era1.Ore_Vein, Era1.Clay_Pit, Era1.Timber_Yard, Era1.Loom,
-    Era1.Glassworks, Era1.Press, Era1.Baths, Era1.Altar, Era1.Theater, Era1.East_Trading_Post, Era1.West_Trading_Post, Era1.Marketplace,
-    Era1.Stockade, Era1.Barracks, Era1.Guard_Tower, Era1.Apothecary, Era1.Workshop, Era1.Scriptorium, Era1.Lumber_Yard, Era1.Ore_Vein, Era1.Excavation,
-    Era1.Pawnshop, Era1.Tavern, Era1.Guard_Tower, Era1.Scriptorium, Era1.Stone_Pit, Era1.Clay_Pool, Era1.Forest_Cave, Era1.Altar, Era1.Tavern,
-    Era1.Barracks, Era1.Apothecary, Era1.Tree_Farm, Era1.Mine, Era1.Loom, Era1.Glassworks, Era1.Press, Era1.Theater, Era1.Marketplace, Era1.Pawnshop,
-    Era1.Baths, Era1.Tavern, Era1.East_Trading_Post, Era1.West_Trading_Post, Era1.Stockade, Era1.Workshop};
+    private static final Enum[] era0deck = { Era0.Lumber_Yard, Era0.Stone_Pit, Era0.Clay_Pool, Era0.Ore_Vein, Era0.Clay_Pit, Era0.Timber_Yard, Era0.Loom,
+    Era0.Glassworks, Era0.Press, Era0.Baths, Era0.Altar, Era0.Theater, Era0.East_Trading_Post, Era0.West_Trading_Post, Era0.Marketplace,
+    Era0.Stockade, Era0.Barracks, Era0.Guard_Tower, Era0.Apothecary, Era0.Workshop, Era0.Scriptorium, Era0.Lumber_Yard, Era0.Ore_Vein, Era0.Excavation,
+    Era0.Pawnshop, Era0.Tavern, Era0.Guard_Tower, Era0.Scriptorium, Era0.Stone_Pit, Era0.Clay_Pool, Era0.Forest_Cave, Era0.Altar, Era0.Tavern,
+    Era0.Barracks, Era0.Apothecary, Era0.Tree_Farm, Era0.Mine, Era0.Loom, Era0.Glassworks, Era0.Press, Era0.Theater, Era0.Marketplace, Era0.Pawnshop,
+    Era0.Baths, Era0.Tavern, Era0.East_Trading_Post, Era0.West_Trading_Post, Era0.Stockade, Era0.Workshop};
 
-    public enum Era2 {
+    public enum Era1 {
         Sawmill,
         Quarry,
         Brickyard,
@@ -155,14 +152,14 @@ public class Generate {
         School
     }
 
-    private static final Enum[] era2deck = { Era2.Sawmill, Era2.Quarry, Era2.Brickyard, Era2.Foundry, Era2.Loom, Era2.Glassworks, Era2.Press, Era2.Aqueduct,
-    Era2.Temple, Era2.Statue, Era2.Courthouse, Era2.Forum, Era2.Caravansery, Era2.Vineyard, Era2.Walls, Era2.Stables, Era2.Archery_Range,
-    Era2.Dispensary, Era2.Laboratory, Era2.Library, Era2.School, Era2.Sawmill, Era2.Quarry, Era2.Brickyard, Era2.Foundry, Era2.Bazaar, Era2.Training_Ground,
-    Era2.Dispensary, Era2.Loom, Era2.Glassworks, Era2.Press, Era2.Courthouse, Era2.Caravansery, Era2.Stables, Era2.Laboratory, Era2.Temple,
-    Era2.Forum, Era2.Caravansery, Era2.Vineyard, Era2.Training_Ground, Era2.Archery_Range, Era2.Library, Era2.Aqueduct, Era2.Statue, Era2.Forum,
-    Era2.Bazaar, Era2.Walls, Era2.Training_Ground, Era2.School };
+    private static final Enum[] era1deck = { Era1.Sawmill, Era1.Quarry, Era1.Brickyard, Era1.Foundry, Era1.Loom, Era1.Glassworks, Era1.Press, Era1.Aqueduct,
+    Era1.Temple, Era1.Statue, Era1.Courthouse, Era1.Forum, Era1.Caravansery, Era1.Vineyard, Era1.Walls, Era1.Stables, Era1.Archery_Range,
+    Era1.Dispensary, Era1.Laboratory, Era1.Library, Era1.School, Era1.Sawmill, Era1.Quarry, Era1.Brickyard, Era1.Foundry, Era1.Bazaar, Era1.Training_Ground,
+    Era1.Dispensary, Era1.Loom, Era1.Glassworks, Era1.Press, Era1.Courthouse, Era1.Caravansery, Era1.Stables, Era1.Laboratory, Era1.Temple,
+    Era1.Forum, Era1.Caravansery, Era1.Vineyard, Era1.Training_Ground, Era1.Archery_Range, Era1.Library, Era1.Aqueduct, Era1.Statue, Era1.Forum,
+    Era1.Bazaar, Era1.Walls, Era1.Training_Ground, Era1.School };
 
-    public enum Era3 {
+    public enum Era2 {
         Pantheon,
         Gardens,
         Town_Hall,
@@ -193,14 +190,14 @@ public class Generate {
         Builders_Guild
     }
 
-    private static final Enum[] era3deck = { Era3.Pantheon, Era3.Gardens, Era3.Town_Hall, Era3.Palace, Era3.Senate, Era3.Haven, Era3.Lighthouse,
-    Era3.Arena, Era3.Fortifications, Era3.Arsenal, Era3.Siege_Workshop, Era3.Lodge, Era3.Observatory, Era3.University, Era3.Academy, Era3.Study,
-    Era3.Gardens, Era3.Haven, Era3.Chamber_Of_Commerce, Era3.Circus, Era3.Arsenal, Era3.University, Era3.Town_Hall, Era3.Senate, Era3.Arena,
-    Era3.Circus, Era3.Siege_Workshop, Era3.Study, Era3.Pantheon, Era3.Town_Hall, Era3.Lighthouse, Era3.Chamber_Of_Commerce, Era3.Circus,
-    Era3.Lodge, Era3.Palace, Era3.Arena, Era3.Fortifications, Era3.Arsenal, Era3.Observatory, Era3.Academy };
+    private static final Enum[] era2deck = { Era2.Pantheon, Era2.Gardens, Era2.Town_Hall, Era2.Palace, Era2.Senate, Era2.Haven, Era2.Lighthouse,
+    Era2.Arena, Era2.Fortifications, Era2.Arsenal, Era2.Siege_Workshop, Era2.Lodge, Era2.Observatory, Era2.University, Era2.Academy, Era2.Study,
+    Era2.Gardens, Era2.Haven, Era2.Chamber_Of_Commerce, Era2.Circus, Era2.Arsenal, Era2.University, Era2.Town_Hall, Era2.Senate, Era2.Arena,
+    Era2.Circus, Era2.Siege_Workshop, Era2.Study, Era2.Pantheon, Era2.Town_Hall, Era2.Lighthouse, Era2.Chamber_Of_Commerce, Era2.Circus,
+    Era2.Lodge, Era2.Palace, Era2.Arena, Era2.Fortifications, Era2.Arsenal, Era2.Observatory, Era2.Academy };
 
-    private static final Enum[] guilds = { Era3.Workers_Guild, Era3.Craftmens_Guild, Era3.Traders_Guild, Era3.Philosophers_Guild, Era3.Spy_Guild,
-    Era3.Strategy_Guild, Era3.Shipowners_Guild, Era3.Scientists_Guild, Era3.Magistrates_Guild, Era3.Builders_Guild };
+    private static final Enum[] guilds = { Era2.Workers_Guild, Era2.Craftmens_Guild, Era2.Traders_Guild, Era2.Philosophers_Guild, Era2.Spy_Guild,
+    Era2.Strategy_Guild, Era2.Shipowners_Guild, Era2.Scientists_Guild, Era2.Magistrates_Guild, Era2.Builders_Guild };
 
     public enum Wonders {
         The_Colossus_of_Rhodes,
@@ -219,60 +216,162 @@ public class Generate {
         Stage_4
     }
 
+    private static ArrayList<Card> getEra0Cards() {
+        ArrayList<Card> cards = new ArrayList<>();
+        Card card;
+
+        card = new Card(Card.Type.RESOURCE, Era0.Lumber_Yard);
+        card.setProducts(Card.Product.WOOD, 1);
+        cards.add(card);
+
+        card = new Card(Card.Type.RESOURCE, Era0.Stone_Pit);
+        card.setProducts(Card.Product.STONE, 1);
+        cards.add(card);
+
+        card = new Card(Card.Type.RESOURCE, Era0.Clay_Pool);
+        card.setProducts(Card.Product.CLAY, 1);
+        cards.add(card);
+
+        card = new Card(Card.Type.RESOURCE, Era0.Ore_Vein);
+        card.setProducts(Card.Product.ORE, 1);
+        cards.add(card);
+
+        card = new Card(Card.Type.RESOURCE, Era0.Tree_Farm);
+        card.setCost(Card.Resource.GOLD, 1);
+        card.setProducts(Card.Product.WOOD, 1);
+        card.setProducts(Card.Product.CLAY, 1);
+        cards.add(card);
+
+        card = new Card(Card.Type.RESOURCE, Era0.Excavation);
+        card.setCost(Card.Resource.GOLD, 1);
+        card.setProducts(Card.Product.STONE, 1);
+        card.setProducts(Card.Product.CLAY, 1);
+        cards.add(card);
+
+        card = new Card(Card.Type.RESOURCE, Era0.Clay_Pit);
+        card.setCost(Card.Resource.GOLD, 1);
+        card.setProducts(Card.Product.CLAY, 1);
+        card.setProducts(Card.Product.ORE, 1);
+        cards.add(card);
+
+        card = new Card(Card.Type.RESOURCE, Era0.Timber_Yard);
+        card.setCost(Card.Resource.GOLD, 1);
+        card.setProducts(Card.Product.STONE, 1);
+        card.setProducts(Card.Product.WOOD, 1);
+        cards.add(card);
+
+        card = new Card(Card.Type.RESOURCE, Era0.Forest_Cave);
+        card.setCost(Card.Resource.GOLD, 1);
+        card.setProducts(Card.Product.WOOD, 1);
+        card.setProducts(Card.Product.ORE, 1);
+        cards.add(card);
+
+        card = new Card(Card.Type.RESOURCE, Era0.Mine);
+        card.setCost(Card.Resource.GOLD, 1);
+        card.setProducts(Card.Product.ORE, 1);
+        card.setProducts(Card.Product.STONE, 1);
+        cards.add(card);
+
+        card = new Card(Card.Type.INDUSTRY, Era0.Loom);
+        card.setProducts(Card.Product.CLOTH, 1);
+        cards.add(card);
+
+        card = new Card(Card.Type.INDUSTRY, Era0.Glassworks);
+        card.setProducts(Card.Product.GLASS, 1);
+        cards.add(card);
+
+        card = new Card(Card.Type.INDUSTRY, Era0.Press);
+        card.setProducts(Card.Product.PAPER, 1);
+        cards.add(card);
+
+        card = new Card(Card.Type.STRUCTURE, Era0.Pawnshop);
+        card.setProducts(Card.Product.VP, 3);
+        cards.add(card);
+
+        card = new Card(Card.Type.STRUCTURE, Era0.Baths);
+        card.setCost(Card.Resource.STONE, 1);
+        card.setProducts(Card.Product.VP, 3);
+        cards.add(card);
+
+        card = new Card(Card.Type.STRUCTURE, Era0.Altar);
+        card.setProducts(Card.Product.VP, 2);
+        cards.add(card);
+
+        card = new Card(Card.Type.STRUCTURE, Era0.Theater);
+        card.setProducts(Card.Product.VP, 2);
+        cards.add(card);
+
+        card = new Card(Card.Type.COMMERCIAL, Era0.Tavern);
+        card.setProducts(Card.Product.GOLD, 5);
+        cards.add(card);
+
+        card = new Card(Card.Type.COMMERCIAL, Era0.East_Trading_Post);
+        card.setMessage("Can trade 1 coin for resources with player to the east.");
+        cards.add(card);
+
+        card = new Card(Card.Type.COMMERCIAL, Era0.West_Trading_Post);
+        card.setMessage("Can trade 1 coin for resources with player to the west.");
+        cards.add(card);
+
+        card = new Card(Card.Type.COMMERCIAL, Era0.Marketplace);
+        card.setMessage("Can trade 1 coin for industry products with adjacent players.");
+        cards.add(card);
+
+        card = new Card(Card.Type.MILITARY, Era0.Stockade);
+        card.setCost(Card.Resource.WOOD, 1);
+        card.setProducts(Card.Product.SHIELD, 1);
+        cards.add(card);
+
+        card = new Card(Card.Type.MILITARY, Era0.Barracks);
+        card.setCost(Card.Resource.ORE, 1);
+        card.setProducts(Card.Product.SHIELD, 1);
+        cards.add(card);
+
+        card = new Card(Card.Type.MILITARY, Era0.Guard_Tower);
+        card.setCost(Card.Resource.CLAY, 1);
+        card.setProducts(Card.Product.SHIELD, 1);
+        cards.add(card);
+
+        card = new Card(Card.Type.SCIENCE, Era0.Apothecary);
+        card.setCost(Card.Resource.CLOTH, 1);
+        card.setProducts(Card.Product.COMPASS, 1);
+        cards.add(card);
+
+        card = new Card(Card.Type.SCIENCE, Era0.Workshop);
+        card.setCost(Card.Resource.GLASS, 1);
+        card.setProducts(Card.Product.GEAR, 1);
+        cards.add(card);
+
+        card = new Card(Card.Type.SCIENCE, Era0.Scriptorium);
+        card.setCost(Card.Resource.PAPER, 1);
+        card.setProducts(Card.Product.TABLET, 1);
+        cards.add(card);
+
+        return cards;
+    }
+
     private static ArrayList<Card> getEra1Cards() {
         ArrayList<Card> cards = new ArrayList<>();
         Card card;
 
-        card = new Card(Card.Type.RESOURCE, Era1.Lumber_Yard);
-        card.setProducts(Card.Product.WOOD, 1);
-        cards.add(card);
-
-        card = new Card(Card.Type.RESOURCE, Era1.Stone_Pit);
-        card.setProducts(Card.Product.STONE, 1);
-        cards.add(card);
-
-        card = new Card(Card.Type.RESOURCE, Era1.Clay_Pool);
-        card.setProducts(Card.Product.CLAY, 1);
-        cards.add(card);
-
-        card = new Card(Card.Type.RESOURCE, Era1.Ore_Vein);
-        card.setProducts(Card.Product.ORE, 1);
-        cards.add(card);
-
-        card = new Card(Card.Type.RESOURCE, Era1.Tree_Farm);
+        card = new Card(Card.Type.RESOURCE, Era1.Sawmill);
         card.setCost(Card.Resource.GOLD, 1);
-        card.setProducts(Card.Product.WOOD, 1);
-        card.setProducts(Card.Product.CLAY, 1);
+        card.setProducts(Card.Product.WOOD, 2);
         cards.add(card);
 
-        card = new Card(Card.Type.RESOURCE, Era1.Excavation);
+        card = new Card(Card.Type.RESOURCE, Era1.Quarry);
         card.setCost(Card.Resource.GOLD, 1);
-        card.setProducts(Card.Product.STONE, 1);
-        card.setProducts(Card.Product.CLAY, 1);
+        card.setProducts(Card.Product.STONE, 2);
         cards.add(card);
 
-        card = new Card(Card.Type.RESOURCE, Era1.Clay_Pit);
+        card = new Card(Card.Type.RESOURCE, Era1.Brickyard);
         card.setCost(Card.Resource.GOLD, 1);
-        card.setProducts(Card.Product.CLAY, 1);
-        card.setProducts(Card.Product.ORE, 1);
+        card.setProducts(Card.Product.CLAY, 2);
         cards.add(card);
 
-        card = new Card(Card.Type.RESOURCE, Era1.Timber_Yard);
+        card = new Card(Card.Type.RESOURCE, Era1.Foundry);
         card.setCost(Card.Resource.GOLD, 1);
-        card.setProducts(Card.Product.STONE, 1);
-        card.setProducts(Card.Product.WOOD, 1);
-        cards.add(card);
-
-        card = new Card(Card.Type.RESOURCE, Era1.Forest_Cave);
-        card.setCost(Card.Resource.GOLD, 1);
-        card.setProducts(Card.Product.WOOD, 1);
-        card.setProducts(Card.Product.ORE, 1);
-        cards.add(card);
-
-        card = new Card(Card.Type.RESOURCE, Era1.Mine);
-        card.setCost(Card.Resource.GOLD, 1);
-        card.setProducts(Card.Product.ORE, 1);
-        card.setProducts(Card.Product.STONE, 1);
+        card.setProducts(Card.Product.ORE, 2);
         cards.add(card);
 
         card = new Card(Card.Type.INDUSTRY, Era1.Loom);
@@ -287,66 +386,98 @@ public class Generate {
         card.setProducts(Card.Product.PAPER, 1);
         cards.add(card);
 
-        card = new Card(Card.Type.STRUCTURE, Era1.Pawnshop);
-        card.setProducts(Card.Product.VP, 3);
+        card = new Card(Card.Type.STRUCTURE, Era1.Aqueduct);
+        card.setCost(Card.Resource.STONE, 3);
+        card.setProducts(Card.Product.VP, 5);
         cards.add(card);
 
-        card = new Card(Card.Type.STRUCTURE, Era1.Baths);
-        card.setCost(Card.Resource.STONE, 1);
-        card.setProducts(Card.Product.VP, 3);
-        cards.add(card);
-
-        card = new Card(Card.Type.STRUCTURE, Era1.Altar);
-        card.setProducts(Card.Product.VP, 2);
-        cards.add(card);
-
-        card = new Card(Card.Type.STRUCTURE, Era1.Theater);
-        card.setProducts(Card.Product.VP, 2);
-        cards.add(card);
-
-        card = new Card(Card.Type.COMMERCIAL, Era1.Tavern);
-        card.setProducts(Card.Product.GOLD, 5);
-        cards.add(card);
-
-        card = new Card(Card.Type.COMMERCIAL, Era1.East_Trading_Post);
-        card.setMessage("Can trade 1 coin for resources with player to the east.");
-        cards.add(card);
-
-        card = new Card(Card.Type.COMMERCIAL, Era1.West_Trading_Post);
-        card.setMessage("Can trade 1 coin for resources with player to the west.");
-        cards.add(card);
-
-        card = new Card(Card.Type.COMMERCIAL, Era1.Marketplace);
-        card.setMessage("Can trade 1 coin for industry products with adjacent players.");
-        cards.add(card);
-
-        card = new Card(Card.Type.MILITARY, Era1.Stockade);
+        card = new Card(Card.Type.STRUCTURE, Era1.Temple);
         card.setCost(Card.Resource.WOOD, 1);
-        card.setProducts(Card.Product.SHIELD, 1);
-        cards.add(card);
-
-        card = new Card(Card.Type.MILITARY, Era1.Barracks);
-        card.setCost(Card.Resource.ORE, 1);
-        card.setProducts(Card.Product.SHIELD, 1);
-        cards.add(card);
-
-        card = new Card(Card.Type.MILITARY, Era1.Guard_Tower);
         card.setCost(Card.Resource.CLAY, 1);
-        card.setProducts(Card.Product.SHIELD, 1);
+        card.setCost(Card.Resource.GLASS, 1);
+        card.setProducts(Card.Product.VP, 3);
         cards.add(card);
 
-        card = new Card(Card.Type.SCIENCE, Era1.Apothecary);
+        card = new Card(Card.Type.STRUCTURE, Era1.Statue);
+        card.setCost(Card.Resource.ORE, 2);
+        card.setCost(Card.Resource.WOOD, 1);
+        card.setProducts(Card.Product.VP, 4);
+        cards.add(card);
+
+        card = new Card(Card.Type.STRUCTURE, Era1.Courthouse);
+        card.setCost(Card.Resource.CLAY, 2);
         card.setCost(Card.Resource.CLOTH, 1);
+        card.setProducts(Card.Product.VP, 4);
+        cards.add(card);
+
+        card = new Card(Card.Type.COMMERCIAL, Era1.Forum);
+        card.setCost(Card.Resource.CLAY, 2);
+        card.setProducts(Card.Product.CLOTH, 1);
+        card.setProducts(Card.Product.GLASS, 1);
+        card.setProducts(Card.Product.PAPER, 1);
+        cards.add(card);
+
+        card = new Card(Card.Type.COMMERCIAL, Era1.Caravansery);
+        card.setCost(Card.Resource.WOOD, 2);
+        card.setProducts(Card.Product.WOOD, 1);
+        card.setProducts(Card.Product.CLAY, 1);
+        card.setProducts(Card.Product.STONE, 1);
+        card.setProducts(Card.Product.ORE, 1);
+        cards.add(card);
+
+        card = new Card(Card.Type.COMMERCIAL, Era1.Vineyard);
+        card.setMessage("1 coin for each resource card of adjacent players or your own.");
+        cards.add(card);
+
+        card = new Card(Card.Type.COMMERCIAL, Era1.Bazaar);
+        card.setMessage("2 coins for each industry card of adjacent players or your own.");
+        cards.add(card);
+
+        card = new Card(Card.Type.MILITARY, Era1.Walls);
+        card.setCost(Card.Resource.STONE, 3);
+        card.setProducts(Card.Product.SHIELD, 2);
+        cards.add(card);
+
+        card = new Card(Card.Type.MILITARY, Era1.Training_Ground);
+        card.setCost(Card.Resource.ORE, 2);
+        card.setCost(Card.Resource.WOOD, 1);
+        card.setProducts(Card.Product.SHIELD, 2);
+        cards.add(card);
+
+        card = new Card(Card.Type.MILITARY, Era1.Stables);
+        card.setCost(Card.Resource.ORE, 1);
+        card.setCost(Card.Resource.CLAY, 1);
+        card.setCost(Card.Resource.WOOD, 1);
+        card.setProducts(Card.Product.SHIELD, 2);
+        cards.add(card);
+
+        card = new Card(Card.Type.MILITARY, Era1.Archery_Range);
+        card.setCost(Card.Resource.ORE, 1);
+        card.setCost(Card.Resource.WOOD, 2);
+        card.setProducts(Card.Product.SHIELD, 2);
+        cards.add(card);
+
+        card = new Card(Card.Type.SCIENCE, Era1.Dispensary);
+        card.setCost(Card.Resource.GLASS, 1);
+        card.setCost(Card.Resource.ORE, 2);
         card.setProducts(Card.Product.COMPASS, 1);
         cards.add(card);
 
-        card = new Card(Card.Type.SCIENCE, Era1.Workshop);
-        card.setCost(Card.Resource.GLASS, 1);
+        card = new Card(Card.Type.SCIENCE, Era1.Laboratory);
+        card.setCost(Card.Resource.PAPER, 1);
+        card.setCost(Card.Resource.CLAY, 2);
         card.setProducts(Card.Product.GEAR, 1);
         cards.add(card);
 
-        card = new Card(Card.Type.SCIENCE, Era1.Scriptorium);
+        card = new Card(Card.Type.SCIENCE, Era1.Library);
+        card.setCost(Card.Resource.CLOTH, 1);
+        card.setCost(Card.Resource.STONE, 2);
+        card.setProducts(Card.Product.TABLET, 1);
+        cards.add(card);
+
+        card = new Card(Card.Type.SCIENCE, Era1.School);
         card.setCost(Card.Resource.PAPER, 1);
+        card.setCost(Card.Resource.WOOD, 1);
         card.setProducts(Card.Product.TABLET, 1);
         cards.add(card);
 
@@ -357,141 +488,7 @@ public class Generate {
         ArrayList<Card> cards = new ArrayList<>();
         Card card;
 
-        card = new Card(Card.Type.RESOURCE, Era2.Sawmill);
-        card.setCost(Card.Resource.GOLD, 1);
-        card.setProducts(Card.Product.WOOD, 2);
-        cards.add(card);
-
-        card = new Card(Card.Type.RESOURCE, Era2.Quarry);
-        card.setCost(Card.Resource.GOLD, 1);
-        card.setProducts(Card.Product.STONE, 2);
-        cards.add(card);
-
-        card = new Card(Card.Type.RESOURCE, Era2.Brickyard);
-        card.setCost(Card.Resource.GOLD, 1);
-        card.setProducts(Card.Product.CLAY, 2);
-        cards.add(card);
-
-        card = new Card(Card.Type.RESOURCE, Era2.Foundry);
-        card.setCost(Card.Resource.GOLD, 1);
-        card.setProducts(Card.Product.ORE, 2);
-        cards.add(card);
-
-        card = new Card(Card.Type.INDUSTRY, Era2.Loom);
-        card.setProducts(Card.Product.CLOTH, 1);
-        cards.add(card);
-
-        card = new Card(Card.Type.INDUSTRY, Era2.Glassworks);
-        card.setProducts(Card.Product.GLASS, 1);
-        cards.add(card);
-
-        card = new Card(Card.Type.INDUSTRY, Era2.Press);
-        card.setProducts(Card.Product.PAPER, 1);
-        cards.add(card);
-
-        card = new Card(Card.Type.STRUCTURE, Era2.Aqueduct);
-        card.setCost(Card.Resource.STONE, 3);
-        card.setProducts(Card.Product.VP, 5);
-        cards.add(card);
-
-        card = new Card(Card.Type.STRUCTURE, Era2.Temple);
-        card.setCost(Card.Resource.WOOD, 1);
-        card.setCost(Card.Resource.CLAY, 1);
-        card.setCost(Card.Resource.GLASS, 1);
-        card.setProducts(Card.Product.VP, 3);
-        cards.add(card);
-
-        card = new Card(Card.Type.STRUCTURE, Era2.Statue);
-        card.setCost(Card.Resource.ORE, 2);
-        card.setCost(Card.Resource.WOOD, 1);
-        card.setProducts(Card.Product.VP, 4);
-        cards.add(card);
-
-        card = new Card(Card.Type.STRUCTURE, Era2.Courthouse);
-        card.setCost(Card.Resource.CLAY, 2);
-        card.setCost(Card.Resource.CLOTH, 1);
-        card.setProducts(Card.Product.VP, 4);
-        cards.add(card);
-
-        card = new Card(Card.Type.COMMERCIAL, Era2.Forum);
-        card.setCost(Card.Resource.CLAY, 2);
-        card.setProducts(Card.Product.CLOTH, 1);
-        card.setProducts(Card.Product.GLASS, 1);
-        card.setProducts(Card.Product.PAPER, 1);
-        cards.add(card);
-
-        card = new Card(Card.Type.COMMERCIAL, Era2.Caravansery);
-        card.setCost(Card.Resource.WOOD, 2);
-        card.setProducts(Card.Product.WOOD, 1);
-        card.setProducts(Card.Product.CLAY, 1);
-        card.setProducts(Card.Product.STONE, 1);
-        card.setProducts(Card.Product.ORE, 1);
-        cards.add(card);
-
-        card = new Card(Card.Type.COMMERCIAL, Era2.Vineyard);
-        card.setMessage("1 coin for each resource card of adjacent players or your own.");
-        cards.add(card);
-
-        card = new Card(Card.Type.COMMERCIAL, Era2.Bazaar);
-        card.setMessage("2 coins for each industry card of adjacent players or your own.");
-        cards.add(card);
-
-        card = new Card(Card.Type.MILITARY, Era2.Walls);
-        card.setCost(Card.Resource.STONE, 3);
-        card.setProducts(Card.Product.SHIELD, 2);
-        cards.add(card);
-
-        card = new Card(Card.Type.MILITARY, Era2.Training_Ground);
-        card.setCost(Card.Resource.ORE, 2);
-        card.setCost(Card.Resource.WOOD, 1);
-        card.setProducts(Card.Product.SHIELD, 2);
-        cards.add(card);
-
-        card = new Card(Card.Type.MILITARY, Era2.Stables);
-        card.setCost(Card.Resource.ORE, 1);
-        card.setCost(Card.Resource.CLAY, 1);
-        card.setCost(Card.Resource.WOOD, 1);
-        card.setProducts(Card.Product.SHIELD, 2);
-        cards.add(card);
-
-        card = new Card(Card.Type.MILITARY, Era2.Archery_Range);
-        card.setCost(Card.Resource.ORE, 1);
-        card.setCost(Card.Resource.WOOD, 2);
-        card.setProducts(Card.Product.SHIELD, 2);
-        cards.add(card);
-
-        card = new Card(Card.Type.SCIENCE, Era2.Dispensary);
-        card.setCost(Card.Resource.GLASS, 1);
-        card.setCost(Card.Resource.ORE, 2);
-        card.setProducts(Card.Product.COMPASS, 1);
-        cards.add(card);
-
-        card = new Card(Card.Type.SCIENCE, Era2.Laboratory);
-        card.setCost(Card.Resource.PAPER, 1);
-        card.setCost(Card.Resource.CLAY, 2);
-        card.setProducts(Card.Product.GEAR, 1);
-        cards.add(card);
-
-        card = new Card(Card.Type.SCIENCE, Era2.Library);
-        card.setCost(Card.Resource.CLOTH, 1);
-        card.setCost(Card.Resource.STONE, 2);
-        card.setProducts(Card.Product.TABLET, 1);
-        cards.add(card);
-
-        card = new Card(Card.Type.SCIENCE, Era2.School);
-        card.setCost(Card.Resource.PAPER, 1);
-        card.setCost(Card.Resource.WOOD, 1);
-        card.setProducts(Card.Product.TABLET, 1);
-        cards.add(card);
-
-        return cards;
-    }
-
-    private static ArrayList<Card> getEra3Cards() {
-        ArrayList<Card> cards = new ArrayList<>();
-        Card card;
-
-        card = new Card(Card.Type.STRUCTURE, Era3.Pantheon);
+        card = new Card(Card.Type.STRUCTURE, Era2.Pantheon);
         card.setCost(Card.Resource.CLAY, 2);
         card.setCost(Card.Resource.ORE, 1);
         card.setCost(Card.Resource.PAPER, 1);
@@ -500,20 +497,20 @@ public class Generate {
         card.setProducts(Card.Product.VP, 7);
         cards.add(card);
 
-        card = new Card(Card.Type.STRUCTURE, Era3.Gardens);
+        card = new Card(Card.Type.STRUCTURE, Era2.Gardens);
         card.setCost(Card.Resource.CLAY, 2);
         card.setCost(Card.Resource.WOOD, 1);
         card.setProducts(Card.Product.VP, 5);
         cards.add(card);
 
-        card = new Card(Card.Type.STRUCTURE, Era3.Town_Hall);
+        card = new Card(Card.Type.STRUCTURE, Era2.Town_Hall);
         card.setCost(Card.Resource.STONE, 2);
         card.setCost(Card.Resource.ORE, 1);
         card.setCost(Card.Resource.GLASS, 1);
         card.setProducts(Card.Product.VP, 6);
         cards.add(card);
 
-        card = new Card(Card.Type.STRUCTURE, Era3.Palace);
+        card = new Card(Card.Type.STRUCTURE, Era2.Palace);
         card.setCost(Card.Resource.WOOD, 1);
         card.setCost(Card.Resource.CLAY, 1);
         card.setCost(Card.Resource.ORE, 1);
@@ -524,98 +521,98 @@ public class Generate {
         card.setProducts(Card.Product.VP, 8);
         cards.add(card);
 
-        card = new Card(Card.Type.STRUCTURE, Era3.Senate);
+        card = new Card(Card.Type.STRUCTURE, Era2.Senate);
         card.setCost(Card.Resource.WOOD, 2);
         card.setCost(Card.Resource.ORE, 1);
         card.setCost(Card.Resource.STONE, 1);
         card.setProducts(Card.Product.VP, 6);
         cards.add(card);
 
-        card = new Card(Card.Type.COMMERCIAL, Era3.Haven);
+        card = new Card(Card.Type.COMMERCIAL, Era2.Haven);
         card.setCost(Card.Resource.ORE, 1);
         card.setCost(Card.Resource.WOOD, 1);
         card.setCost(Card.Resource.CLOTH, 1);
         card.setMessage("1 coin and 1 vp for each resource card.");
         cards.add(card);
 
-        card = new Card(Card.Type.COMMERCIAL, Era3.Lighthouse);
+        card = new Card(Card.Type.COMMERCIAL, Era2.Lighthouse);
         card.setCost(Card.Resource.STONE, 1);
         card.setCost(Card.Resource.GLASS, 1);
         card.setMessage("1 coin and 1 vp for each commercial card.");
         cards.add(card);
 
-        card = new Card(Card.Type.COMMERCIAL, Era3.Chamber_Of_Commerce);
+        card = new Card(Card.Type.COMMERCIAL, Era2.Chamber_Of_Commerce);
         card.setCost(Card.Resource.CLAY, 2);
         card.setCost(Card.Resource.PAPER, 1);
         card.setMessage("2 coins and 2 vps for each industrial card.");
         cards.add(card);
 
-        card = new Card(Card.Type.COMMERCIAL, Era3.Arena);
+        card = new Card(Card.Type.COMMERCIAL, Era2.Arena);
         card.setCost(Card.Resource.STONE, 2);
         card.setCost(Card.Resource.ORE, 1);
         card.setMessage("3 coins and 1 vp for each completed wonder stage.");
         cards.add(card);
 
-        card = new Card(Card.Type.MILITARY, Era3.Fortifications);
+        card = new Card(Card.Type.MILITARY, Era2.Fortifications);
         card.setCost(Card.Resource.ORE, 3);
         card.setCost(Card.Resource.STONE, 1);
         card.setProducts(Card.Product.SHIELD, 3);
         cards.add(card);
 
-        card = new Card(Card.Type.MILITARY, Era3.Circus);
+        card = new Card(Card.Type.MILITARY, Era2.Circus);
         card.setCost(Card.Resource.STONE, 3);
         card.setCost(Card.Resource.ORE, 1);
         card.setProducts(Card.Product.SHIELD, 3);
         cards.add(card);
 
-        card = new Card(Card.Type.MILITARY, Era3.Arsenal);
+        card = new Card(Card.Type.MILITARY, Era2.Arsenal);
         card.setCost(Card.Resource.ORE, 1);
         card.setCost(Card.Resource.WOOD, 2);
         card.setCost(Card.Resource.CLOTH, 1);
         card.setProducts(Card.Product.SHIELD, 3);
         cards.add(card);
 
-        card = new Card(Card.Type.MILITARY, Era3.Siege_Workshop);
+        card = new Card(Card.Type.MILITARY, Era2.Siege_Workshop);
         card.setCost(Card.Resource.CLAY, 3);
         card.setCost(Card.Resource.WOOD, 1);
         card.setProducts(Card.Product.SHIELD, 3);
         cards.add(card);
 
-        card = new Card(Card.Type.SCIENCE, Era3.Lodge);
+        card = new Card(Card.Type.SCIENCE, Era2.Lodge);
         card.setCost(Card.Resource.CLAY, 2);
         card.setCost(Card.Resource.CLOTH, 1);
         card.setCost(Card.Resource.PAPER, 1);
         card.setProducts(Card.Product.COMPASS, 1);
         cards.add(card);
 
-        card = new Card(Card.Type.SCIENCE, Era3.Observatory);
+        card = new Card(Card.Type.SCIENCE, Era2.Observatory);
         card.setCost(Card.Resource.ORE, 2);
         card.setCost(Card.Resource.GLASS, 1);
         card.setCost(Card.Resource.CLOTH, 1);
         card.setProducts(Card.Product.GEAR, 1);
         cards.add(card);
 
-        card = new Card(Card.Type.SCIENCE, Era3.University);
+        card = new Card(Card.Type.SCIENCE, Era2.University);
         card.setCost(Card.Resource.WOOD, 2);
         card.setCost(Card.Resource.GLASS, 1);
         card.setCost(Card.Resource.PAPER, 1);
         card.setProducts(Card.Product.TABLET, 1);
         cards.add(card);
 
-        card = new Card(Card.Type.SCIENCE, Era3.Academy);
+        card = new Card(Card.Type.SCIENCE, Era2.Academy);
         card.setCost(Card.Resource.GLASS, 2);
         card.setCost(Card.Resource.STONE, 3);
         card.setProducts(Card.Product.COMPASS, 1);
         cards.add(card);
 
-        card = new Card(Card.Type.SCIENCE, Era3.Study);
+        card = new Card(Card.Type.SCIENCE, Era2.Study);
         card.setCost(Card.Resource.WOOD, 1);
         card.setCost(Card.Resource.CLOTH, 1);
         card.setCost(Card.Resource.PAPER, 1);
         card.setProducts(Card.Product.GEAR, 1);
         cards.add(card);
 
-        card = new Card(Card.Type.GUILD, Era3.Workers_Guild);
+        card = new Card(Card.Type.GUILD, Era2.Workers_Guild);
         card.setCost(Card.Resource.ORE, 2);
         card.setCost(Card.Resource.CLAY, 1);
         card.setCost(Card.Resource.STONE, 1);
@@ -624,14 +621,14 @@ public class Generate {
                 "1 vp for each resource card owned by adjacent players.");
         cards.add(card);
 
-        card = new Card(Card.Type.GUILD, Era3.Craftmens_Guild);
+        card = new Card(Card.Type.GUILD, Era2.Craftmens_Guild);
         card.setCost(Card.Resource.ORE, 2);
         card.setCost(Card.Resource.STONE, 2);
         card.setMessage(
                 "2 vps for each industrial card owned by adjacent players.");
         cards.add(card);
 
-        card = new Card(Card.Type.GUILD, Era3.Traders_Guild);
+        card = new Card(Card.Type.GUILD, Era2.Traders_Guild);
         card.setCost(Card.Resource.CLOTH, 1);
         card.setCost(Card.Resource.PAPER, 1);
         card.setCost(Card.Resource.GLASS, 1);
@@ -639,7 +636,7 @@ public class Generate {
                 "1 vp for each commercial card owned by adjacent players.");
         cards.add(card);
 
-        card = new Card(Card.Type.GUILD, Era3.Philosophers_Guild);
+        card = new Card(Card.Type.GUILD, Era2.Philosophers_Guild);
         card.setCost(Card.Resource.CLAY, 3);
         card.setCost(Card.Resource.CLOTH, 1);
         card.setCost(Card.Resource.PAPER, 1);
@@ -647,14 +644,14 @@ public class Generate {
                 "1 vp for each scientific card owned by adjacent players.");
         cards.add(card);
 
-        card = new Card(Card.Type.GUILD, Era3.Spy_Guild);
+        card = new Card(Card.Type.GUILD, Era2.Spy_Guild);
         card.setCost(Card.Resource.CLAY, 3);
         card.setCost(Card.Resource.GLASS, 1);
         card.setMessage(
                 "1 vp for each military card owned by adjacent players.");
         cards.add(card);
 
-        card = new Card(Card.Type.GUILD, Era3.Strategy_Guild);
+        card = new Card(Card.Type.GUILD, Era2.Strategy_Guild);
         card.setCost(Card.Resource.ORE, 2);
         card.setCost(Card.Resource.STONE, 1);
         card.setCost(Card.Resource.CLOTH, 1);
@@ -662,7 +659,7 @@ public class Generate {
                 "1 vp for each military defeat by adjacent players.");
         cards.add(card);
 
-        card = new Card(Card.Type.GUILD, Era3.Shipowners_Guild);
+        card = new Card(Card.Type.GUILD, Era2.Shipowners_Guild);
         card.setCost(Card.Resource.WOOD, 3);
         card.setCost(Card.Resource.PAPER, 1);
         card.setCost(Card.Resource.GLASS, 1);
@@ -670,7 +667,7 @@ public class Generate {
                 "1 vp for each resource, industrial, and guild card.");
         cards.add(card);
 
-        card = new Card(Card.Type.GUILD, Era3.Scientists_Guild);
+        card = new Card(Card.Type.GUILD, Era2.Scientists_Guild);
         card.setCost(Card.Resource.WOOD, 2);
         card.setCost(Card.Resource.ORE, 2);
         card.setCost(Card.Resource.CLOTH, 1);
@@ -678,7 +675,7 @@ public class Generate {
                 "Counts as either a compass, gear or tablet.");
         cards.add(card);
 
-        card = new Card(Card.Type.GUILD, Era3.Magistrates_Guild);
+        card = new Card(Card.Type.GUILD, Era2.Magistrates_Guild);
         card.setCost(Card.Resource.WOOD, 3);
         card.setCost(Card.Resource.STONE, 1);
         card.setCost(Card.Resource.CLOTH, 1);
@@ -686,7 +683,7 @@ public class Generate {
                 "1 vp for each structure card owned by adjacent players.");
         cards.add(card);
 
-        card = new Card(Card.Type.GUILD, Era3.Builders_Guild);
+        card = new Card(Card.Type.GUILD, Era2.Builders_Guild);
         card.setCost(Card.Resource.STONE, 2);
         card.setCost(Card.Resource.CLAY, 2);
         card.setCost(Card.Resource.GLASS, 1);

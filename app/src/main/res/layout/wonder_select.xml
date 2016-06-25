@@ -5,8 +5,10 @@
     android:orientation="vertical">
 
     <RadioGroup
-        android:layout_width="match_parent"
+        android:id="@+id/wonder_switch"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
         android:orientation="horizontal">
 
         <RadioButton
@@ -20,5 +22,17 @@
             android:text="@string/wonder_side_b" />
 
     </RadioGroup>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scrollbars="vertical">
+
+        <TextView
+            android:id="@+id/text"
+            android:layout_height="wrap_content"
+            android:layout_width="match_parent" />
+
+    </ScrollView>
 
 </LinearLayout>

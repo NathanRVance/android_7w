@@ -1,14 +1,12 @@
 package net.dumtoad.android_7w.cards;
 
+import android.os.Bundle;
+
 import net.dumtoad.android_7w.ai.AI;
 import net.dumtoad.android_7w.controller.MasterViewController;
-import net.dumtoad.android_7w.controller.TableController;
 
 import java.util.ArrayList;
 
-/**
- * Created by nathav63 on 7/29/15.
- */
 public class Player {
 
     private Hand hand;
@@ -16,18 +14,51 @@ public class Player {
     private MasterViewController mvc;
     private final String name;
     private Wonder wonder;
+    private boolean wonderSide;
     private final boolean isAI;
     private AI ai;
+    private int gold;
 
     public Player(MasterViewController mvc, boolean isAI, String name) {
         this.mvc = mvc;
         playedCards = new ArrayList<>();
         this.isAI = isAI;
         this.name = name;
+        hand = new Hand();
+    }
+
+    public Player(MasterViewController mvc, Bundle savedInstanceState) {
+        this.isAI = savedInstanceState.getBoolean("isAI");
+        this.name = savedInstanceState.getString("name");
+        this.hand = new Hand(mvc.getDatabase().getAllCards(), savedInstanceState.getString("hand"));
+        String wonderName = savedInstanceState.getString("wonder");
+        for(Wonder wonder : Generate.getWonders()) {
+            if(wonder.getName().toString().equals(wonderName)) {
+                this.wonder = wonder;
+                break;
+            }
+        }
+        this.wonderSide = savedInstanceState.getBoolean("player" + name + "wonderSide");
+        this.gold = savedInstanceState.getInt("player" + name + "gold");
+    }
+
+    public Bundle getInstanceState() {
+        Bundle outstate = new Bundle();
+        outstate.putBoolean("isAI", isAI);
+        outstate.putString("name", name);
+        outstate.putString("hand", hand.getOrder());
+        outstate.putString("wonder", wonder.getName().toString());
+        outstate.putBoolean("wonderSide", wonderSide);
+        outstate.putInt("gold", gold);
+        return outstate;
     }
 
     public void setWonder(Wonder wonder) {
         this.wonder = wonder;
+    }
+
+    public Wonder getWonder() {
+        return wonder;
     }
 
     public boolean isAI() {
@@ -40,6 +71,14 @@ public class Player {
 
     public AI getAI() {
         return ai;
+    }
+
+    public void setWonderSide(boolean wonderSide) {
+        this.wonderSide = wonderSide;
+    }
+
+    public boolean getWonderSide() {
+        return wonderSide;
     }
 
     public String getName() {
@@ -66,6 +105,7 @@ public class Player {
     public void discardCard(Card card) {
         hand.remove(card);
         mvc.getTableController().discard(card);
+        gold += 3;
     }
 
 }

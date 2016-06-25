@@ -1,16 +1,14 @@
 package net.dumtoad.android_7w.cards;
 
+import android.os.Bundle;
+
 import java.util.ArrayList;
 import java.util.Collections;
 
-/**
- * Created by nathav63 on 7/27/15.
- */
 public class Database {
 
     private ArrayList<Wonder> wonders;
     private ArrayList<Deck> decks;
-    private ArrayList<Hand> hands;
     private int numPlayers;
 
     public Database(int numPlayers) {
@@ -21,9 +19,9 @@ public class Database {
         Collections.shuffle(wonders);
 
         decks = new ArrayList<>();
+        decks.add(Generate.getEra0Deck(numPlayers));
         decks.add(Generate.getEra1Deck(numPlayers));
-        decks.add(Generate.getEra2Deck(numPlayers));
-        decks.add(Generate.getEra3Cards(numPlayers)); //Contains numPlayers * 6 - 2 cards
+        decks.add(Generate.getEra2Cards(numPlayers)); //Contains numPlayers * 6 - 2 cards
 
         Deck guilds = Generate.getGuildCards();
         Collections.shuffle(guilds);
@@ -37,8 +35,8 @@ public class Database {
         }
     }
 
-    public void dealHands(int era) {
-        hands = new ArrayList<>();
+    public ArrayList<Hand> dealHands(int era) {
+        ArrayList<Hand> hands = new ArrayList<>();
         int index = 0;
         for(int i = 0; i < numPlayers; i++) {
             Hand hand = new Hand();
@@ -48,14 +46,44 @@ public class Database {
             hand.sort();
             hands.add(hand);
         }
-    }
-
-    public ArrayList<Hand> getHands() {
         return hands;
     }
 
     public Wonder drawWonder() {
         return(wonders.remove(0));
+    }
+
+    public Bundle getInstanceState() {
+        Bundle outstate = new Bundle();
+        ArrayList<String> order = new ArrayList<>();
+        for(Deck deck : decks) {
+            order.add(deck.getOrder());
+        }
+        outstate.putStringArrayList("deckOrder", order);
+        return outstate;
+    }
+
+    public Deck getAllCards() {
+        Deck deck = Generate.getEra0Deck(7);
+        deck.addAll(Generate.getEra1Deck(7));
+        deck.addAll(Generate.getEra2Cards(7));
+        deck.addAll(Generate.getGuildCards());
+        return deck;
+    }
+
+    public void onRestoreInstanceState (Bundle savedInstanceState) {
+        numPlayers = savedInstanceState.getInt("numPlayers");
+        ArrayList<String> order = savedInstanceState.getStringArrayList("deckOrder");
+        if(order == null) {
+            return;
+        }
+        decks = new ArrayList<>();
+        decks.add(new Deck(Generate.getEra0Deck(numPlayers), order.get(0)));
+        decks.add(new Deck(Generate.getEra1Deck(numPlayers), order.get(1)));
+
+        Deck era2 = Generate.getEra2Cards(numPlayers);
+        era2.addAll(Generate.getGuildCards());
+        decks.add(new Deck(era2, order.get(2)));
     }
 
 }

@@ -2,10 +2,15 @@ package net.dumtoad.android_7w.cards;
 
 import java.util.ArrayList;
 
-/**
- * Created by nathav63 on 7/28/15.
- */
-public class Hand extends ArrayList<Card> {
+public class Hand extends CardCollection {
+
+    public Hand(ArrayList<Card> cards, String order) {
+        super(cards, order);
+    }
+
+    public Hand() {
+        super();
+    }
 
     //Sorts by type
     public void sort() {

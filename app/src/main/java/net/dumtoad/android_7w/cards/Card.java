@@ -1,20 +1,27 @@
 package net.dumtoad.android_7w.cards;
 
-import java.util.ArrayList;
-import java.util.HashMap;
+import android.content.Context;
+import android.support.v4.content.ContextCompat;
+import android.text.SpannableStringBuilder;
+import android.text.Spanned;
+import android.text.style.CharacterStyle;
+import android.text.style.ForegroundColorSpan;
 
-/**
- * Created by nathav63 on 7/27/15.
- */
+import net.dumtoad.android_7w.MainActivity;
+
+import java.util.ArrayList;
+import java.util.SortedMap;
+import java.util.TreeMap;
+
 public class Card {
 
     private Type type;
     private Enum name;
-    private String message;
-    private HashMap<Resource, Integer> cost;
-    private HashMap<Product, Integer> products;
-    public ArrayList<Enum> couponsFor;
-    public ArrayList<Enum> couponedBy;
+    private String message = "";
+    private SortedMap<Resource, Integer> cost;
+    private SortedMap<Product, Integer> products;
+    public ArrayList<Card> couponsFor;
+    public ArrayList<Card> couponedBy;
 
     public enum Type {
         RESOURCE,
@@ -54,18 +61,37 @@ public class Card {
         VP
     }
 
+    boolean isBaseResource(String name) {
+        switch(name.toLowerCase()) {
+            case "wood":
+            case "stone":
+            case "clay":
+            case "ore":
+            case "cloth":
+            case "glass":
+            case "paper":
+                return true;
+            default: return false;
+        }
+    }
+
+    public static int getColorId(String id) {
+        Context context = MainActivity.getMainActivity();
+        return ContextCompat.getColor(context, context.getResources().getIdentifier(id, "color", context.getPackageName()));
+    }
+
     public Card(Type type, Enum name) {
         this.type = type;
         this.name = name;
         this.message = "";
 
         //Instantiate both to zero
-        cost = new HashMap<>();
+        cost = new TreeMap<>();
         for(Resource res : Resource.values()) {
             cost.put(res, 0);
         }
 
-        products = new HashMap<>();
+        products = new TreeMap<>();
         for(Product prod : Product.values()) {
             products.put(prod, 0);
         }
@@ -90,10 +116,6 @@ public class Card {
         this.message = message;
     }
 
-    public String getMessage() {
-        return message;
-    }
-
     public void setCost(Resource resource, int num) {
         cost.put(resource, num);
     }
@@ -102,39 +124,98 @@ public class Card {
         products.put(product, num);
     }
 
-    public HashMap<Resource, Integer> getCost() {
-        return cost;
-    }
-
-    public HashMap<Product, Integer> getProducts() {
-        return products;
-    }
-
     public void couponFor(Card card) {
-        couponsFor.add(card.getName());
+        couponsFor.add(card);
         card.couponedBy(this);
     }
 
     public void couponedBy(Card card) {
-        couponedBy.add(card.getName());
+        couponedBy.add(card);
     }
 
-    //Makes a new card that looks exactly the same as this one
-    public Card getCopy() {
-        Card card = new Card(type, name);
-        card.setMessage(message);
-        for(Resource res : Resource.values()) {
-            card.setCost(res, cost.get(res));
+    public static void appendSb(SpannableStringBuilder sb, String text, CharacterStyle style)
+    {
+        sb.append(text);
+        sb.setSpan(style, sb.length()-text.length(), sb.length(), Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
+    }
+
+    public SpannableStringBuilder getSummary()
+    {
+
+        SpannableStringBuilder sb = new SpannableStringBuilder();
+        ForegroundColorSpan fcs = new ForegroundColorSpan(getColorId(type.toString()));
+        appendSb(sb, type.toString(), fcs);
+        sb.append('\n');
+        int numNonZero;
+
+        numNonZero=0;
+        for(Integer i : cost.values()) {
+            if(! i.equals(0))
+                numNonZero++;
         }
-        for(Product prod : Product.values()) {
-            card.setProducts(prod, products.get(prod));
+        if(numNonZero != 0) {
+            sb.append("Costs:\n");
+            for(Resource resource : cost.keySet()) {
+                if(cost.get(resource).equals(0))
+                    continue;
+                sb.append(" ");
+                fcs = new ForegroundColorSpan(getColorId(resource.toString()));
+                appendSb(sb, resource.toString().toLowerCase(), fcs);
+                sb.append(": ");
+                sb.append(cost.get(resource).toString());
+                sb.append("\n");
+            }
         }
-        for(Enum e : couponsFor) {
-            card.couponsFor.add(e);
+
+        numNonZero=0;
+        for(Integer i : products.values()) {
+            if(! i.equals(0))
+                numNonZero++;
         }
-        for(Enum e : couponedBy) {
-            card.couponedBy.add(e);
+        if(numNonZero != 0) {
+            sb.append("Produces:\n");
+            int i = 1;
+            for(Product product : products.keySet()) {
+                if(products.get(product).equals(0))
+                    continue;
+                sb.append(" ");
+                fcs = new ForegroundColorSpan(getColorId(product.toString()));
+                appendSb(sb, product.toString().toLowerCase(), fcs);
+                sb.append(": ");
+                sb.append(products.get(product).toString());
+                if(i < numNonZero && isBaseResource(product.toString())) {
+                    sb.append("\tor");
+                }
+                sb.append("\n");
+                i++;
+            }
         }
-        return card;
+
+        if(! message.isEmpty()) {
+            sb.append(message);
+            sb.append('\n');
+        }
+
+        if(! couponedBy.isEmpty()) {
+            sb.append("Free if owned:\n");
+            for(Card card : couponedBy) {
+                sb.append(" ");
+                fcs = new ForegroundColorSpan(getColorId(card.getType().toString()));
+                appendSb(sb, card.getNameString(), fcs);
+                sb.append("\n");
+            }
+        }
+
+        if(! couponsFor.isEmpty()) {
+            sb.append("Free if owned:\n");
+            for(Card card : couponsFor) {
+                sb.append(" ");
+                fcs = new ForegroundColorSpan(getColorId(card.getType().toString()));
+                appendSb(sb, card.getNameString(), fcs);
+                sb.append("\n");
+            }
+        }
+
+        return sb;
     }
 }

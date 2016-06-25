@@ -1,16 +1,15 @@
 package net.dumtoad.android_7w.cards;
 
+import android.text.SpannableStringBuilder;
+import android.text.style.ForegroundColorSpan;
+
 import java.util.ArrayList;
 
-/**
- * Created by nathav63 on 7/28/15.
- */
 public class Wonder {
 
     private Enum name;
     private ArrayList<Card> stagesA;
     private ArrayList<Card> stagesB;
-    private boolean side;
     private Card.Resource resource;
 
     public Wonder(Enum name) {
@@ -49,19 +48,28 @@ public class Wonder {
         return stagesB;
     }
 
-    public void setSide(boolean isSideA) {
-        side = isSideA;
-    }
-
-    public boolean getSide() {
-        return side;
-    }
-
-    public ArrayList<Card> getStages() {
+    public ArrayList<Card> getStages(boolean side) {
         if(side)
             return stagesA;
         else
             return stagesB;
+    }
+
+    public SpannableStringBuilder getSummary(boolean side) {
+        SpannableStringBuilder sb = new SpannableStringBuilder();
+        sb.append(getNameString());
+        sb.append('\n');
+        sb.append("produces: ");
+        ForegroundColorSpan fcs = new ForegroundColorSpan(Card.getColorId(resource.toString()));
+        Card.appendSb(sb, resource.toString().toLowerCase(), fcs);
+        ArrayList<Card> stages = getStages(side);
+        for(Card card : stages) {
+            sb.append('\n');
+            sb.append(card.getSummary());
+            sb.append("\n--------\n");
+        }
+
+        return sb;
     }
 
 }

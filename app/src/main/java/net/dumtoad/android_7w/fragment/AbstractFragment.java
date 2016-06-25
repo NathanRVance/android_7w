@@ -7,9 +7,6 @@ import android.os.Bundle;
 import net.dumtoad.android_7w.MainActivity;
 import net.dumtoad.android_7w.controller.MasterViewController;
 
-/**
- * Created by nathav63 on 8/11/15.
- */
 public class AbstractFragment extends Fragment {
 
     protected MasterViewController mvc;

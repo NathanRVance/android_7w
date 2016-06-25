@@ -16,4 +16,27 @@
     <item name="gray" type="color">#ffb4b4b4</item>
     <item name="darkgray" type="color">#ff6a6a6a</item>
 
+    <item name="RESOURCE" type="color">#6b301c</item>
+    <item name="INDUSTRY" type="color">#96948f</item>
+    <item name="STRUCTURE" type="color">#027cbf</item>
+    <item name="COMMERCIAL" type="color">#ffa72c</item>
+    <item name="MILITARY" type="color">#f72d19</item>
+    <item name="SCIENCE" type="color">#089547</item>
+    <item name="GUILD" type="color">#493f8b</item>
+    <item name="STAGE" type="color">#000000</item>
+
+    <item name="WOOD" type="color">#6b301c</item>
+    <item name="STONE" type="color">#ff6a6a6a</item>
+    <item name="CLAY" type="color">#6b1c1c</item>
+    <item name="ORE" type="color">#6b1c1c</item>
+    <item name="CLOTH" type="color">#8c0062</item>
+    <item name="GLASS" type="color">#4d6db3</item>
+    <item name="PAPER" type="color">#bfb770</item>
+    <item name="GOLD" type="color">#848600</item>
+    <item name="COMPASS" type="color">#002686</item>
+    <item name="GEAR" type="color">#414141</item>
+    <item name="TABLET" type="color">#591e03</item>
+    <item name="SHIELD" type="color">#de0000</item>
+    <item name="VP" type="color">#848600</item>
+
 </resources>
