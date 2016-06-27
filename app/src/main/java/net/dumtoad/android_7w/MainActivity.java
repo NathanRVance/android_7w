@@ -34,8 +34,8 @@ public class MainActivity extends Activity {
         return mainActivity;
     }
 
-    public MasterViewController getMasterViewController() {
-        return mvc;
+    public static MasterViewController getMasterViewController() {
+        return getMainActivity().mvc;
     }
 
 

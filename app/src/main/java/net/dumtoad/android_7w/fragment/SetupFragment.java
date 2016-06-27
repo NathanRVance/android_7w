@@ -1,6 +1,5 @@
 package net.dumtoad.android_7w.fragment;
 
-import android.app.Activity;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,17 +9,12 @@ import android.widget.LinearLayout;
 
 import net.dumtoad.android_7w.MainActivity;
 import net.dumtoad.android_7w.R;
-import net.dumtoad.android_7w.controller.MasterViewController;
 import net.dumtoad.android_7w.view.SetupPlayerItem;
 
 import java.util.ArrayList;
 
-/**
- * Created by nathav63 on 7/28/15.
- */
 public class SetupFragment extends AbstractFragment {
 
-    private MasterViewController mvc;
     private int numPlayers = 3;
     private ArrayList<SetupPlayerItem> setupItems;
     private String[] names;
@@ -28,12 +22,6 @@ public class SetupFragment extends AbstractFragment {
     private LinearLayout playerSelectLayout;
     private Button addButton;
     private Button subtractButton;
-
-    @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
-        this.mvc = ((MainActivity) getActivity()).getMasterViewController();
-    }
 
     @Override
     public View onCreateView(final LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
@@ -112,7 +100,7 @@ public class SetupFragment extends AbstractFragment {
             addSetupItem();
         }
 
-        this.mvc = ((MainActivity) getActivity()).getMasterViewController();
+        this.mvc = MainActivity.getMasterViewController();
     }
 
     @Override
@@ -125,7 +113,7 @@ public class SetupFragment extends AbstractFragment {
 
     private void addSetupItem() {
         final int index = setupItems.size();
-        String name = "Player " + setupItems.size() + " ai?";
+        String name = "Player " + (setupItems.size()+1);
         names[index] = name;
 
         SetupPlayerItem item = new SetupPlayerItem(getActivity(), names, ais, setupItems.size());

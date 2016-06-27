@@ -1,7 +1,7 @@
 package net.dumtoad.android_7w.fragment;
 
-import android.app.Activity;
 import android.app.Fragment;
+import android.content.Context;
 import android.os.Bundle;
 
 import net.dumtoad.android_7w.MainActivity;
@@ -12,14 +12,14 @@ public class AbstractFragment extends Fragment {
     protected MasterViewController mvc;
 
     @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
-        this.mvc = ((MainActivity) activity).getMasterViewController();
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        this.mvc = MainActivity.getMasterViewController();
     }
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        this.mvc = ((MainActivity) getActivity()).getMasterViewController();
+        this.mvc = MainActivity.getMasterViewController();
     }
 }

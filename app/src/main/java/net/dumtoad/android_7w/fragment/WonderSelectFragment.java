@@ -12,23 +12,28 @@ import net.dumtoad.android_7w.MainActivity;
 import net.dumtoad.android_7w.R;
 import net.dumtoad.android_7w.cards.Player;
 
+import java.util.ArrayList;
+
 public class WonderSelectFragment extends AbstractFragment {
 
     private RadioButton buttA;
 
-    public void setPlayerNum(int playerNum) {
+    public void setPlayers(ArrayList<Integer> nums) {
         Bundle bundle = new Bundle();
-        bundle.putInt("PlayerNum", playerNum);
+        bundle.putIntegerArrayList("PlayerNums", nums);
         setArguments(bundle);
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        this.mvc = ((MainActivity) getActivity()).getMasterViewController();
-        int playerNum = getArguments().getInt("PlayerNum");
+        this.mvc = MainActivity.getMasterViewController();
+        final ArrayList<Integer> playerNums = getArguments().getIntegerArrayList("PlayerNums");
+        int playerNum = playerNums.remove(0);
         final Player player = mvc.getPlayer(playerNum);
 
         final View view = inflater.inflate(R.layout.wonder_select, container, false);
+
+        ((TextView) view.findViewById(R.id.player_name)).setText(player.getName());
 
         final TextView tv = (TextView) view.findViewById(R.id.text);
         tv.setText(player.getWonder().getSummary(true));
@@ -42,6 +47,7 @@ public class WonderSelectFragment extends AbstractFragment {
                 RadioButton rb = (RadioButton) v;
                 if(rb.isChecked()) {
                     tv.setText(player.getWonder().getSummary(true));
+                    player.setWonderSide(true);
                 }
             }
         });
@@ -52,6 +58,7 @@ public class WonderSelectFragment extends AbstractFragment {
                 RadioButton rb = (RadioButton) v;
                 if(rb.isChecked()) {
                     tv.setText(player.getWonder().getSummary(false));
+                    player.setWonderSide(false);
                 }
             }
         });
@@ -59,13 +66,31 @@ public class WonderSelectFragment extends AbstractFragment {
         if(savedInstanceState != null) {
             if (savedInstanceState.getBoolean("selectedSides")) {
                 buttA.setChecked(true);
+                player.setWonderSide(true);
             } else {
                 buttB.setChecked(true);
                 tv.setText(player.getWonder().getSummary(false));
+                player.setWonderSide(false);
             }
         } else {
             buttA.setChecked(true);
+            player.setWonderSide(true);
         }
+
+        view.findViewById(R.id.ok).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(playerNums.isEmpty()) {
+                    mvc.startMainGame();
+                } else {
+                    WonderSelectFragment frag = new WonderSelectFragment();
+                    frag.setPlayers(playerNums);
+                    getActivity().getFragmentManager().beginTransaction()
+                            .replace(R.id.main_layout, frag, "WonderSelect")
+                            .commit();
+                }
+            }
+        });
 
         return view;
     }

@@ -7,9 +7,10 @@ import net.dumtoad.android_7w.R;
 import net.dumtoad.android_7w.ai.AI;
 import net.dumtoad.android_7w.cards.Database;
 import net.dumtoad.android_7w.cards.Player;
-import net.dumtoad.android_7w.cards.Wonder;
 import net.dumtoad.android_7w.fragment.SetupFragment;
 import net.dumtoad.android_7w.fragment.WonderSelectFragment;
+
+import java.util.ArrayList;
 
 public class MasterViewController {
 
@@ -40,22 +41,22 @@ public class MasterViewController {
         database = new Database(numPlayers);
 
         players = new Player[numPlayers];
-
+        ArrayList<Integer> humanPlayerIndecies = new ArrayList<>();
         for(int i = 0; i < numPlayers; i++) {
             players[i] = new Player(this, ais[i], names[i]);
-            Wonder wonder = database.drawWonder();
-            players[i].setWonder(wonder);
+            players[i].setWonder(database.drawWonder());
 
             if(players[i].isAI()) {
                 players[i].setAI(new AI(players[i]));
             } else {
-                WonderSelectFragment frag = new WonderSelectFragment();
-                frag.setPlayerNum(i);
-                activity.getFragmentManager().beginTransaction()
-                        .replace(R.id.main_layout, frag, "WonderSelect")
-                        .commit();
+                humanPlayerIndecies.add(i);
             }
         }
+        WonderSelectFragment frag = new WonderSelectFragment();
+        frag.setPlayers(humanPlayerIndecies);
+        activity.getFragmentManager().beginTransaction()
+                .replace(R.id.main_layout, frag, "WonderSelect")
+                .commit();
     }
 
     public Player getPlayer(int index) {
@@ -63,6 +64,10 @@ public class MasterViewController {
             return players[index];
         }
         return null;
+    }
+
+    public void startMainGame() {
+
     }
 
     public Database getDatabase() {
