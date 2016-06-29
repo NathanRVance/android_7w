@@ -27,4 +27,18 @@ public class CardCollection extends ArrayList<Card> {
         return sb.toString();
     }
 
+    //Sorts by type
+    public void sort() {
+        ArrayList<Card> sorted = new ArrayList<>();
+        for(Card.Type type : Card.Type.values()) {
+            for(Card card : this) {
+                if(card.getType().equals(type)) {
+                    sorted.add(card);
+                }
+            }
+        }
+        this.clear();
+        this.addAll(sorted);
+    }
+
 }

@@ -40,14 +40,6 @@ public class Wonder {
         return name;
     }
 
-    public ArrayList<Card> getStagesA() {
-        return stagesA;
-    }
-
-    public ArrayList<Card> getStagesB() {
-        return stagesB;
-    }
-
     public ArrayList<Card> getStages(boolean side) {
         if(side)
             return stagesA;

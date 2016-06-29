@@ -18,12 +18,6 @@ public class WonderSelectFragment extends AbstractFragment {
 
     private RadioButton buttA;
 
-    public void setPlayers(ArrayList<Integer> nums) {
-        Bundle bundle = new Bundle();
-        bundle.putIntegerArrayList("PlayerNums", nums);
-        setArguments(bundle);
-    }
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         this.mvc = MainActivity.getMasterViewController();
@@ -84,7 +78,9 @@ public class WonderSelectFragment extends AbstractFragment {
                     mvc.startMainGame();
                 } else {
                     WonderSelectFragment frag = new WonderSelectFragment();
-                    frag.setPlayers(playerNums);
+                    Bundle bundle = new Bundle();
+                    bundle.putIntegerArrayList("PlayerNums", playerNums);
+                    frag.setArguments(bundle);
                     getActivity().getFragmentManager().beginTransaction()
                             .replace(R.id.main_layout, frag, "WonderSelect")
                             .commit();

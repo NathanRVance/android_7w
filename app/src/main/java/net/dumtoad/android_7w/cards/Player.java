@@ -10,7 +10,7 @@ import java.util.ArrayList;
 public class Player {
 
     private Hand hand;
-    private ArrayList<Card> playedCards;
+    private CardCollection playedCards;
     private MasterViewController mvc;
     private final String name;
     private Wonder wonder;
@@ -21,7 +21,7 @@ public class Player {
 
     public Player(MasterViewController mvc, boolean isAI, String name) {
         this.mvc = mvc;
-        playedCards = new ArrayList<>();
+        playedCards = new CardCollection();
         this.isAI = isAI;
         this.name = name;
         hand = new Hand();
@@ -31,6 +31,7 @@ public class Player {
         this.isAI = savedInstanceState.getBoolean("isAI");
         this.name = savedInstanceState.getString("name");
         this.hand = new Hand(mvc.getDatabase().getAllCards(), savedInstanceState.getString("hand"));
+        this.playedCards = new CardCollection(mvc.getDatabase().getAllCards(), savedInstanceState.getString("playedCards"));
         String wonderName = savedInstanceState.getString("wonder");
         for(Wonder wonder : Generate.getWonders()) {
             if(wonder.getName().toString().equals(wonderName)) {
@@ -38,8 +39,8 @@ public class Player {
                 break;
             }
         }
-        this.wonderSide = savedInstanceState.getBoolean("player" + name + "wonderSide");
-        this.gold = savedInstanceState.getInt("player" + name + "gold");
+        this.wonderSide = savedInstanceState.getBoolean("wonderSide");
+        this.gold = savedInstanceState.getInt("gold");
     }
 
     public Bundle getInstanceState() {
@@ -47,6 +48,7 @@ public class Player {
         outstate.putBoolean("isAI", isAI);
         outstate.putString("name", name);
         outstate.putString("hand", hand.getOrder());
+        outstate.putString("playedCards", playedCards.getOrder());
         outstate.putString("wonder", wonder.getName().toString());
         outstate.putBoolean("wonderSide", wonderSide);
         outstate.putInt("gold", gold);
@@ -77,8 +79,8 @@ public class Player {
         this.wonderSide = wonderSide;
     }
 
-    public boolean getWonderSide() {
-        return wonderSide;
+    public ArrayList<Card> getWonderStages() {
+        return wonder.getStages(wonderSide);
     }
 
     public String getName() {
@@ -93,7 +95,7 @@ public class Player {
         return hand;
     }
 
-    public ArrayList<Card> getPlayedCards() {
+    public CardCollection getPlayedCards() {
         return playedCards;
     }
 

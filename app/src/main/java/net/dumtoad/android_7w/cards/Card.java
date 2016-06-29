@@ -24,14 +24,14 @@ public class Card {
     public ArrayList<Card> couponedBy;
 
     public enum Type {
+        STAGE,
         RESOURCE,
         INDUSTRY,
         STRUCTURE,
         COMMERCIAL,
         MILITARY,
         SCIENCE,
-        GUILD,
-        STAGE
+        GUILD
     }
 
     public enum Resource {
@@ -100,8 +100,11 @@ public class Card {
         couponsFor = new ArrayList<>();
     }
 
-    public String getNameString() {
-        return name.name().replace("_", " ");
+    public SpannableStringBuilder getNameString() {
+        SpannableStringBuilder sb = new SpannableStringBuilder();
+        ForegroundColorSpan fcs = new ForegroundColorSpan(getColorId(type.toString()));
+        appendSb(sb, name.name().replace("_", " "), fcs);
+        return sb;
     }
 
     public Enum getName() {
@@ -200,8 +203,7 @@ public class Card {
             sb.append("Free if owned:\n");
             for(Card card : couponedBy) {
                 sb.append(" ");
-                fcs = new ForegroundColorSpan(getColorId(card.getType().toString()));
-                appendSb(sb, card.getNameString(), fcs);
+                sb.append(card.getNameString());
                 sb.append("\n");
             }
         }
@@ -210,8 +212,7 @@ public class Card {
             sb.append("Free if owned:\n");
             for(Card card : couponsFor) {
                 sb.append(" ");
-                fcs = new ForegroundColorSpan(getColorId(card.getType().toString()));
-                appendSb(sb, card.getNameString(), fcs);
+                sb.append(card.getNameString());
                 sb.append("\n");
             }
         }
