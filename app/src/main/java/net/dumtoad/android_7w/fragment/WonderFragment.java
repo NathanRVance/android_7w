@@ -29,6 +29,27 @@ public class WonderFragment extends AbstractFragment {
             }
         });
 
+        view.findViewById(R.id.wonder).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mvc.getTableController().getTurnController().showWonder();
+            }
+        });
+
+        view.findViewById(R.id.summary).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mvc.getTableController().getTurnController().showSummary();
+            }
+        });
+
+        view.findViewById(R.id.hand).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mvc.getTableController().getTurnController().showHand();
+            }
+        });
+
         return view;
     }
 

@@ -10,7 +10,7 @@ public class Wonder {
     private Enum name;
     private ArrayList<Card> stagesA;
     private ArrayList<Card> stagesB;
-    private Card.Resource resource;
+    private Card.Resource product;
 
     public Wonder(Enum name) {
         this.name = name;
@@ -24,12 +24,12 @@ public class Wonder {
         this.stagesB = stagesB;
     }
 
-    public void setResource(Card.Resource resource) {
-        this.resource = resource;
+    public void setResource(Card.Resource product) {
+        this.product = product;
     }
 
     public Card.Resource getResource(){
-        return resource;
+        return product;
     }
 
     public String getNameString() {
@@ -52,10 +52,13 @@ public class Wonder {
         sb.append(getNameString());
         sb.append('\n');
         sb.append("produces: ");
-        ForegroundColorSpan fcs = new ForegroundColorSpan(Card.getColorId(resource.toString()));
-        Card.appendSb(sb, resource.toString().toLowerCase(), fcs);
+        ForegroundColorSpan fcs = new ForegroundColorSpan(Card.getColorId(product.toString()));
+        Card.appendSb(sb, product.toString().toLowerCase(), fcs);
+        sb.append('\n');
         ArrayList<Card> stages = getStages(side);
+        int i = 1;
         for(Card card : stages) {
+            sb.append("\nStage " + i++);
             sb.append('\n');
             sb.append(card.getSummary());
             sb.append("\n--------\n");

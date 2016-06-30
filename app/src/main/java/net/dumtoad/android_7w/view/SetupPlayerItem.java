@@ -1,19 +1,18 @@
 package net.dumtoad.android_7w.view;
 
 import android.content.Context;
-import android.util.AttributeSet;
+import android.view.Gravity;
 import android.view.View;
-import android.widget.CheckBox;
 import android.widget.LinearLayout;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.TextView;
 
-/**
- * Created by nathav63 on 7/28/15.
- */
 public class SetupPlayerItem extends LinearLayout {
 
     TextView textView;
-    CheckBox checkBox;
+    RadioButton buttA;
+    RadioButton buttB;
     String names[];
     boolean ais[];
     int index;
@@ -22,43 +21,54 @@ public class SetupPlayerItem extends LinearLayout {
         super(context);
     }
 
-    public SetupPlayerItem(Context context, AttributeSet attrs) {
-        super(context, attrs);
-    }
-
-    public SetupPlayerItem(Context context, AttributeSet attrs, int defStyleAttr) {
-        super(context, attrs, defStyleAttr);
-    }
-
     public SetupPlayerItem(Context context, String names[], boolean ais[], int index) {
         super(context);
         this.names = names;
         this.ais = ais;
         this.index = index;
+        setGravity(Gravity.CENTER_VERTICAL);
         init();
     }
 
     private void init() {
         textView = new TextView(getContext());
         textView.setText(names[index]);
-        checkBox = new CheckBox(getContext());
-        checkBox.setOnClickListener(new View.OnClickListener() {
+        RadioGroup radioGroup = new RadioGroup(getContext());
+
+        radioGroup.setOrientation(HORIZONTAL);
+
+        buttA = new RadioButton(getContext());
+        buttA.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                ais[index] = ((CheckBox) v).isChecked();
+                ais[index] = ! buttA.isChecked();
             }
         });
-        checkBox.setChecked(ais[index]);
+        buttA.setText("human");
+        radioGroup.addView(buttA);
+
+        buttB = new RadioButton(getContext());
+        buttB.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ais[index] = buttB.isChecked();
+            }
+        });
+        buttB.setText("ai");
+        radioGroup.addView(buttB);
+
         addView(textView);
-        addView(checkBox);
+        addView(radioGroup);
+
+        if(ais[index]) {
+            buttB.setChecked(true);
+        } else {
+            buttA.setChecked(true);
+        }
     }
 
     public void setText(String text) {
         textView.setText(text);
-    }
-
-    public void setChecked(boolean checked) {
-        checkBox.setChecked(checked);
     }
 
 }

@@ -10,16 +10,14 @@ import android.text.style.ForegroundColorSpan;
 import net.dumtoad.android_7w.MainActivity;
 
 import java.util.ArrayList;
-import java.util.SortedMap;
-import java.util.TreeMap;
 
 public class Card {
 
     private Type type;
     private Enum name;
     private String message = "";
-    private SortedMap<Resource, Integer> cost;
-    private SortedMap<Product, Integer> products;
+    private ResQuant cost;
+    private ResQuant products;
     public ArrayList<Card> couponsFor;
     public ArrayList<Card> couponedBy;
 
@@ -35,25 +33,14 @@ public class Card {
     }
 
     public enum Resource {
-        WOOD,
-        STONE,
-        CLAY,
-        ORE,
-        CLOTH,
-        GLASS,
-        PAPER,
-        GOLD
-    }
-
-    public enum Product {
-        WOOD,
-        STONE,
-        CLAY,
-        ORE,
-        CLOTH,
-        GLASS,
-        PAPER,
         GOLD,
+        WOOD,
+        STONE,
+        CLAY,
+        ORE,
+        CLOTH,
+        GLASS,
+        PAPER,
         COMPASS,
         GEAR,
         TABLET,
@@ -86,13 +73,13 @@ public class Card {
         this.message = "";
 
         //Instantiate both to zero
-        cost = new TreeMap<>();
+        cost = new ResQuant();
         for(Resource res : Resource.values()) {
             cost.put(res, 0);
         }
 
-        products = new TreeMap<>();
-        for(Product prod : Product.values()) {
+        products = new ResQuant();
+        for(Resource prod : Resource.values()) {
             products.put(prod, 0);
         }
 
@@ -123,8 +110,16 @@ public class Card {
         cost.put(resource, num);
     }
 
-    public void setProducts(Product product, int num) {
+    public ResQuant getCost() {
+        return cost;
+    }
+
+    public void setProducts(Resource product, int num) {
         products.put(product, num);
+    }
+
+    public ResQuant getProducts() {
+        return products;
     }
 
     public void couponFor(Card card) {
@@ -146,9 +141,9 @@ public class Card {
     {
 
         SpannableStringBuilder sb = new SpannableStringBuilder();
-        ForegroundColorSpan fcs = new ForegroundColorSpan(getColorId(type.toString()));
-        appendSb(sb, type.toString(), fcs);
-        sb.append('\n');
+        ForegroundColorSpan fcs;// = new ForegroundColorSpan(getColorId(type.toString()));
+        //appendSb(sb, type.toString(), fcs);
+        //sb.append('\n');
         int numNonZero;
 
         numNonZero=0;
@@ -178,7 +173,7 @@ public class Card {
         if(numNonZero != 0) {
             sb.append("Produces:\n");
             int i = 1;
-            for(Product product : products.keySet()) {
+            for(Resource product : products.keySet()) {
                 if(products.get(product).equals(0))
                     continue;
                 sb.append(" ");
@@ -209,7 +204,7 @@ public class Card {
         }
 
         if(! couponsFor.isEmpty()) {
-            sb.append("Free if owned:\n");
+            sb.append("Makes free:\n");
             for(Card card : couponsFor) {
                 sb.append(" ");
                 sb.append(card.getNameString());

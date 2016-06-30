@@ -35,13 +35,15 @@
     <ScrollView
         android:layout_width="match_parent"
         android:layout_weight="1"
-        android:layout_height="0dp">
+        android:layout_height="0dp" >
 
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:id="@+id/player_select_layout" />
+            android:id="@+id/player_select_layout"
+            android:layout_marginLeft="@dimen/activity_horizontal_margin"
+            android:layout_marginRight="@dimen/activity_horizontal_margin" />
 
     </ScrollView>
 

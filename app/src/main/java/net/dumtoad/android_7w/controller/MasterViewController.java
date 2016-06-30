@@ -1,14 +1,12 @@
 package net.dumtoad.android_7w.controller;
 
 import android.app.Activity;
-import android.app.DialogFragment;
 import android.os.Bundle;
 
 import net.dumtoad.android_7w.R;
 import net.dumtoad.android_7w.ai.AI;
 import net.dumtoad.android_7w.cards.Database;
 import net.dumtoad.android_7w.cards.Player;
-import net.dumtoad.android_7w.dialog.PassThePhone;
 import net.dumtoad.android_7w.fragment.SetupFragment;
 import net.dumtoad.android_7w.fragment.WonderSelectFragment;
 
@@ -79,8 +77,7 @@ public class MasterViewController {
     }
 
     public void startMainGame() {
-        DialogFragment df = new PassThePhone();
-        df.show(activity.getFragmentManager(), "passthephone");
+        tc.startEra();
     }
 
     public Database getDatabase() {

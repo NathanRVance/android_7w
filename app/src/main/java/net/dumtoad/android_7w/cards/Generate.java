@@ -221,88 +221,88 @@ public class Generate {
         Card card;
 
         card = new Card(Card.Type.RESOURCE, Era0.Lumber_Yard);
-        card.setProducts(Card.Product.WOOD, 1);
+        card.setProducts(Card.Resource.WOOD, 1);
         cards.add(card);
 
         card = new Card(Card.Type.RESOURCE, Era0.Stone_Pit);
-        card.setProducts(Card.Product.STONE, 1);
+        card.setProducts(Card.Resource.STONE, 1);
         cards.add(card);
 
         card = new Card(Card.Type.RESOURCE, Era0.Clay_Pool);
-        card.setProducts(Card.Product.CLAY, 1);
+        card.setProducts(Card.Resource.CLAY, 1);
         cards.add(card);
 
         card = new Card(Card.Type.RESOURCE, Era0.Ore_Vein);
-        card.setProducts(Card.Product.ORE, 1);
+        card.setProducts(Card.Resource.ORE, 1);
         cards.add(card);
 
         card = new Card(Card.Type.RESOURCE, Era0.Tree_Farm);
         card.setCost(Card.Resource.GOLD, 1);
-        card.setProducts(Card.Product.WOOD, 1);
-        card.setProducts(Card.Product.CLAY, 1);
+        card.setProducts(Card.Resource.WOOD, 1);
+        card.setProducts(Card.Resource.CLAY, 1);
         cards.add(card);
 
         card = new Card(Card.Type.RESOURCE, Era0.Excavation);
         card.setCost(Card.Resource.GOLD, 1);
-        card.setProducts(Card.Product.STONE, 1);
-        card.setProducts(Card.Product.CLAY, 1);
+        card.setProducts(Card.Resource.STONE, 1);
+        card.setProducts(Card.Resource.CLAY, 1);
         cards.add(card);
 
         card = new Card(Card.Type.RESOURCE, Era0.Clay_Pit);
         card.setCost(Card.Resource.GOLD, 1);
-        card.setProducts(Card.Product.CLAY, 1);
-        card.setProducts(Card.Product.ORE, 1);
+        card.setProducts(Card.Resource.CLAY, 1);
+        card.setProducts(Card.Resource.ORE, 1);
         cards.add(card);
 
         card = new Card(Card.Type.RESOURCE, Era0.Timber_Yard);
         card.setCost(Card.Resource.GOLD, 1);
-        card.setProducts(Card.Product.STONE, 1);
-        card.setProducts(Card.Product.WOOD, 1);
+        card.setProducts(Card.Resource.STONE, 1);
+        card.setProducts(Card.Resource.WOOD, 1);
         cards.add(card);
 
         card = new Card(Card.Type.RESOURCE, Era0.Forest_Cave);
         card.setCost(Card.Resource.GOLD, 1);
-        card.setProducts(Card.Product.WOOD, 1);
-        card.setProducts(Card.Product.ORE, 1);
+        card.setProducts(Card.Resource.WOOD, 1);
+        card.setProducts(Card.Resource.ORE, 1);
         cards.add(card);
 
         card = new Card(Card.Type.RESOURCE, Era0.Mine);
         card.setCost(Card.Resource.GOLD, 1);
-        card.setProducts(Card.Product.ORE, 1);
-        card.setProducts(Card.Product.STONE, 1);
+        card.setProducts(Card.Resource.ORE, 1);
+        card.setProducts(Card.Resource.STONE, 1);
         cards.add(card);
 
         card = new Card(Card.Type.INDUSTRY, Era0.Loom);
-        card.setProducts(Card.Product.CLOTH, 1);
+        card.setProducts(Card.Resource.CLOTH, 1);
         cards.add(card);
 
         card = new Card(Card.Type.INDUSTRY, Era0.Glassworks);
-        card.setProducts(Card.Product.GLASS, 1);
+        card.setProducts(Card.Resource.GLASS, 1);
         cards.add(card);
 
         card = new Card(Card.Type.INDUSTRY, Era0.Press);
-        card.setProducts(Card.Product.PAPER, 1);
+        card.setProducts(Card.Resource.PAPER, 1);
         cards.add(card);
 
         card = new Card(Card.Type.STRUCTURE, Era0.Pawnshop);
-        card.setProducts(Card.Product.VP, 3);
+        card.setProducts(Card.Resource.VP, 3);
         cards.add(card);
 
         card = new Card(Card.Type.STRUCTURE, Era0.Baths);
         card.setCost(Card.Resource.STONE, 1);
-        card.setProducts(Card.Product.VP, 3);
+        card.setProducts(Card.Resource.VP, 3);
         cards.add(card);
 
         card = new Card(Card.Type.STRUCTURE, Era0.Altar);
-        card.setProducts(Card.Product.VP, 2);
+        card.setProducts(Card.Resource.VP, 2);
         cards.add(card);
 
         card = new Card(Card.Type.STRUCTURE, Era0.Theater);
-        card.setProducts(Card.Product.VP, 2);
+        card.setProducts(Card.Resource.VP, 2);
         cards.add(card);
 
         card = new Card(Card.Type.COMMERCIAL, Era0.Tavern);
-        card.setProducts(Card.Product.GOLD, 5);
+        card.setProducts(Card.Resource.GOLD, 5);
         cards.add(card);
 
         card = new Card(Card.Type.COMMERCIAL, Era0.East_Trading_Post);
@@ -319,32 +319,32 @@ public class Generate {
 
         card = new Card(Card.Type.MILITARY, Era0.Stockade);
         card.setCost(Card.Resource.WOOD, 1);
-        card.setProducts(Card.Product.SHIELD, 1);
+        card.setProducts(Card.Resource.SHIELD, 1);
         cards.add(card);
 
         card = new Card(Card.Type.MILITARY, Era0.Barracks);
         card.setCost(Card.Resource.ORE, 1);
-        card.setProducts(Card.Product.SHIELD, 1);
+        card.setProducts(Card.Resource.SHIELD, 1);
         cards.add(card);
 
         card = new Card(Card.Type.MILITARY, Era0.Guard_Tower);
         card.setCost(Card.Resource.CLAY, 1);
-        card.setProducts(Card.Product.SHIELD, 1);
+        card.setProducts(Card.Resource.SHIELD, 1);
         cards.add(card);
 
         card = new Card(Card.Type.SCIENCE, Era0.Apothecary);
         card.setCost(Card.Resource.CLOTH, 1);
-        card.setProducts(Card.Product.COMPASS, 1);
+        card.setProducts(Card.Resource.COMPASS, 1);
         cards.add(card);
 
         card = new Card(Card.Type.SCIENCE, Era0.Workshop);
         card.setCost(Card.Resource.GLASS, 1);
-        card.setProducts(Card.Product.GEAR, 1);
+        card.setProducts(Card.Resource.GEAR, 1);
         cards.add(card);
 
         card = new Card(Card.Type.SCIENCE, Era0.Scriptorium);
         card.setCost(Card.Resource.PAPER, 1);
-        card.setProducts(Card.Product.TABLET, 1);
+        card.setProducts(Card.Resource.TABLET, 1);
         cards.add(card);
 
         return cards;
@@ -356,73 +356,73 @@ public class Generate {
 
         card = new Card(Card.Type.RESOURCE, Era1.Sawmill);
         card.setCost(Card.Resource.GOLD, 1);
-        card.setProducts(Card.Product.WOOD, 2);
+        card.setProducts(Card.Resource.WOOD, 2);
         cards.add(card);
 
         card = new Card(Card.Type.RESOURCE, Era1.Quarry);
         card.setCost(Card.Resource.GOLD, 1);
-        card.setProducts(Card.Product.STONE, 2);
+        card.setProducts(Card.Resource.STONE, 2);
         cards.add(card);
 
         card = new Card(Card.Type.RESOURCE, Era1.Brickyard);
         card.setCost(Card.Resource.GOLD, 1);
-        card.setProducts(Card.Product.CLAY, 2);
+        card.setProducts(Card.Resource.CLAY, 2);
         cards.add(card);
 
         card = new Card(Card.Type.RESOURCE, Era1.Foundry);
         card.setCost(Card.Resource.GOLD, 1);
-        card.setProducts(Card.Product.ORE, 2);
+        card.setProducts(Card.Resource.ORE, 2);
         cards.add(card);
 
         card = new Card(Card.Type.INDUSTRY, Era1.Loom);
-        card.setProducts(Card.Product.CLOTH, 1);
+        card.setProducts(Card.Resource.CLOTH, 1);
         cards.add(card);
 
         card = new Card(Card.Type.INDUSTRY, Era1.Glassworks);
-        card.setProducts(Card.Product.GLASS, 1);
+        card.setProducts(Card.Resource.GLASS, 1);
         cards.add(card);
 
         card = new Card(Card.Type.INDUSTRY, Era1.Press);
-        card.setProducts(Card.Product.PAPER, 1);
+        card.setProducts(Card.Resource.PAPER, 1);
         cards.add(card);
 
         card = new Card(Card.Type.STRUCTURE, Era1.Aqueduct);
         card.setCost(Card.Resource.STONE, 3);
-        card.setProducts(Card.Product.VP, 5);
+        card.setProducts(Card.Resource.VP, 5);
         cards.add(card);
 
         card = new Card(Card.Type.STRUCTURE, Era1.Temple);
         card.setCost(Card.Resource.WOOD, 1);
         card.setCost(Card.Resource.CLAY, 1);
         card.setCost(Card.Resource.GLASS, 1);
-        card.setProducts(Card.Product.VP, 3);
+        card.setProducts(Card.Resource.VP, 3);
         cards.add(card);
 
         card = new Card(Card.Type.STRUCTURE, Era1.Statue);
         card.setCost(Card.Resource.ORE, 2);
         card.setCost(Card.Resource.WOOD, 1);
-        card.setProducts(Card.Product.VP, 4);
+        card.setProducts(Card.Resource.VP, 4);
         cards.add(card);
 
         card = new Card(Card.Type.STRUCTURE, Era1.Courthouse);
         card.setCost(Card.Resource.CLAY, 2);
         card.setCost(Card.Resource.CLOTH, 1);
-        card.setProducts(Card.Product.VP, 4);
+        card.setProducts(Card.Resource.VP, 4);
         cards.add(card);
 
         card = new Card(Card.Type.COMMERCIAL, Era1.Forum);
         card.setCost(Card.Resource.CLAY, 2);
-        card.setProducts(Card.Product.CLOTH, 1);
-        card.setProducts(Card.Product.GLASS, 1);
-        card.setProducts(Card.Product.PAPER, 1);
+        card.setProducts(Card.Resource.CLOTH, 1);
+        card.setProducts(Card.Resource.GLASS, 1);
+        card.setProducts(Card.Resource.PAPER, 1);
         cards.add(card);
 
         card = new Card(Card.Type.COMMERCIAL, Era1.Caravansery);
         card.setCost(Card.Resource.WOOD, 2);
-        card.setProducts(Card.Product.WOOD, 1);
-        card.setProducts(Card.Product.CLAY, 1);
-        card.setProducts(Card.Product.STONE, 1);
-        card.setProducts(Card.Product.ORE, 1);
+        card.setProducts(Card.Resource.WOOD, 1);
+        card.setProducts(Card.Resource.CLAY, 1);
+        card.setProducts(Card.Resource.STONE, 1);
+        card.setProducts(Card.Resource.ORE, 1);
         cards.add(card);
 
         card = new Card(Card.Type.COMMERCIAL, Era1.Vineyard);
@@ -435,50 +435,50 @@ public class Generate {
 
         card = new Card(Card.Type.MILITARY, Era1.Walls);
         card.setCost(Card.Resource.STONE, 3);
-        card.setProducts(Card.Product.SHIELD, 2);
+        card.setProducts(Card.Resource.SHIELD, 2);
         cards.add(card);
 
         card = new Card(Card.Type.MILITARY, Era1.Training_Ground);
         card.setCost(Card.Resource.ORE, 2);
         card.setCost(Card.Resource.WOOD, 1);
-        card.setProducts(Card.Product.SHIELD, 2);
+        card.setProducts(Card.Resource.SHIELD, 2);
         cards.add(card);
 
         card = new Card(Card.Type.MILITARY, Era1.Stables);
         card.setCost(Card.Resource.ORE, 1);
         card.setCost(Card.Resource.CLAY, 1);
         card.setCost(Card.Resource.WOOD, 1);
-        card.setProducts(Card.Product.SHIELD, 2);
+        card.setProducts(Card.Resource.SHIELD, 2);
         cards.add(card);
 
         card = new Card(Card.Type.MILITARY, Era1.Archery_Range);
         card.setCost(Card.Resource.ORE, 1);
         card.setCost(Card.Resource.WOOD, 2);
-        card.setProducts(Card.Product.SHIELD, 2);
+        card.setProducts(Card.Resource.SHIELD, 2);
         cards.add(card);
 
         card = new Card(Card.Type.SCIENCE, Era1.Dispensary);
         card.setCost(Card.Resource.GLASS, 1);
         card.setCost(Card.Resource.ORE, 2);
-        card.setProducts(Card.Product.COMPASS, 1);
+        card.setProducts(Card.Resource.COMPASS, 1);
         cards.add(card);
 
         card = new Card(Card.Type.SCIENCE, Era1.Laboratory);
         card.setCost(Card.Resource.PAPER, 1);
         card.setCost(Card.Resource.CLAY, 2);
-        card.setProducts(Card.Product.GEAR, 1);
+        card.setProducts(Card.Resource.GEAR, 1);
         cards.add(card);
 
         card = new Card(Card.Type.SCIENCE, Era1.Library);
         card.setCost(Card.Resource.CLOTH, 1);
         card.setCost(Card.Resource.STONE, 2);
-        card.setProducts(Card.Product.TABLET, 1);
+        card.setProducts(Card.Resource.TABLET, 1);
         cards.add(card);
 
         card = new Card(Card.Type.SCIENCE, Era1.School);
         card.setCost(Card.Resource.PAPER, 1);
         card.setCost(Card.Resource.WOOD, 1);
-        card.setProducts(Card.Product.TABLET, 1);
+        card.setProducts(Card.Resource.TABLET, 1);
         cards.add(card);
 
         return cards;
@@ -494,20 +494,20 @@ public class Generate {
         card.setCost(Card.Resource.PAPER, 1);
         card.setCost(Card.Resource.CLOTH, 1);
         card.setCost(Card.Resource.GLASS, 1);
-        card.setProducts(Card.Product.VP, 7);
+        card.setProducts(Card.Resource.VP, 7);
         cards.add(card);
 
         card = new Card(Card.Type.STRUCTURE, Era2.Gardens);
         card.setCost(Card.Resource.CLAY, 2);
         card.setCost(Card.Resource.WOOD, 1);
-        card.setProducts(Card.Product.VP, 5);
+        card.setProducts(Card.Resource.VP, 5);
         cards.add(card);
 
         card = new Card(Card.Type.STRUCTURE, Era2.Town_Hall);
         card.setCost(Card.Resource.STONE, 2);
         card.setCost(Card.Resource.ORE, 1);
         card.setCost(Card.Resource.GLASS, 1);
-        card.setProducts(Card.Product.VP, 6);
+        card.setProducts(Card.Resource.VP, 6);
         cards.add(card);
 
         card = new Card(Card.Type.STRUCTURE, Era2.Palace);
@@ -518,14 +518,14 @@ public class Generate {
         card.setCost(Card.Resource.PAPER, 1);
         card.setCost(Card.Resource.CLOTH, 1);
         card.setCost(Card.Resource.GLASS, 1);
-        card.setProducts(Card.Product.VP, 8);
+        card.setProducts(Card.Resource.VP, 8);
         cards.add(card);
 
         card = new Card(Card.Type.STRUCTURE, Era2.Senate);
         card.setCost(Card.Resource.WOOD, 2);
         card.setCost(Card.Resource.ORE, 1);
         card.setCost(Card.Resource.STONE, 1);
-        card.setProducts(Card.Product.VP, 6);
+        card.setProducts(Card.Resource.VP, 6);
         cards.add(card);
 
         card = new Card(Card.Type.COMMERCIAL, Era2.Haven);
@@ -556,60 +556,60 @@ public class Generate {
         card = new Card(Card.Type.MILITARY, Era2.Fortifications);
         card.setCost(Card.Resource.ORE, 3);
         card.setCost(Card.Resource.STONE, 1);
-        card.setProducts(Card.Product.SHIELD, 3);
+        card.setProducts(Card.Resource.SHIELD, 3);
         cards.add(card);
 
         card = new Card(Card.Type.MILITARY, Era2.Circus);
         card.setCost(Card.Resource.STONE, 3);
         card.setCost(Card.Resource.ORE, 1);
-        card.setProducts(Card.Product.SHIELD, 3);
+        card.setProducts(Card.Resource.SHIELD, 3);
         cards.add(card);
 
         card = new Card(Card.Type.MILITARY, Era2.Arsenal);
         card.setCost(Card.Resource.ORE, 1);
         card.setCost(Card.Resource.WOOD, 2);
         card.setCost(Card.Resource.CLOTH, 1);
-        card.setProducts(Card.Product.SHIELD, 3);
+        card.setProducts(Card.Resource.SHIELD, 3);
         cards.add(card);
 
         card = new Card(Card.Type.MILITARY, Era2.Siege_Workshop);
         card.setCost(Card.Resource.CLAY, 3);
         card.setCost(Card.Resource.WOOD, 1);
-        card.setProducts(Card.Product.SHIELD, 3);
+        card.setProducts(Card.Resource.SHIELD, 3);
         cards.add(card);
 
         card = new Card(Card.Type.SCIENCE, Era2.Lodge);
         card.setCost(Card.Resource.CLAY, 2);
         card.setCost(Card.Resource.CLOTH, 1);
         card.setCost(Card.Resource.PAPER, 1);
-        card.setProducts(Card.Product.COMPASS, 1);
+        card.setProducts(Card.Resource.COMPASS, 1);
         cards.add(card);
 
         card = new Card(Card.Type.SCIENCE, Era2.Observatory);
         card.setCost(Card.Resource.ORE, 2);
         card.setCost(Card.Resource.GLASS, 1);
         card.setCost(Card.Resource.CLOTH, 1);
-        card.setProducts(Card.Product.GEAR, 1);
+        card.setProducts(Card.Resource.GEAR, 1);
         cards.add(card);
 
         card = new Card(Card.Type.SCIENCE, Era2.University);
         card.setCost(Card.Resource.WOOD, 2);
         card.setCost(Card.Resource.GLASS, 1);
         card.setCost(Card.Resource.PAPER, 1);
-        card.setProducts(Card.Product.TABLET, 1);
+        card.setProducts(Card.Resource.TABLET, 1);
         cards.add(card);
 
         card = new Card(Card.Type.SCIENCE, Era2.Academy);
         card.setCost(Card.Resource.GLASS, 2);
         card.setCost(Card.Resource.STONE, 3);
-        card.setProducts(Card.Product.COMPASS, 1);
+        card.setProducts(Card.Resource.COMPASS, 1);
         cards.add(card);
 
         card = new Card(Card.Type.SCIENCE, Era2.Study);
         card.setCost(Card.Resource.WOOD, 1);
         card.setCost(Card.Resource.CLOTH, 1);
         card.setCost(Card.Resource.PAPER, 1);
-        card.setProducts(Card.Product.GEAR, 1);
+        card.setProducts(Card.Resource.GEAR, 1);
         cards.add(card);
 
         card = new Card(Card.Type.GUILD, Era2.Workers_Guild);
@@ -706,33 +706,33 @@ public class Generate {
         stages = new ArrayList<>();
         card = new Card(Card.Type.STAGE, WonderStages.Stage_1);
         card.setCost(Card.Resource.WOOD, 2);
-        card.setProducts(Card.Product.VP, 3);
+        card.setProducts(Card.Resource.VP, 3);
         stages.add(card);
 
         card = new Card(Card.Type.STAGE, WonderStages.Stage_2);
         card.setCost(Card.Resource.CLAY, 3);
-        card.setProducts(Card.Product.SHIELD, 2);
+        card.setProducts(Card.Resource.SHIELD, 2);
         stages.add(card);
 
         card = new Card(Card.Type.STAGE, WonderStages.Stage_3);
         card.setCost(Card.Resource.ORE, 4);
-        card.setProducts(Card.Product.VP, 7);
+        card.setProducts(Card.Resource.VP, 7);
         stages.add(card);
         wonder.setStagesA(stages);
 
         stages = new ArrayList<>();
         card = new Card(Card.Type.STAGE, WonderStages.Stage_1);
         card.setCost(Card.Resource.STONE, 3);
-        card.setProducts(Card.Product.SHIELD, 1);
-        card.setProducts(Card.Product.VP, 3);
-        card.setProducts(Card.Product.GOLD, 3);
+        card.setProducts(Card.Resource.SHIELD, 1);
+        card.setProducts(Card.Resource.VP, 3);
+        card.setProducts(Card.Resource.GOLD, 3);
         stages.add(card);
 
         card = new Card(Card.Type.STAGE, WonderStages.Stage_2);
         card.setCost(Card.Resource.ORE, 4);
-        card.setProducts(Card.Product.SHIELD, 1);
-        card.setProducts(Card.Product.VP, 4);
-        card.setProducts(Card.Product.GOLD, 4);
+        card.setProducts(Card.Resource.SHIELD, 1);
+        card.setProducts(Card.Resource.VP, 4);
+        card.setProducts(Card.Resource.GOLD, 4);
         stages.add(card);
         wonder.setStagesB(stages);
         wonders.add(wonder);
@@ -744,42 +744,42 @@ public class Generate {
         stages = new ArrayList<>();
         card = new Card(Card.Type.STAGE, WonderStages.Stage_1);
         card.setCost(Card.Resource.STONE, 2);
-        card.setProducts(Card.Product.VP, 3);
+        card.setProducts(Card.Resource.VP, 3);
         stages.add(card);
 
         card = new Card(Card.Type.STAGE, WonderStages.Stage_2);
         card.setCost(Card.Resource.ORE, 2);
-        card.setProducts(Card.Product.CLAY, 1);
-        card.setProducts(Card.Product.ORE, 1);
-        card.setProducts(Card.Product.WOOD, 1);
-        card.setProducts(Card.Product.STONE, 1);
+        card.setProducts(Card.Resource.CLAY, 1);
+        card.setProducts(Card.Resource.ORE, 1);
+        card.setProducts(Card.Resource.WOOD, 1);
+        card.setProducts(Card.Resource.STONE, 1);
         stages.add(card);
 
         card = new Card(Card.Type.STAGE, WonderStages.Stage_3);
         card.setCost(Card.Resource.GLASS, 2);
-        card.setProducts(Card.Product.VP, 7);
+        card.setProducts(Card.Resource.VP, 7);
         stages.add(card);
         wonder.setStagesA(stages);
 
         stages = new ArrayList<>();
         card = new Card(Card.Type.STAGE, WonderStages.Stage_1);
         card.setCost(Card.Resource.CLAY, 2);
-        card.setProducts(Card.Product.CLAY, 1);
-        card.setProducts(Card.Product.ORE, 1);
-        card.setProducts(Card.Product.WOOD, 1);
-        card.setProducts(Card.Product.STONE, 1);
+        card.setProducts(Card.Resource.CLAY, 1);
+        card.setProducts(Card.Resource.ORE, 1);
+        card.setProducts(Card.Resource.WOOD, 1);
+        card.setProducts(Card.Resource.STONE, 1);
         stages.add(card);
 
         card = new Card(Card.Type.STAGE, WonderStages.Stage_2);
         card.setCost(Card.Resource.WOOD, 2);
-        card.setProducts(Card.Product.GLASS, 1);
-        card.setProducts(Card.Product.CLOTH, 1);
-        card.setProducts(Card.Product.PAPER, 1);
+        card.setProducts(Card.Resource.GLASS, 1);
+        card.setProducts(Card.Resource.CLOTH, 1);
+        card.setProducts(Card.Resource.PAPER, 1);
         stages.add(card);
 
         card = new Card(Card.Type.STAGE, WonderStages.Stage_3);
         card.setCost(Card.Resource.STONE, 3);
-        card.setProducts(Card.Product.VP, 7);
+        card.setProducts(Card.Resource.VP, 7);
         stages.add(card);
         wonder.setStagesB(stages);
         wonders.add(wonder);
@@ -791,39 +791,39 @@ public class Generate {
         stages = new ArrayList<>();
         card = new Card(Card.Type.STAGE, WonderStages.Stage_1);
         card.setCost(Card.Resource.STONE, 2);
-        card.setProducts(Card.Product.VP, 3);
+        card.setProducts(Card.Resource.VP, 3);
         stages.add(card);
 
         card = new Card(Card.Type.STAGE, WonderStages.Stage_2);
         card.setCost(Card.Resource.WOOD, 2);
-        card.setProducts(Card.Product.GOLD, 9);
+        card.setProducts(Card.Resource.GOLD, 9);
         stages.add(card);
 
         card = new Card(Card.Type.STAGE, WonderStages.Stage_3);
         card.setCost(Card.Resource.PAPER, 2);
-        card.setProducts(Card.Product.VP, 7);
+        card.setProducts(Card.Resource.VP, 7);
         stages.add(card);
         wonder.setStagesA(stages);
 
         stages = new ArrayList<>();
         card = new Card(Card.Type.STAGE, WonderStages.Stage_1);
         card.setCost(Card.Resource.STONE, 2);
-        card.setProducts(Card.Product.VP, 2);
-        card.setProducts(Card.Product.GOLD, 4);
+        card.setProducts(Card.Resource.VP, 2);
+        card.setProducts(Card.Resource.GOLD, 4);
         stages.add(card);
 
         card = new Card(Card.Type.STAGE, WonderStages.Stage_2);
         card.setCost(Card.Resource.WOOD, 2);
-        card.setProducts(Card.Product.VP, 3);
-        card.setProducts(Card.Product.GOLD, 4);
+        card.setProducts(Card.Resource.VP, 3);
+        card.setProducts(Card.Resource.GOLD, 4);
         stages.add(card);
 
         card = new Card(Card.Type.STAGE, WonderStages.Stage_3);
         card.setCost(Card.Resource.GLASS, 1);
         card.setCost(Card.Resource.CLOTH, 1);
         card.setCost(Card.Resource.PAPER, 1);
-        card.setProducts(Card.Product.VP, 5);
-        card.setProducts(Card.Product.GOLD, 4);
+        card.setProducts(Card.Resource.VP, 5);
+        card.setProducts(Card.Resource.GOLD, 4);
         stages.add(card);
         wonder.setStagesB(stages);
         wonders.add(wonder);
@@ -835,19 +835,19 @@ public class Generate {
         stages = new ArrayList<>();
         card = new Card(Card.Type.STAGE, WonderStages.Stage_1);
         card.setCost(Card.Resource.CLAY, 2);
-        card.setProducts(Card.Product.VP, 3);
+        card.setProducts(Card.Resource.VP, 3);
         stages.add(card);
 
         card = new Card(Card.Type.STAGE, WonderStages.Stage_2);
         card.setCost(Card.Resource.WOOD, 3);
-        card.setProducts(Card.Product.TABLET, 1);
-        card.setProducts(Card.Product.COMPASS, 1);
-        card.setProducts(Card.Product.GEAR, 1);
+        card.setProducts(Card.Resource.TABLET, 1);
+        card.setProducts(Card.Resource.COMPASS, 1);
+        card.setProducts(Card.Resource.GEAR, 1);
         stages.add(card);
 
         card = new Card(Card.Type.STAGE, WonderStages.Stage_3);
         card.setCost(Card.Resource.CLAY, 4);
-        card.setProducts(Card.Product.VP, 7);
+        card.setProducts(Card.Resource.VP, 7);
         stages.add(card);
         wonder.setStagesA(stages);
 
@@ -855,7 +855,7 @@ public class Generate {
         card = new Card(Card.Type.STAGE, WonderStages.Stage_1);
         card.setCost(Card.Resource.CLAY, 1);
         card.setCost(Card.Resource.CLOTH, 1);
-        card.setProducts(Card.Product.VP, 3);
+        card.setProducts(Card.Resource.VP, 3);
         stages.add(card);
 
         card = new Card(Card.Type.STAGE, WonderStages.Stage_2);
@@ -867,9 +867,9 @@ public class Generate {
         card = new Card(Card.Type.STAGE, WonderStages.Stage_3);
         card.setCost(Card.Resource.CLAY, 3);
         card.setCost(Card.Resource.PAPER, 1);
-        card.setProducts(Card.Product.TABLET, 1);
-        card.setProducts(Card.Product.COMPASS, 1);
-        card.setProducts(Card.Product.GEAR, 1);
+        card.setProducts(Card.Resource.TABLET, 1);
+        card.setProducts(Card.Resource.COMPASS, 1);
+        card.setProducts(Card.Resource.GEAR, 1);
         stages.add(card);
         wonder.setStagesB(stages);
         wonders.add(wonder);
@@ -881,7 +881,7 @@ public class Generate {
         stages = new ArrayList<>();
         card = new Card(Card.Type.STAGE, WonderStages.Stage_1);
         card.setCost(Card.Resource.WOOD, 2);
-        card.setProducts(Card.Product.VP, 3);
+        card.setProducts(Card.Resource.VP, 3);
         stages.add(card);
 
         card = new Card(Card.Type.STAGE, WonderStages.Stage_2);
@@ -891,7 +891,7 @@ public class Generate {
 
         card = new Card(Card.Type.STAGE, WonderStages.Stage_3);
         card.setCost(Card.Resource.ORE, 2);
-        card.setProducts(Card.Product.VP, 7);
+        card.setProducts(Card.Resource.VP, 7);
         stages.add(card);
         wonder.setStagesA(stages);
 
@@ -903,7 +903,7 @@ public class Generate {
 
         card = new Card(Card.Type.STAGE, WonderStages.Stage_2);
         card.setCost(Card.Resource.STONE, 2);
-        card.setProducts(Card.Product.VP, 5);
+        card.setProducts(Card.Resource.VP, 5);
         stages.add(card);
 
         card = new Card(Card.Type.STAGE, WonderStages.Stage_3);
@@ -921,7 +921,7 @@ public class Generate {
         stages = new ArrayList<>();
         card = new Card(Card.Type.STAGE, WonderStages.Stage_1);
         card.setCost(Card.Resource.CLAY, 2);
-        card.setProducts(Card.Product.VP, 3);
+        card.setProducts(Card.Resource.VP, 3);
         stages.add(card);
 
         card = new Card(Card.Type.STAGE, WonderStages.Stage_2);
@@ -931,20 +931,20 @@ public class Generate {
 
         card = new Card(Card.Type.STAGE, WonderStages.Stage_3);
         card.setCost(Card.Resource.CLOTH, 2);
-        card.setProducts(Card.Product.VP, 7);
+        card.setProducts(Card.Resource.VP, 7);
         stages.add(card);
         wonder.setStagesA(stages);
 
         stages = new ArrayList<>();
         card = new Card(Card.Type.STAGE, WonderStages.Stage_1);
         card.setCost(Card.Resource.ORE, 2);
-        card.setProducts(Card.Product.VP, 2);
+        card.setProducts(Card.Resource.VP, 2);
         card.setMessage("Can look through all discards since the beginning of the game, pick one, and build it for free.");
         stages.add(card);
 
         card = new Card(Card.Type.STAGE, WonderStages.Stage_2);
         card.setCost(Card.Resource.CLAY, 3);
-        card.setProducts(Card.Product.VP, 1);
+        card.setProducts(Card.Resource.VP, 1);
         card.setMessage("Can look through all discards since the beginning of the game, pick one, and build it for free.");
 
         stages.add(card);
@@ -965,40 +965,40 @@ public class Generate {
         stages = new ArrayList<>();
         card = new Card(Card.Type.STAGE, WonderStages.Stage_1);
         card.setCost(Card.Resource.STONE, 2);
-        card.setProducts(Card.Product.VP, 3);
+        card.setProducts(Card.Resource.VP, 3);
         stages.add(card);
 
         card = new Card(Card.Type.STAGE, WonderStages.Stage_2);
         card.setCost(Card.Resource.WOOD, 3);
-        card.setProducts(Card.Product.VP, 5);
+        card.setProducts(Card.Resource.VP, 5);
         stages.add(card);
 
         card = new Card(Card.Type.STAGE, WonderStages.Stage_3);
         card.setCost(Card.Resource.STONE, 4);
-        card.setProducts(Card.Product.VP, 7);
+        card.setProducts(Card.Resource.VP, 7);
         stages.add(card);
         wonder.setStagesA(stages);
 
         stages = new ArrayList<>();
         card = new Card(Card.Type.STAGE, WonderStages.Stage_1);
         card.setCost(Card.Resource.WOOD, 2);
-        card.setProducts(Card.Product.VP, 3);
+        card.setProducts(Card.Resource.VP, 3);
         stages.add(card);
 
         card = new Card(Card.Type.STAGE, WonderStages.Stage_2);
         card.setCost(Card.Resource.STONE, 3);
-        card.setProducts(Card.Product.VP, 5);
+        card.setProducts(Card.Resource.VP, 5);
         stages.add(card);
 
         card = new Card(Card.Type.STAGE, WonderStages.Stage_3);
         card.setCost(Card.Resource.CLAY, 3);
-        card.setProducts(Card.Product.VP, 5);
+        card.setProducts(Card.Resource.VP, 5);
         stages.add(card);
 
         card = new Card(Card.Type.STAGE, WonderStages.Stage_4);
         card.setCost(Card.Resource.STONE, 4);
         card.setCost(Card.Resource.PAPER, 1);
-        card.setProducts(Card.Product.VP, 7);
+        card.setProducts(Card.Resource.VP, 7);
         stages.add(card);
         wonder.setStagesB(stages);
         wonders.add(wonder);

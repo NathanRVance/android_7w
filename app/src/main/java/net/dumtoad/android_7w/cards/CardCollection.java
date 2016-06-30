@@ -10,6 +10,7 @@ public class CardCollection extends ArrayList<Card> {
             for(Card card : cards) {
                 if(card.getName().toString().equals(name)) {
                     add(card);
+                    break;
                 }
             }
         }
@@ -39,6 +40,14 @@ public class CardCollection extends ArrayList<Card> {
         }
         this.clear();
         this.addAll(sorted);
+    }
+
+    public boolean contains(Enum name) {
+        for(Card card : this) {
+            if(card.getName().equals(name)) {
+                return true;
+            }
+        } return false;
     }
 
 }
