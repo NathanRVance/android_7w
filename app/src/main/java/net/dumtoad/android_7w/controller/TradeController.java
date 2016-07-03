@@ -1,6 +1,7 @@
 package net.dumtoad.android_7w.controller;
 
 import android.os.Bundle;
+import android.support.v4.content.ContextCompat;
 import android.text.SpannableStringBuilder;
 import android.text.style.ForegroundColorSpan;
 import android.view.LayoutInflater;
@@ -17,7 +18,6 @@ import net.dumtoad.android_7w.cards.Player;
 import net.dumtoad.android_7w.cards.ResQuant;
 
 import java.util.HashMap;
-import java.util.Iterator;
 
 public class TradeController {
     private MasterViewController mvc;
@@ -26,6 +26,7 @@ public class TradeController {
     private ResQuant tradeEast;
     private HashMap<Card.Resource, LinearLayout> westViews;
     private HashMap<Card.Resource, LinearLayout> eastViews;
+    private TextView goldStatus;
     private Card.Resource[] tradeable = new Card.Resource[] {Card.Resource.WOOD, Card.Resource.STONE, Card.Resource.CLAY,
             Card.Resource.ORE, Card.Resource.CLOTH, Card.Resource.GLASS, Card.Resource.PAPER };
 
@@ -67,6 +68,8 @@ public class TradeController {
     private void addTradeItems(LinearLayout content, final ResQuant currentTrade,
                                HashMap<Card.Resource, LinearLayout> views) {
         views.clear();
+        goldStatus = new TextView(mvc.getActivity());
+        content.addView(goldStatus);
         LayoutInflater inflater = LayoutInflater.from(mvc.getActivity());
         for(final Card.Resource res : tradeable) {
             LinearLayout ll = (LinearLayout) inflater.inflate(R.layout.trade_item, content, false);
@@ -100,19 +103,41 @@ public class TradeController {
     }
 
     private void updateViews(HashMap<Card.Resource, LinearLayout> views, ResQuant currentTrade, Player other) {
-        ResQuant numAvailable = numAvailable(other, currentTrade);
+        int playerGold = mvc.getTableController().getTurnController().getCurrentPlayer().getGold();
+        goldStatus.setText("Gold available: " + (playerGold - getTotalCost()));
+        ResQuant numAvailable = numAvailable(other, currentTrade, false);
         for(Card.Resource res : views.keySet()) {
             LinearLayout ll = views.get(res);
             SpannableStringBuilder sb = new SpannableStringBuilder();
             Card.appendSb(sb, res.toString().toLowerCase(), new ForegroundColorSpan(Card.getColorId(res.toString())));
             sb.append(": ").append(String.valueOf(numAvailable.get(res)));
-            sb.append("\nBought: ").append(String.valueOf(currentTrade.get(res)));
-            sb.append("\nCost: ").append(String.valueOf(
-                    getCost(mvc.getTableController().getTurnController().getCurrentPlayer(), west, res)));
+            sb.append("\nBought: ");
+            if (currentTrade.get(res) == 0) {
+                sb.append("0");
+            } else {
+                Card.appendSb(sb, String.valueOf(currentTrade.get(res)),
+                        new ForegroundColorSpan(ContextCompat.getColor(mvc.getActivity(), R.color.red)));
+            }
+            int cost = getCost(mvc.getTableController().getTurnController().getCurrentPlayer(), west, res);
+            sb.append("\nCost: ").append(String.valueOf(cost));
             ((TextView) ll.findViewById(R.id.title)).setText(sb);
-            ll.findViewById(R.id.add).setEnabled(numAvailable.get(res) > 0);
+            ll.findViewById(R.id.add).setEnabled(numAvailable.get(res) > 0 && getTotalCost() + cost <= playerGold);
             ll.findViewById(R.id.subtract).setEnabled(currentTrade.get(res) > 0);
         }
+    }
+
+    public int getTotalCost() {
+        return getCurrentCost(true) + getCurrentCost(false);
+    }
+
+    public int getCurrentCost(boolean west) {
+        int tot = 0;
+        ResQuant trade = (west)? tradeWest : tradeEast;
+        for(Card.Resource res : trade.keySet()) {
+            tot += getCost(mvc.getTableController().getTurnController().getCurrentPlayer(), true, res)
+                    * trade.get(res);
+        }
+        return tot;
     }
 
     public int getCost(Player player, boolean west, Card.Resource res) {
@@ -140,51 +165,79 @@ public class TradeController {
     }
 
     //Status is current trade status, and is positive
-    public ResQuant numAvailable(Player player, ResQuant status) {
+    public ResQuant numAvailable(Player player, ResQuant status, boolean includeCommercial) {
         ResQuant available = new ResQuant();
+        //Add the wonder resource
         available.put(player.getWonder().getResource(), 1);
+        //Remove status resources
         available.subtractResources(status);
+        //complicated are cards where you must choose which resource they produce
         CardCollection complicated = new CardCollection();
         for(Card card : player.getPlayedCards()) {
-            if(! (card.getType() == Card.Type.RESOURCE || card.getType() == Card.Type.INDUSTRY)) continue;
+            //If we aren't including commercial, skip it now
+            if(! includeCommercial && card.getType() == Card.Type.COMMERCIAL) continue;
+            //We only care about cards that produce resources (commercial has already been skipped if necessary)
+            if(! (card.getType() == Card.Type.RESOURCE || card.getType() == Card.Type.INDUSTRY
+                    || card.getType() == Card.Type.COMMERCIAL)) continue;
+
             ResQuant prod = card.getProducts();
+
+            //Count number of products card produces
             int numProducts = 0;
             for(Card.Resource res : tradeable) {
                 if(prod.get(res) > 0) numProducts++;
             }
-            if(numProducts == 1) {
+            if(numProducts == 1) { //Great, a reasonable card. Deal with it now
                 for(Card.Resource res : tradeable) {
                     available.put(res, available.get(res) + prod.get(res));
                 }
-            } else if(numProducts > 1) {
+            } else if(numProducts > 1) { //Ugh, it's complicated. Deal with it later
                 complicated.add(card);
             }
-        }
-        for(Card.Resource res : tradeable) {
-            if(available.get(res) < 0) {
-                available.put(res, 0);
-                int numRes = 0;
-                for(Card card : complicated) {
-                    numRes += card.getProducts().get(res);
-                }
-                if(numRes == available.get(res)) {
-                    Iterator<Card> it = complicated.iterator();
-                    while(it.hasNext()) {
-                        if(it.next().getProducts().get(res) > 0)
-                            it.remove();
-                    }
-                } else if(numRes < available.get(res)) {
-                    throw new RuntimeException("Inextricable situation!");
-                }
-            }
-        }
-        for(Card card : complicated) {
-            for(Card.Resource res : tradeable) {
-                available.put(res, available.get(res) + card.getProducts().get(res));
-            }
+            //If it doen't produce a tradeable resource, we don't care about it.
         }
 
-        return available;
+        //We're left with some cards that could be in one of several categories. I think (not sure)
+        //that this is an NP-complete problem, so brute force! Find all legal combinations, and take
+        //the maximum available for each resource.
+        ResQuant answer = new ResQuant().addResources(available); //Makes a copy of available
+        availableRecurse(complicated, available, answer);
+
+        return answer;
+    }
+
+    private void availableRecurse(CardCollection cards, ResQuant available, ResQuant answer) {
+        if(cards.size() > 0) {
+            Card card = cards.remove(0);
+            for(Card.Resource res : tradeable) {
+                if(card.getProducts().get(res) > 0) {
+                    available.put(res, available.get(res) + 1);
+                    availableRecurse(cards, available, answer);
+                    available.put(res, available.get(res) - 1);
+                }
+            }
+        } else {
+            if(available.allZeroOrAbove()) {
+                for(Card.Resource res : tradeable) {
+                    if(available.get(res) > answer.get(res)) {
+                        answer.put(res, available.get(res));
+                    }
+                }
+            }
+        }
+    }
+
+    public boolean canAffordResources(Card card) {
+        ResQuant status = new ResQuant().subtractResources(card.getCost());
+        status.put(Card.Resource.GOLD, 0); //Handle gold elsewhere
+        status.addResources(tradeEast);
+        status.addResources(tradeWest);
+        return numAvailable(mvc.getTableController().getTurnController().getCurrentPlayer(), status, true).allZeroOrAbove();
+    }
+
+    public boolean canAffordGold(Card card) {
+        int playerGold = mvc.getTableController().getTurnController().getCurrentPlayer().getGold();
+        return playerGold >= card.getCost().get(Card.Resource.GOLD) + getTotalCost();
     }
 
 }

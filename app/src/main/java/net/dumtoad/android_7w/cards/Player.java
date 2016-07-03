@@ -6,7 +6,6 @@ import android.text.style.ForegroundColorSpan;
 
 import net.dumtoad.android_7w.ai.AI;
 import net.dumtoad.android_7w.controller.MasterViewController;
-import net.dumtoad.android_7w.controller.TableController;
 
 import java.util.ArrayList;
 
@@ -97,10 +96,6 @@ public class Player {
         return name;
     }
 
-    public String getNation() {
-        return getWonder().getNameString();
-    }
-
     public void setHand(Hand hand) {
         this.hand = hand;
     }
@@ -115,6 +110,19 @@ public class Player {
 
     public void addGold(int amount) {
         gold += amount;
+    }
+
+    public int getGold() {
+        return gold;
+    }
+
+    public Card nextWonderStage() {
+        for(Card stage : wonder.getStages(wonderSide)) {
+            if(! playedCards.contains(stage)) {
+                return stage;
+            }
+        }
+        return null;
     }
 
     public ResQuant getProduction(boolean full) {
@@ -158,13 +166,6 @@ public class Player {
         }
     }
 
-    public boolean canAfford(Card card, ResQuant purchased) {
-        ResQuant cost = card.getCost();
-        cost.subtractResources(purchased);
-        cost.subtractResources(getProduction(true));
-        return cost.allZeroOrBelow();
-    }
-
     public void buildCard(Card card, int goldHere, int goldEast, int goldWest) {
         if(!hand.remove(card)) {
             throw new RuntimeException("Could not build card I don't have!");
@@ -178,6 +179,13 @@ public class Player {
         }
         mvc.getTableController().discard(card);
         turnBuffer = new TurnBuffer(null, 3, 0, 0);
+    }
+
+    public void buildWonder(Card stage, Card card, int goldHere, int goldEast, int goldWest) {
+        if(!hand.remove(card)) {
+            throw new RuntimeException("Could not build card I don't have!");
+        }
+        turnBuffer = new TurnBuffer(stage, goldHere, goldEast, goldWest);
     }
 
     public void finishTurn() {

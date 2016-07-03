@@ -31,6 +31,14 @@ public class TableController {
         tc = new TurnController(mvc, savedInstanceState.getBundle("tc"));
     }
 
+    public Bundle getInstanceState() {
+        Bundle outstate = new Bundle();
+        outstate.putString("discards", discards.getOrder());
+        outstate.putInt("era", era);
+        outstate.putBundle("tc", tc.getInstanceState());
+        return outstate;
+    }
+
     public void discard(Card card) {
         discards.add(card);
     }
@@ -43,78 +51,79 @@ public class TableController {
         return era;
     }
 
-    public void nextEra() {
+    private void nextEra() {
+        //Discard current hands
+        for(int i = 0; i < mvc.getNumPlayers(); i++) {
+            discard(mvc.getPlayer(i).getHand().get(0));
+        }
         era++;
+        startEra();
     }
 
     public void startEra() {
         ArrayList<Hand> hands = mvc.getDatabase().dealHands(era);
-        for(int i = 0; i < mvc.getNumPlayers(); i++) {
+        for (int i = 0; i < mvc.getNumPlayers(); i++) {
             mvc.getPlayer(i).setHand(hands.get(i));
         }
         nextPlayerStart();
     }
 
-    public void nextTurn() {
-        for(int i = 0; i < mvc.getNumPlayers(); i++) {
+    public void endTurn() {
+        for (int i = 0; i < mvc.getNumPlayers(); i++) {
             mvc.getPlayer(i).finishTurn();
         }
     }
 
     public void passTheHand() {
-        if(era == 1) { //pass East
+        if (era == 1) { //pass East
             Hand tmp = mvc.getPlayer(0).getHand();
-            for(int i = 1; i < mvc.getNumPlayers()-1; i++) {
-                mvc.getPlayer(i).setHand(mvc.getPlayer(i+1).getHand());
+            for (int i = 1; i < mvc.getNumPlayers() - 1; i++) {
+                mvc.getPlayer(i).setHand(mvc.getPlayer(i + 1).getHand());
             }
-            mvc.getPlayer(mvc.getNumPlayers()-1).setHand(tmp);
+            mvc.getPlayer(mvc.getNumPlayers() - 1).setHand(tmp);
         } else { //pass West
-            Hand tmp = mvc.getPlayer(mvc.getNumPlayers()-1).getHand();
-            for(int i = mvc.getNumPlayers()-1; i > 0; i--) {
-                mvc.getPlayer(i).setHand(mvc.getPlayer(i-1).getHand());
+            Hand tmp = mvc.getPlayer(mvc.getNumPlayers() - 1).getHand();
+            for (int i = mvc.getNumPlayers() - 1; i > 0; i--) {
+                mvc.getPlayer(i).setHand(mvc.getPlayer(i - 1).getHand());
             }
             mvc.getPlayer(0).setHand(tmp);
         }
     }
 
     public void nextPlayerStart() {
-        if(playerTurn < mvc.getNumPlayers()) {
+        if (playerTurn < mvc.getNumPlayers()) {
             tc.startTurn(playerTurn++);
         } else {
             playerTurn = 0;
-            nextTurn();
-            passTheHand();
-            nextPlayerStart();
+            endTurn();
+            if (mvc.getPlayer(0).getHand().size() == 1) { //end of era
+                nextEra();
+            } else {
+                passTheHand();
+                nextPlayerStart();
+            }
         }
-    }
-
-    public Bundle getInstanceState() {
-        Bundle outstate = new Bundle();
-        outstate.putString("discards", discards.getOrder());
-        outstate.putInt("era", era);
-        outstate.putBundle("tc", tc.getInstanceState());
-        return outstate;
     }
 
     public Player getPlayerDirection(Boolean west, Player asker) {
         int playerNum;
-        for(playerNum = 0; playerNum < mvc.getNumPlayers(); playerNum++) {
-            if(asker == mvc.getPlayer(playerNum)) break;
+        for (playerNum = 0; playerNum < mvc.getNumPlayers(); playerNum++) {
+            if (asker == mvc.getPlayer(playerNum)) break;
         }
-        if(west) {
+        if (west) {
             playerNum++;
-            if(playerNum == mvc.getNumPlayers()) playerNum = 0;
+            if (playerNum == mvc.getNumPlayers()) playerNum = 0;
         } else {
             playerNum--;
-            if(playerNum < 0) playerNum = mvc.getNumPlayers() - 1;
+            if (playerNum < 0) playerNum = mvc.getNumPlayers() - 1;
         }
         return mvc.getPlayer(playerNum);
     }
 
     public int getNumHumanPlayers() {
         int num = 0;
-        for(int i = 0; i < mvc.getNumPlayers(); i++)
-            if(! mvc.getPlayer(i).isAI()) num++;
+        for (int i = 0; i < mvc.getNumPlayers(); i++)
+            if (!mvc.getPlayer(i).isAI()) num++;
         return num;
     }
 

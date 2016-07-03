@@ -6,7 +6,9 @@ import android.content.DialogInterface;
 import android.view.View;
 import android.widget.Button;
 
+import net.dumtoad.android_7w.MainActivity;
 import net.dumtoad.android_7w.cards.Card;
+import net.dumtoad.android_7w.controller.TurnController;
 
 public class CardView extends Button {
 
@@ -17,7 +19,7 @@ public class CardView extends Button {
     public CardView(Card card, Context context, boolean buildable) {
         super(context);
         setText(card.getNameString());
-        if(buildable) build(card);
+        if (buildable) build(card);
         else view(card);
     }
 
@@ -25,27 +27,45 @@ public class CardView extends Button {
         setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
+                final TurnController tc = MainActivity.getMasterViewController().getTableController().getTurnController();
                 new AlertDialog.Builder(getContext())
                         .setTitle(card.getNameString())
                         .setMessage(card.getSummary())
-                        .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                        .setNegativeButton("OK", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
                                 //Do nothing
                             }
                         })
-                        .setPositiveButton("Build", new DialogInterface.OnClickListener() {
+                        .setPositiveButton("Actions...", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
-
+                                new AlertDialog.Builder(getContext())
+                                        .setTitle("Select action")
+                                        .setItems(new CharSequence[]
+                                                        {"Cancel", "Discard", "Build Wonder", "Build Card"},
+                                                new DialogInterface.OnClickListener() {
+                                                    public void onClick(DialogInterface dialog, int which) {
+                                                        switch (which) {
+                                                            case 0:
+                                                                //Do nothing
+                                                                break;
+                                                            case 1:
+                                                                tc.requestDiscard(card);
+                                                                break;
+                                                            case 2:
+                                                                tc.requestWonder(card);
+                                                                break;
+                                                            case 3:
+                                                                tc.requestBuild(card);
+                                                                break;
+                                                        }
+                                                    }
+                                                })
+                                        .create().show();
                             }
                         })
-                        .setNeutralButton("Discard", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-
-                            }
-                        }).show();
+                        .create().show();
             }
         });
     }

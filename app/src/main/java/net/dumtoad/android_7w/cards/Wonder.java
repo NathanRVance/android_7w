@@ -3,24 +3,22 @@ package net.dumtoad.android_7w.cards;
 import android.text.SpannableStringBuilder;
 import android.text.style.ForegroundColorSpan;
 
-import java.util.ArrayList;
-
 public class Wonder {
 
     private Enum name;
-    private ArrayList<Card> stagesA;
-    private ArrayList<Card> stagesB;
+    private CardCollection stagesA;
+    private CardCollection stagesB;
     private Card.Resource product;
 
     public Wonder(Enum name) {
         this.name = name;
     }
 
-    public void setStagesA(ArrayList<Card> stagesA) {
+    public void setStagesA(CardCollection stagesA) {
         this.stagesA = stagesA;
     }
 
-    public void setStagesB(ArrayList<Card> stagesB) {
+    public void setStagesB(CardCollection stagesB) {
         this.stagesB = stagesB;
     }
 
@@ -40,7 +38,7 @@ public class Wonder {
         return name;
     }
 
-    public ArrayList<Card> getStages(boolean side) {
+    public CardCollection getStages(boolean side) {
         if(side)
             return stagesA;
         else
@@ -55,7 +53,7 @@ public class Wonder {
         ForegroundColorSpan fcs = new ForegroundColorSpan(Card.getColorId(product.toString()));
         Card.appendSb(sb, product.toString().toLowerCase(), fcs);
         sb.append('\n');
-        ArrayList<Card> stages = getStages(side);
+        CardCollection stages = getStages(side);
         int i = 1;
         for(Card card : stages) {
             sb.append("\nStage " + i++);

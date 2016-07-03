@@ -6,10 +6,13 @@ public class AI {
 
     private final Player player;
 
-
     public AI(Player player) {
         this.player = player;
         player.setWonderSide(true);
+    }
+
+    public void doTurn() {
+        //do fancy stuff
     }
 
 }

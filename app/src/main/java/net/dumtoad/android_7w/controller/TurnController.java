@@ -6,6 +6,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import net.dumtoad.android_7w.R;
 import net.dumtoad.android_7w.cards.Card;
@@ -52,19 +53,16 @@ public class TurnController {
         return outstate;
     }
 
-    public TradeController getTradeController() {
-        return tradeController;
-    }
-
     public Player getCurrentPlayer() {
         return mvc.getPlayer(playerTurn);
     }
 
     public void startTurn(int playerNum) {
+        mode = Mode.wonder;
         tradeController = new TradeController(mvc);
-        this.playerTurn = this.playerViewing = playerNum;
+        playerTurn = playerViewing = playerNum;
         if(mvc.getPlayer(playerNum).isAI()) {
-            //Do something cool!
+            mvc.getPlayer(playerNum).getAI().doTurn();
         } else {
             if(mvc.getTableController().getNumHumanPlayers() > 1) {
                 DialogFragment df = new PassThePhone();
@@ -141,11 +139,18 @@ public class TurnController {
         LinearLayout content = (LinearLayout) mvc.getActivity().findViewById(R.id.content);
         content.removeAllViews();
 
-        CardCollection cc = new CardCollection();
-        cc.addAll(player.getWonderStages());
-        cc.addAll(player.getPlayedCards());
+        for(Card card : player.getWonderStages()) {
+            CardView cv = new CardView(card, mvc.getActivity(), false);
+            if(! player.getPlayedCards().contains(card)) {
+                cv.setText(cv.getText() + " (not built)");
+            }
+            content.addView(cv);
+        }
+
+        CardCollection cc = player.getPlayedCards();
         cc.sort();
         for(Card card : cc) {
+            if(card.getType() == Card.Type.STAGE) continue;
             CardView cv = new CardView(card, mvc.getActivity(), false);
             content.addView(cv);
         }
@@ -211,6 +216,38 @@ public class TurnController {
 
     public void onComplete() {
         showMode();
+    }
+
+    public void requestDiscard(Card card) {
+        getCurrentPlayer().discardCard(card);
+        endTurn();
+    }
+
+    public void requestWonder(Card card) {
+        Card stage = getCurrentPlayer().nextWonderStage();
+        if(stage == null) {
+            Toast.makeText(mvc.getActivity(), "Already built all stages!", Toast.LENGTH_SHORT).show();
+        } else if(tradeController.canAffordResources(stage) && tradeController.canAffordGold(card)) {
+            getCurrentPlayer().buildWonder(stage, card, (tradeController.getTotalCost() * -1) - card.getCost().get(Card.Resource.GOLD),
+                    tradeController.getCurrentCost(false), tradeController.getCurrentCost(true));
+            endTurn();
+        } else {
+            Toast.makeText(mvc.getActivity(), "Insufficient resources", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    public void requestBuild(Card card) {
+        if(tradeController.canAffordResources(card) && tradeController.canAffordGold(card)) {
+            getCurrentPlayer().buildCard(card, (tradeController.getTotalCost() * -1) - card.getCost().get(Card.Resource.GOLD),
+                    tradeController.getCurrentCost(false), tradeController.getCurrentCost(true));
+            endTurn();
+        } else {
+            Toast.makeText(mvc.getActivity(), "Insufficient resources", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    private void endTurn() {
+        mvc.getTableController().nextPlayerStart();
     }
 
 }

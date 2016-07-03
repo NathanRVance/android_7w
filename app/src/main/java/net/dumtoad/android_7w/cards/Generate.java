@@ -698,12 +698,12 @@ public class Generate {
         ArrayList<Wonder> wonders = new ArrayList<>();
         Wonder wonder;
         Card card;
-        ArrayList<Card> stages;
+        CardCollection stages;
 
         //Rhodes
         wonder = new Wonder(Wonders.The_Colossus_of_Rhodes);
         wonder.setResource(Card.Resource.ORE);
-        stages = new ArrayList<>();
+        stages = new CardCollection();
         card = new Card(Card.Type.STAGE, WonderStages.Stage_1);
         card.setCost(Card.Resource.WOOD, 2);
         card.setProducts(Card.Resource.VP, 3);
@@ -720,7 +720,7 @@ public class Generate {
         stages.add(card);
         wonder.setStagesA(stages);
 
-        stages = new ArrayList<>();
+        stages = new CardCollection();
         card = new Card(Card.Type.STAGE, WonderStages.Stage_1);
         card.setCost(Card.Resource.STONE, 3);
         card.setProducts(Card.Resource.SHIELD, 1);
@@ -741,7 +741,7 @@ public class Generate {
         //Alexandria
         wonder = new Wonder(Wonders.The_Lighthouse_of_Alexandria);
         wonder.setResource(Card.Resource.GLASS);
-        stages = new ArrayList<>();
+        stages = new CardCollection();
         card = new Card(Card.Type.STAGE, WonderStages.Stage_1);
         card.setCost(Card.Resource.STONE, 2);
         card.setProducts(Card.Resource.VP, 3);
@@ -761,7 +761,7 @@ public class Generate {
         stages.add(card);
         wonder.setStagesA(stages);
 
-        stages = new ArrayList<>();
+        stages = new CardCollection();
         card = new Card(Card.Type.STAGE, WonderStages.Stage_1);
         card.setCost(Card.Resource.CLAY, 2);
         card.setProducts(Card.Resource.CLAY, 1);
@@ -788,7 +788,7 @@ public class Generate {
         //Ephesus
         wonder = new Wonder(Wonders.The_Temple_of_Artemis_in_Ephesus);
         wonder.setResource(Card.Resource.PAPER);
-        stages = new ArrayList<>();
+        stages = new CardCollection();
         card = new Card(Card.Type.STAGE, WonderStages.Stage_1);
         card.setCost(Card.Resource.STONE, 2);
         card.setProducts(Card.Resource.VP, 3);
@@ -805,7 +805,7 @@ public class Generate {
         stages.add(card);
         wonder.setStagesA(stages);
 
-        stages = new ArrayList<>();
+        stages = new CardCollection();
         card = new Card(Card.Type.STAGE, WonderStages.Stage_1);
         card.setCost(Card.Resource.STONE, 2);
         card.setProducts(Card.Resource.VP, 2);
@@ -832,7 +832,7 @@ public class Generate {
         //Babylon
         wonder = new Wonder(Wonders.The_Hanging_Gardens_of_Babylon);
         wonder.setResource(Card.Resource.CLAY);
-        stages = new ArrayList<>();
+        stages = new CardCollection();
         card = new Card(Card.Type.STAGE, WonderStages.Stage_1);
         card.setCost(Card.Resource.CLAY, 2);
         card.setProducts(Card.Resource.VP, 3);
@@ -851,7 +851,7 @@ public class Generate {
         stages.add(card);
         wonder.setStagesA(stages);
 
-        stages = new ArrayList<>();
+        stages = new CardCollection();
         card = new Card(Card.Type.STAGE, WonderStages.Stage_1);
         card.setCost(Card.Resource.CLAY, 1);
         card.setCost(Card.Resource.CLOTH, 1);
@@ -878,7 +878,7 @@ public class Generate {
         //Olympia
         wonder = new Wonder(Wonders.The_Statue_of_Zeus_in_Olympia);
         wonder.setResource(Card.Resource.WOOD);
-        stages = new ArrayList<>();
+        stages = new CardCollection();
         card = new Card(Card.Type.STAGE, WonderStages.Stage_1);
         card.setCost(Card.Resource.WOOD, 2);
         card.setProducts(Card.Resource.VP, 3);
@@ -895,7 +895,7 @@ public class Generate {
         stages.add(card);
         wonder.setStagesA(stages);
 
-        stages = new ArrayList<>();
+        stages = new CardCollection();
         card = new Card(Card.Type.STAGE, WonderStages.Stage_1);
         card.setCost(Card.Resource.WOOD, 2);
         card.setMessage("Can trade 1 coin for resources with adjacent players.");
@@ -918,7 +918,7 @@ public class Generate {
         //Halicarnassus
         wonder = new Wonder(Wonders.The_Mausoleum_of_Halicarnassus);
         wonder.setResource(Card.Resource.CLOTH);
-        stages = new ArrayList<>();
+        stages = new CardCollection();
         card = new Card(Card.Type.STAGE, WonderStages.Stage_1);
         card.setCost(Card.Resource.CLAY, 2);
         card.setProducts(Card.Resource.VP, 3);
@@ -935,7 +935,7 @@ public class Generate {
         stages.add(card);
         wonder.setStagesA(stages);
 
-        stages = new ArrayList<>();
+        stages = new CardCollection();
         card = new Card(Card.Type.STAGE, WonderStages.Stage_1);
         card.setCost(Card.Resource.ORE, 2);
         card.setProducts(Card.Resource.VP, 2);
@@ -962,7 +962,7 @@ public class Generate {
         //Giza
         wonder = new Wonder(Wonders.The_Pyrimids_of_Giza);
         wonder.setResource(Card.Resource.STONE);
-        stages = new ArrayList<>();
+        stages = new CardCollection();
         card = new Card(Card.Type.STAGE, WonderStages.Stage_1);
         card.setCost(Card.Resource.STONE, 2);
         card.setProducts(Card.Resource.VP, 3);
@@ -979,7 +979,7 @@ public class Generate {
         stages.add(card);
         wonder.setStagesA(stages);
 
-        stages = new ArrayList<>();
+        stages = new CardCollection();
         card = new Card(Card.Type.STAGE, WonderStages.Stage_1);
         card.setCost(Card.Resource.WOOD, 2);
         card.setProducts(Card.Resource.VP, 3);
