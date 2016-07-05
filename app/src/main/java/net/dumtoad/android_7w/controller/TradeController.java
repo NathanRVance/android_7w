@@ -14,7 +14,7 @@ import net.dumtoad.android_7w.R;
 import net.dumtoad.android_7w.cards.Card;
 import net.dumtoad.android_7w.cards.CardCollection;
 import net.dumtoad.android_7w.cards.Generate;
-import net.dumtoad.android_7w.cards.Player;
+import net.dumtoad.android_7w.player.Player;
 import net.dumtoad.android_7w.cards.ResQuant;
 
 import java.util.HashMap;

@@ -550,7 +550,7 @@ public class Generate {
         card = new Card(Card.Type.COMMERCIAL, Era2.Arena);
         card.setCost(Card.Resource.STONE, 2);
         card.setCost(Card.Resource.ORE, 1);
-        card.setMessage("3 coins and 1 vp for each completed wonder stage.");
+        card.setMessage("3 coins and 1 vp for each completed wonder stage");
         cards.add(card);
 
         card = new Card(Card.Type.MILITARY, Era2.Fortifications);
@@ -671,8 +671,9 @@ public class Generate {
         card.setCost(Card.Resource.WOOD, 2);
         card.setCost(Card.Resource.ORE, 2);
         card.setCost(Card.Resource.CLOTH, 1);
-        card.setMessage(
-                "Counts as either a compass, gear or tablet.");
+        card.setProducts(Card.Resource.COMPASS, 1);
+        card.setProducts(Card.Resource.GEAR, 1);
+        card.setProducts(Card.Resource.TABLET, 1);
         cards.add(card);
 
         card = new Card(Card.Type.GUILD, Era2.Magistrates_Guild);

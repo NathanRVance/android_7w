@@ -5,7 +5,7 @@ import android.os.Bundle;
 import net.dumtoad.android_7w.cards.Card;
 import net.dumtoad.android_7w.cards.CardCollection;
 import net.dumtoad.android_7w.cards.Hand;
-import net.dumtoad.android_7w.cards.Player;
+import net.dumtoad.android_7w.player.Player;
 
 import java.util.ArrayList;
 
@@ -47,17 +47,16 @@ public class TableController {
         return tc;
     }
 
-    public int getEra() {
-        return era;
-    }
-
-    private void nextEra() {
-        //Discard current hands
+    private void discardHands() {
         for(int i = 0; i < mvc.getNumPlayers(); i++) {
             discard(mvc.getPlayer(i).getHand().get(0));
         }
-        era++;
-        startEra();
+    }
+
+    private void endEra() {
+        for (int i = 0; i < mvc.getNumPlayers(); i++) {
+            mvc.getPlayer(i).getScore().resolveMilitary(era);
+        }
     }
 
     public void startEra() {
@@ -71,6 +70,10 @@ public class TableController {
     public void endTurn() {
         for (int i = 0; i < mvc.getNumPlayers(); i++) {
             mvc.getPlayer(i).finishTurn();
+        }
+        //Wait for all players to finish before doing special actions
+        for (int i = 0; i < mvc.getNumPlayers(); i++) {
+            mvc.getPlayer(i).specialAction();
         }
     }
 
@@ -95,17 +98,21 @@ public class TableController {
             tc.startTurn(playerTurn++);
         } else {
             playerTurn = 0;
-            endTurn();
             if (mvc.getPlayer(0).getHand().size() == 1) { //end of era
-                nextEra();
+                discardHands();
+                endTurn();
+                endEra();
+                era++;
+                startEra();
             } else {
+                endTurn();
                 passTheHand();
                 nextPlayerStart();
             }
         }
     }
 
-    public Player getPlayerDirection(Boolean west, Player asker) {
+    public Player getPlayerDirection(boolean west, Player asker) {
         int playerNum;
         for (playerNum = 0; playerNum < mvc.getNumPlayers(); playerNum++) {
             if (asker == mvc.getPlayer(playerNum)) break;

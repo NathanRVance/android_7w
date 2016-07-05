@@ -12,7 +12,7 @@ import android.widget.TextView;
 
 import net.dumtoad.android_7w.MainActivity;
 import net.dumtoad.android_7w.R;
-import net.dumtoad.android_7w.cards.Player;
+import net.dumtoad.android_7w.player.Player;
 
 import java.util.ArrayList;
 

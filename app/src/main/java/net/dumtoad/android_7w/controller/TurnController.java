@@ -15,7 +15,7 @@ import net.dumtoad.android_7w.R;
 import net.dumtoad.android_7w.cards.Card;
 import net.dumtoad.android_7w.cards.CardCollection;
 import net.dumtoad.android_7w.cards.Hand;
-import net.dumtoad.android_7w.cards.Player;
+import net.dumtoad.android_7w.player.Player;
 import net.dumtoad.android_7w.dialog.PassThePhone;
 import net.dumtoad.android_7w.fragment.WonderFragment;
 import net.dumtoad.android_7w.view.CardView;

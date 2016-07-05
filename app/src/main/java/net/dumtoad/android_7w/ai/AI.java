@@ -1,6 +1,6 @@
 package net.dumtoad.android_7w.ai;
 
-import net.dumtoad.android_7w.cards.Player;
+import net.dumtoad.android_7w.player.Player;
 
 public class AI {
 

@@ -14,7 +14,7 @@ import android.widget.ScrollView;
 import net.dumtoad.android_7w.R;
 import net.dumtoad.android_7w.ai.AI;
 import net.dumtoad.android_7w.cards.Database;
-import net.dumtoad.android_7w.cards.Player;
+import net.dumtoad.android_7w.player.Player;
 import net.dumtoad.android_7w.fragment.SetupFragment;
 import net.dumtoad.android_7w.fragment.WonderSelectFragment;
 

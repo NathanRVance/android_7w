@@ -1,10 +1,17 @@
-package net.dumtoad.android_7w.cards;
+package net.dumtoad.android_7w.player;
 
 import android.os.Bundle;
 import android.text.SpannableStringBuilder;
 import android.text.style.ForegroundColorSpan;
 
 import net.dumtoad.android_7w.ai.AI;
+import net.dumtoad.android_7w.cards.Card;
+import net.dumtoad.android_7w.cards.CardCollection;
+import net.dumtoad.android_7w.cards.Generate;
+import net.dumtoad.android_7w.cards.Hand;
+import net.dumtoad.android_7w.cards.ResQuant;
+import net.dumtoad.android_7w.cards.Special;
+import net.dumtoad.android_7w.cards.Wonder;
 import net.dumtoad.android_7w.controller.MasterViewController;
 
 import java.util.ArrayList;
@@ -21,6 +28,7 @@ public class Player {
     private AI ai;
     private int gold;
     private TurnBuffer turnBuffer;
+    private Score score;
 
     public Player(MasterViewController mvc, boolean isAI, String name) {
         this.mvc = mvc;
@@ -29,6 +37,7 @@ public class Player {
         this.name = name;
         hand = new Hand();
         gold = 3;
+        score = new Score(this, mvc);
     }
 
     public Player(MasterViewController mvc, Bundle savedInstanceState) {
@@ -46,6 +55,7 @@ public class Player {
         }
         this.wonderSide = savedInstanceState.getBoolean("wonderSide");
         this.gold = savedInstanceState.getInt("gold");
+        this.score = new Score(this, mvc, savedInstanceState.getBundle("score"));
     }
 
     public Bundle getInstanceState() {
@@ -57,6 +67,7 @@ public class Player {
         outstate.putString("wonder", wonder.getName().toString());
         outstate.putBoolean("wonderSide", wonderSide);
         outstate.putInt("gold", gold);
+        outstate.putBundle("score", score.getInstanceState());
         return outstate;
     }
 
@@ -114,6 +125,10 @@ public class Player {
 
     public int getGold() {
         return gold;
+    }
+
+    public Score getScore() {
+        return score;
     }
 
     public Card nextWonderStage() {
@@ -192,6 +207,10 @@ public class Player {
         turnBuffer.resolve();
     }
 
+    public void specialAction() {
+        turnBuffer.resolveSpecialAction();
+    }
+
     private class TurnBuffer {
         Card card;
         int goldHere;
@@ -206,11 +225,19 @@ public class Player {
         }
 
         public void resolve() {
-            if(card != null)
+            if(card != null) {
                 playedCards.add(card);
+                if(Special.isSpecialGold(card, Player.this)) {
+                    addGold(Special.getSpecialGold(card, Player.this));
+                }
+            }
             addGold(goldHere);
             mvc.getTableController().getPlayerDirection(false, Player.this).addGold(goldEast);
             mvc.getTableController().getPlayerDirection(true, Player.this).addGold(goldWest);
+        }
+
+        public void resolveSpecialAction() {
+            Special.specialAction(card, Player.this);
         }
     }
 
