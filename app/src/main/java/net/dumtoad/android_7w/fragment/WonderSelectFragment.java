@@ -6,6 +6,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
+import android.widget.RelativeLayout;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
 import net.dumtoad.android_7w.MainActivity;
@@ -32,7 +34,9 @@ public class WonderSelectFragment extends AbstractFragment {
 
         ((TextView) view.findViewById(R.id.player_name)).setText(player.getName());
 
-        final TextView tv = (TextView) view.findViewById(R.id.text);
+        final RelativeLayout content = (RelativeLayout) view.findViewById(R.id.content);
+
+        final TextView tv = (TextView) ((ScrollView) content.getChildAt(0)).getChildAt(0);
         tv.setText(player.getWonder().getSummary(true));
 
         RadioGroup rg = (RadioGroup) view.findViewById(R.id.wonder_switch);
@@ -43,8 +47,18 @@ public class WonderSelectFragment extends AbstractFragment {
             public void onClick(View v) {
                 RadioButton rb = (RadioButton) v;
                 if(rb.isChecked()) {
-                    tv.setText(player.getWonder().getSummary(true));
                     player.setWonderSide(true);
+                    ScrollView s1 = (ScrollView) content.getChildAt(content.getChildCount()-1);
+
+                    ScrollView s2 = new ScrollView(getActivity());
+                    s2.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
+                    TextView tv = new TextView(getActivity());
+                    tv.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+                    tv.setText(player.getWonder().getSummary(true));
+                    s2.addView(tv);
+
+                    //Animate the swap
+                    mvc.animateTranslate(content, s1, s2, false);
                 }
             }
         });
@@ -54,8 +68,18 @@ public class WonderSelectFragment extends AbstractFragment {
             public void onClick(View v) {
                 RadioButton rb = (RadioButton) v;
                 if(rb.isChecked()) {
-                    tv.setText(player.getWonder().getSummary(false));
                     player.setWonderSide(false);
+                    ScrollView s1 = (ScrollView) content.getChildAt(content.getChildCount()-1);
+
+                    ScrollView s2 = new ScrollView(getActivity());
+                    s2.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
+                    TextView tv = new TextView(getActivity());
+                    tv.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+                    tv.setText(player.getWonder().getSummary(false));
+                    s2.addView(tv);
+
+                    //Animate the swap
+                    mvc.animateTranslate(content, s1, s2, true);
                 }
             }
         });

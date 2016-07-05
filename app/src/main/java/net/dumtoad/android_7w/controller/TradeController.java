@@ -170,7 +170,7 @@ public class TradeController {
         //Add the wonder resource
         available.put(player.getWonder().getResource(), 1);
         //Remove status resources
-        available.subtractResources(status);
+        available.addResources(status);
         //complicated are cards where you must choose which resource they produce
         CardCollection complicated = new CardCollection();
         for(Card card : player.getPlayedCards()) {

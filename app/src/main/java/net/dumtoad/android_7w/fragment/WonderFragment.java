@@ -7,6 +7,7 @@ import android.view.ViewGroup;
 
 import net.dumtoad.android_7w.MainActivity;
 import net.dumtoad.android_7w.R;
+import net.dumtoad.android_7w.controller.TurnController;
 
 public class WonderFragment extends AbstractFragment {
 
@@ -32,21 +33,24 @@ public class WonderFragment extends AbstractFragment {
         view.findViewById(R.id.wonder).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mvc.getTableController().getTurnController().showWonder();
+                TurnController tc = mvc.getTableController().getTurnController();
+                tc.crossfadeToView(tc.showWonder());
             }
         });
 
         view.findViewById(R.id.summary).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mvc.getTableController().getTurnController().showSummary();
+                TurnController tc = mvc.getTableController().getTurnController();
+                tc.crossfadeToView(tc.showSummary());
             }
         });
 
         view.findViewById(R.id.hand).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mvc.getTableController().getTurnController().showHand();
+                TurnController tc = mvc.getTableController().getTurnController();
+                tc.crossfadeToView(tc.showHand());
             }
         });
 

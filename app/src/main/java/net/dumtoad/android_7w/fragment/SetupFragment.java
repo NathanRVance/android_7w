@@ -1,5 +1,7 @@
 package net.dumtoad.android_7w.fragment;
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -56,8 +58,7 @@ public class SetupFragment extends AbstractFragment {
             @Override
             public void onClick(View v) {
                 numPlayers--;
-                playerSelectLayout.removeView(setupItems.get(setupItems.size() - 1));
-                setupItems.remove(setupItems.size() - 1);
+                removeSetupItem();
                 addButton.setEnabled(true);
                 if (numPlayers == 3)
                     subtractButton.setEnabled(false);
@@ -117,8 +118,26 @@ public class SetupFragment extends AbstractFragment {
         names[index] = name;
 
         SetupPlayerItem item = new SetupPlayerItem(getActivity(), names, ais, setupItems.size());
-        playerSelectLayout.addView(item);
         setupItems.add(item);
+
+        //Animate the addition!
+        int duration = getResources().getInteger(android.R.integer.config_shortAnimTime);
+        item.setAlpha(0f);
+        playerSelectLayout.addView(item); //Added, but invisible!
+        item.animate().alpha(1f).setDuration(duration).setListener(null);
+    }
+
+    private void removeSetupItem() {
+        final SetupPlayerItem item = setupItems.remove(setupItems.size() - 1);
+
+        //Animate the deletion!
+        int duration = getResources().getInteger(android.R.integer.config_shortAnimTime);
+        item.animate().alpha(0f).setDuration(duration).setListener(new AnimatorListenerAdapter() {
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                playerSelectLayout.removeView(item);
+            }
+        });
     }
 
 }

@@ -1,6 +1,5 @@
 package net.dumtoad.android_7w.cards;
 
-import java.util.Map;
 import java.util.TreeMap;
 
 public class ResQuant extends TreeMap<Card.Resource, Integer> {
@@ -32,14 +31,14 @@ public class ResQuant extends TreeMap<Card.Resource, Integer> {
         return sb.toString();
     }
 
-    public ResQuant addResources(Map<Card.Resource, Integer> add) {
+    public ResQuant addResources(ResQuant add) {
         for(Card.Resource resource : add.keySet()) {
             put(resource, get(resource) + add.get(resource));
         }
         return this;
     }
 
-    public ResQuant subtractResources(Map<Card.Resource, Integer> sub) {
+    public ResQuant subtractResources(ResQuant sub) {
         for(Card.Resource resource : sub.keySet()) {
             put(resource, get(resource) - sub.get(resource));
         }

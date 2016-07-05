@@ -47,19 +47,24 @@
 
     </android.support.v7.widget.Toolbar>
 
-    <ScrollView
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_weight="1"
-        android:layout_height="0dp" >
+        android:layout_height="0dp"
+        android:id="@+id/content"
+        android:layout_marginLeft="@dimen/activity_horizontal_margin">
 
-        <TextView
-            android:id="@+id/text"
-            android:layout_height="wrap_content"
+        <ScrollView
             android:layout_width="match_parent"
-            android:layout_marginLeft="@dimen/activity_horizontal_margin"
-            android:layout_marginRight="@dimen/activity_horizontal_margin" />
+            android:layout_height="match_parent" >
 
-    </ScrollView>
+            <TextView
+                android:layout_height="wrap_content"
+                android:layout_width="match_parent" />
+
+        </ScrollView>
+
+    </RelativeLayout>
 
     <android.support.v7.widget.Toolbar
         android:id="@+id/bottom_toolbar"
