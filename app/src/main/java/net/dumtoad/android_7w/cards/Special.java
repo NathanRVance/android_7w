@@ -88,14 +88,16 @@ public class Special {
         return ret;
     }
 
-    public static void specialAction(Card card, Player player) {
+    public static boolean specialAction(Card card, Player player) {
         if(card.getType() == Card.Type.STAGE && player.getWonder().getName() == Generate.Wonders.The_Mausoleum_of_Halicarnassus) {
             if(card.getName() == Generate.WonderStages.Stage_2 ||
                     !player.getWonderSide() && (card.getName() == Generate.WonderStages.Stage_1 || card.getName() == Generate.WonderStages.Stage_3)) {
                 int playerNum = MainActivity.getMasterViewController().getPlayerNum(player);
                 MainActivity.getMasterViewController().getTableController().getTurnController().startTurn(playerNum, true);
+                return true;
             }
         }
+        return false;
     }
 
 }

@@ -208,7 +208,7 @@ public class Player {
         return false;
     }
 
-    public void buildCard(Card card, int goldHere, int goldEast, int goldWest) {
+    public void buildCard(Card card, int goldHere, int goldEast, int goldWest, Hand hand) {
         if(!hand.remove(card)) {
             throw new RuntimeException("Could not build card I don't have!");
         }
@@ -231,11 +231,14 @@ public class Player {
     }
 
     public void finishTurn() {
-        turnBuffer.resolve();
+        if(turnBuffer != null)
+            turnBuffer.resolve();
     }
 
-    public void specialAction() {
-        turnBuffer.resolveSpecialAction();
+    public boolean specialAction() {
+        if(turnBuffer != null)
+            return turnBuffer.resolveSpecialAction();
+        return false;
     }
 
     public void flush() {
@@ -289,8 +292,8 @@ public class Player {
             mvc.getTableController().getPlayerDirection(true, Player.this).addGold(goldWest);
         }
 
-        public void resolveSpecialAction() {
-            Special.specialAction(card, Player.this);
+        public boolean resolveSpecialAction() {
+            return Special.specialAction(card, Player.this);
         }
     }
 

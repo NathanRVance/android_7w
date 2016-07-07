@@ -289,7 +289,10 @@ public class TurnController {
         } else if(hasCoupon || (tradeController.canAffordResources(card) && tradeController.canAffordGold(card))) {
             int cardGoldCost = (tradeController.getTotalCost() * -1) - card.getCost().get(Card.Resource.GOLD);
             if(hasCoupon) cardGoldCost = 0;
-            getCurrentPlayer().buildCard(card, cardGoldCost, tradeController.getCurrentCost(false), tradeController.getCurrentCost(true));
+            Hand hand;
+            if(playDiscard) hand = mvc.getTableController().getDiscards();
+            else hand = getCurrentPlayer().getHand();
+            getCurrentPlayer().buildCard(card, cardGoldCost, tradeController.getCurrentCost(false), tradeController.getCurrentCost(true), hand);
             endTurn();
             return true;
         } else {

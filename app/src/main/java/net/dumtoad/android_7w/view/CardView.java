@@ -51,7 +51,7 @@ public class CardView extends Button {
                                                         case 0:
                                                             //Do nothing
                                                             break;
-                                                        case 3:
+                                                        case 1:
                                                             tc.requestBuild(card);
                                                             break;
                                                     }

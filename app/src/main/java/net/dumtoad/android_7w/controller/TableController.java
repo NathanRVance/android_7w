@@ -92,15 +92,17 @@ public class TableController {
         nextPlayerStart();
     }
 
-    public void endTurn() {
+    public boolean endTurn() {
         for (Player player : mvc.getPlayers()) {
             player.finishTurn();
         }
         //Wait for all players to finish before doing special actions
+        boolean specialAction = false;
         for (Player player : mvc.getPlayers()) {
-            player.specialAction();
+            specialAction |= player.specialAction();
             player.flush();
         }
+        return specialAction;
     }
 
     public void passTheHand() {
@@ -128,7 +130,7 @@ public class TableController {
             if (mvc.getPlayer(0).getHand().size() <= 1) { //end of era
                 if(play7thCard()) return;
                 discardHands();
-                endTurn();
+                if(endTurn()) return;
                 endEra();
                 era++;
                 startEra();
