@@ -1,7 +1,9 @@
 package net.dumtoad.android_7w.controller;
 
 import android.app.DialogFragment;
+import android.graphics.PorterDuff;
 import android.os.Bundle;
+import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
@@ -220,6 +222,10 @@ public class TurnController {
             Hand hand = player.getHand();
             for (Card card : hand) {
                 CardView cv = new CardView(card, mvc.getActivity(), true);
+                if(! (getCurrentPlayer().hasCouponFor(card) || (tradeController.canAffordResources(card) && tradeController.canAffordGold(card)))) {
+                    //Darken it slightly
+                    cv.getBackground().setColorFilter(ContextCompat.getColor(mvc.getActivity(), R.color.gray), PorterDuff.Mode.MULTIPLY);
+                }
                 ll.addView(cv);
             }
         } else {
@@ -238,12 +244,13 @@ public class TurnController {
         content.addView(showMode());
     }
 
-    public void requestDiscard(Card card) {
+    public boolean requestDiscard(Card card) {
         getCurrentPlayer().discardCard(card);
         endTurn();
+        return true;
     }
 
-    public void requestWonder(Card card) {
+    public boolean requestWonder(Card card) {
         Card stage = getCurrentPlayer().nextWonderStage();
         if(stage == null) {
             Toast.makeText(mvc.getActivity(), "Already built all stages!", Toast.LENGTH_SHORT).show();
@@ -251,19 +258,31 @@ public class TurnController {
             getCurrentPlayer().buildWonder(stage, card, (tradeController.getTotalCost() * -1) - card.getCost().get(Card.Resource.GOLD),
                     tradeController.getCurrentCost(false), tradeController.getCurrentCost(true));
             endTurn();
+            return true;
         } else {
             Toast.makeText(mvc.getActivity(), "Insufficient resources", Toast.LENGTH_SHORT).show();
         }
+        return false;
     }
 
-    public void requestBuild(Card card) {
-        if(tradeController.canAffordResources(card) && tradeController.canAffordGold(card)) {
-            getCurrentPlayer().buildCard(card, (tradeController.getTotalCost() * -1) - card.getCost().get(Card.Resource.GOLD),
-                    tradeController.getCurrentCost(false), tradeController.getCurrentCost(true));
+    public boolean requestBuild(Card card) {
+        boolean hasCoupon = getCurrentPlayer().hasCouponFor(card);
+        if(getCurrentPlayer().getPlayedCards().contains(card.getName())) {
+            Toast.makeText(mvc.getActivity(), "Already built " + card.getNameString(), Toast.LENGTH_SHORT).show();
+        } else if(hasCoupon && tradeController.hasTrade()) {
+            Toast.makeText(mvc.getActivity(), "Don't trade, you have a coupon", Toast.LENGTH_SHORT).show();
+        } else if(tradeController.overpaid(card)) {
+            Toast.makeText(mvc.getActivity(), "Overpaid, undo some trades", Toast.LENGTH_SHORT).show();
+        } else if(hasCoupon || (tradeController.canAffordResources(card) && tradeController.canAffordGold(card))) {
+            int cardGoldCost = (tradeController.getTotalCost() * -1) - card.getCost().get(Card.Resource.GOLD);
+            if(hasCoupon) cardGoldCost = 0;
+            getCurrentPlayer().buildCard(card, cardGoldCost, tradeController.getCurrentCost(false), tradeController.getCurrentCost(true));
             endTurn();
+            return true;
         } else {
             Toast.makeText(mvc.getActivity(), "Insufficient resources", Toast.LENGTH_SHORT).show();
         }
+        return false;
     }
 
     private void endTurn() {

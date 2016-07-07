@@ -44,7 +44,7 @@ public class CardCollection extends ArrayList<Card> {
 
     public boolean contains(Enum name) {
         for(Card card : this) {
-            if(card.getName().equals(name)) {
+            if(card.getName().toString().equals(name.toString())) {
                 return true;
             }
         } return false;

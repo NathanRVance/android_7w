@@ -25,7 +25,6 @@ public class MasterViewController {
     private Activity activity;
     private Database database;
     private Player players[];
-    private int numPlayers;
     private TableController tc;
 
     public MasterViewController(Activity activity) {
@@ -42,7 +41,7 @@ public class MasterViewController {
     }
 
     public int getNumPlayers() {
-        return numPlayers;
+        return players.length;
     }
 
     public void setup() {
@@ -52,7 +51,6 @@ public class MasterViewController {
     }
 
     public void postSetup(String names[], boolean ais[], int numPlayers) {
-        this.numPlayers = numPlayers;
 
         database = new Database(numPlayers);
 
@@ -78,10 +76,11 @@ public class MasterViewController {
     }
 
     public Player getPlayer(int index) {
-        if(index < players.length) {
-            return players[index];
-        }
-        return null;
+        return players[index];
+    }
+
+    public Player[] getPlayers() {
+        return players;
     }
 
     public void startMainGame() {
@@ -94,7 +93,7 @@ public class MasterViewController {
 
     public void onSaveInstanceState(Bundle outstate)
     {
-        outstate.putInt("numPlayers", numPlayers);
+        outstate.putInt("numPlayers", players.length);
         if(database != null) {
             outstate.putBoolean("databaseCreated", true);
             outstate.putBundle("database", database.getInstanceState());
@@ -109,7 +108,7 @@ public class MasterViewController {
     }
 
     public void onRestoreInstanceState (Bundle savedInstanceState) {
-        numPlayers = savedInstanceState.getInt("numPlayers");
+        int numPlayers = savedInstanceState.getInt("numPlayers");
         if(savedInstanceState.getBoolean("databaseCreated")) {
             database = new Database(numPlayers);
             database.onRestoreInstanceState(savedInstanceState);

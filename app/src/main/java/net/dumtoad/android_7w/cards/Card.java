@@ -122,6 +122,13 @@ public class Card {
         return products;
     }
 
+    public boolean isCouponFor(Card card) {
+        for(Card c : couponsFor) {
+            if(c.getName().toString().equals(card.getName().toString())) return true;
+        }
+        return false;
+    }
+
     public void couponFor(Card card) {
         couponsFor.add(card);
         card.couponedBy(this);

@@ -132,53 +132,74 @@ public class Player {
     }
 
     public Card nextWonderStage() {
-        for(Card stage : wonder.getStages(wonderSide)) {
-            if(! playedCards.contains(stage)) {
+        for (Card stage : wonder.getStages(wonderSide)) {
+            if (!playedCards.contains(stage)) {
                 return stage;
             }
         }
         return null;
     }
 
-    public ResQuant getProduction(boolean full) {
-        ResQuant resources = new ResQuant();
-        for(Card.Resource product : Card.Resource.values()) {
-            resources.put(product, 0);
-        }
-        resources.put(getWonder().getResource(), resources.get(getWonder().getResource()) + 1);
-        for(Card card : playedCards) {
-            if(! full && card.getType() == Card.Type.COMMERCIAL) continue;
-            ResQuant products = card.getProducts();
-            for(Card.Resource product : Card.Resource.values()) {
-                if(product == Card.Resource.GOLD) continue;
-                resources.put(product, resources.get(product) + products.get(product));
-            }
-        }
-        resources.put(Card.Resource.GOLD, gold);
-        return resources;
-    }
+    private Card.Resource[] ored = new Card.Resource[] {Card.Resource.WOOD, Card.Resource.STONE, Card.Resource.CLAY,
+            Card.Resource.ORE, Card.Resource.CLOTH, Card.Resource.GLASS, Card.Resource.PAPER, Card.Resource.COMPASS,
+            Card.Resource.GEAR, Card.Resource.TABLET};
 
     public SpannableStringBuilder getSummary() {
         SpannableStringBuilder sb = new SpannableStringBuilder();
-        sb.append("Owned:\n");
-        appendSbPlayer(sb, this, true);
-        sb.append("\nWest:\n");
-        appendSbPlayer(sb, mvc.getTableController().getPlayerDirection(true, this), false);
-        sb.append("\nEast:\n");
-        appendSbPlayer(sb, mvc.getTableController().getPlayerDirection(false, this), false);
-        return sb;
-    }
+        ResQuant production = new ResQuant();
+        production.put(wonder.getResource(), 1);
+        CardCollection complicated = new CardCollection();
+        for(Card card : playedCards) {
+            int numRes = 0;
+            for(Card.Resource res : ored) {
+                if(card.getProducts().get(res) > 0) numRes++;
+            }
+            if(numRes > 1) {
+                complicated.add(card);
+            } else {
+                production.addResources(card.getProducts());
+            }
+        }
 
-    private void appendSbPlayer(SpannableStringBuilder sb, Player player, boolean full) {
-        ResQuant production = player.getProduction(full);
+        ForegroundColorSpan fcs = new ForegroundColorSpan(Card.getColorId(Card.Resource.GOLD.toString()));
+        Card.appendSb(sb, "Gold", fcs);
+        sb.append(": ").append(String.valueOf(gold)).append("\n");
+
+        if(complicated.size() > 0) {
+            sb.append("Dynamic products:");
+            for(Card card : complicated) {
+                sb.append("\n ");
+                for(Card.Resource product : ored) {
+                    if(card.getProducts().get(product) == 1) {
+                        fcs = new ForegroundColorSpan(Card.getColorId(product.toString()));
+                        Card.appendSb(sb, product.toString().toLowerCase(), fcs);
+                        sb.append(" or ");
+                    }
+                }
+                //Remove the last " or "
+                sb.delete(sb.length()-4, sb.length());
+            }
+            sb.append("\n");
+        }
+
+        sb.append("Static products:\n");
         for(Card.Resource product : Card.Resource.values()) {
+            if(product == Card.Resource.GOLD) continue;
             sb.append(" ");
-            ForegroundColorSpan fcs = new ForegroundColorSpan(Card.getColorId(product.toString()));
+            fcs = new ForegroundColorSpan(Card.getColorId(product.toString()));
             Card.appendSb(sb, product.toString().toLowerCase(), fcs);
             sb.append(": ");
             sb.append(production.get(product).toString());
             sb.append("\n");
         }
+        return sb;
+    }
+
+    public boolean hasCouponFor(Card card) {
+        for(Card c : playedCards) {
+            if(c.isCouponFor(card)) return true;
+        }
+        return false;
     }
 
     public void buildCard(Card card, int goldHere, int goldEast, int goldWest) {
@@ -209,6 +230,10 @@ public class Player {
 
     public void specialAction() {
         turnBuffer.resolveSpecialAction();
+    }
+
+    public void flush() {
+        turnBuffer = null;
     }
 
     private class TurnBuffer {

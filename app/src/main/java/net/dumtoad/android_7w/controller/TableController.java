@@ -4,6 +4,7 @@ import android.os.Bundle;
 
 import net.dumtoad.android_7w.cards.Card;
 import net.dumtoad.android_7w.cards.CardCollection;
+import net.dumtoad.android_7w.cards.Generate;
 import net.dumtoad.android_7w.cards.Hand;
 import net.dumtoad.android_7w.player.Player;
 
@@ -47,15 +48,34 @@ public class TableController {
         return tc;
     }
 
-    private void discardHands() {
+    private boolean play7thCard() {
+        //Babylon side B stage 2 can play their 7th card
         for(int i = 0; i < mvc.getNumPlayers(); i++) {
-            discard(mvc.getPlayer(i).getHand().get(0));
+            Player player = mvc.getPlayer(i);
+            if(player.getWonder().getName() == Generate.Wonders.The_Hanging_Gardens_of_Babylon
+                    && ! player.getWonderSide()) {
+                for(Card card : player.getPlayedCards()) {
+                    if(card.getName() == Generate.WonderStages.Stage_2) {
+                        if(player.getHand().size() == 0) return false;
+                        tc.startTurn(i);
+                        return true;
+                    }
+                }
+            }
+        }
+        return false;
+    }
+
+    private void discardHands() {
+        for(Player player : mvc.getPlayers()) {
+            //If player could play his 7th card, there's nothing to discard
+            if(player.getHand().size() ==  1) discard(player.getHand().get(0));
         }
     }
 
     private void endEra() {
-        for (int i = 0; i < mvc.getNumPlayers(); i++) {
-            mvc.getPlayer(i).getScore().resolveMilitary(era);
+        for (Player player : mvc.getPlayers()) {
+            player.getScore().resolveMilitary(era);
         }
     }
 
@@ -68,12 +88,13 @@ public class TableController {
     }
 
     public void endTurn() {
-        for (int i = 0; i < mvc.getNumPlayers(); i++) {
-            mvc.getPlayer(i).finishTurn();
+        for (Player player : mvc.getPlayers()) {
+            player.finishTurn();
         }
         //Wait for all players to finish before doing special actions
-        for (int i = 0; i < mvc.getNumPlayers(); i++) {
-            mvc.getPlayer(i).specialAction();
+        for (Player player : mvc.getPlayers()) {
+            player.specialAction();
+            player.flush();
         }
     }
 
@@ -94,11 +115,12 @@ public class TableController {
     }
 
     public void nextPlayerStart() {
-        if (playerTurn < mvc.getNumPlayers()) {
+        if (playerTurn < mvc.getNumPlayers() && mvc.getPlayer(playerTurn).getHand().size() > 1) {
             tc.startTurn(playerTurn++);
         } else {
             playerTurn = 0;
-            if (mvc.getPlayer(0).getHand().size() == 1) { //end of era
+            if (mvc.getPlayer(0).getHand().size() <= 1) { //end of era
+                if(play7thCard()) return;
                 discardHands();
                 endTurn();
                 endEra();
@@ -129,8 +151,8 @@ public class TableController {
 
     public int getNumHumanPlayers() {
         int num = 0;
-        for (int i = 0; i < mvc.getNumPlayers(); i++)
-            if (!mvc.getPlayer(i).isAI()) num++;
+        for (Player player : mvc.getPlayers())
+            if (!player.isAI()) num++;
         return num;
     }
 

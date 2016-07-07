@@ -50,12 +50,10 @@ public class WonderSelectFragment extends AbstractFragment {
                     player.setWonderSide(true);
                     ScrollView s1 = (ScrollView) content.getChildAt(content.getChildCount()-1);
 
-                    ScrollView s2 = new ScrollView(getActivity());
-                    s2.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
-                    TextView tv = new TextView(getActivity());
-                    tv.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+                    LayoutInflater inflater = LayoutInflater.from(mvc.getActivity());
+                    ScrollView s2 = (ScrollView) inflater.inflate(R.layout.wonder_select_content, content, false);
+                    TextView tv = (TextView) s2.getChildAt(0);
                     tv.setText(player.getWonder().getSummary(true));
-                    s2.addView(tv);
 
                     //Animate the swap
                     mvc.animateTranslate(content, s1, s2, false);
@@ -71,12 +69,10 @@ public class WonderSelectFragment extends AbstractFragment {
                     player.setWonderSide(false);
                     ScrollView s1 = (ScrollView) content.getChildAt(content.getChildCount()-1);
 
-                    ScrollView s2 = new ScrollView(getActivity());
-                    s2.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
-                    TextView tv = new TextView(getActivity());
-                    tv.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+                    LayoutInflater inflater = LayoutInflater.from(mvc.getActivity());
+                    ScrollView s2 = (ScrollView) inflater.inflate(R.layout.wonder_select_content, content, false);
+                    TextView tv = (TextView) s2.getChildAt(0);
                     tv.setText(player.getWonder().getSummary(false));
-                    s2.addView(tv);
 
                     //Animate the swap
                     mvc.animateTranslate(content, s1, s2, true);

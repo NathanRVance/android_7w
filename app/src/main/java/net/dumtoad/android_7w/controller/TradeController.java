@@ -105,7 +105,8 @@ public class TradeController {
     private void updateViews(HashMap<Card.Resource, LinearLayout> views, ResQuant currentTrade, Player other) {
         int playerGold = mvc.getTableController().getTurnController().getCurrentPlayer().getGold();
         goldStatus.setText("Gold available: " + (playerGold - getTotalCost()));
-        ResQuant numAvailable = numAvailable(other, currentTrade, false);
+        ResQuant currentTradeInCorrectDirection = new ResQuant().subtractResources(currentTrade);
+        ResQuant numAvailable = numAvailable(other, currentTradeInCorrectDirection, false);
         for(Card.Resource res : views.keySet()) {
             LinearLayout ll = views.get(res);
             SpannableStringBuilder sb = new SpannableStringBuilder();
@@ -164,21 +165,18 @@ public class TradeController {
         return 2;
     }
 
-    //Status is current trade status, and is positive
-    public ResQuant numAvailable(Player player, ResQuant status, boolean includeCommercial) {
+    //Status is current trade status, and is positive in the direction of the player who's turn it is.
+    public ResQuant numAvailable(Player player, ResQuant status, boolean includeNonTradeable) {
         ResQuant available = new ResQuant();
         //Add the wonder resource
         available.put(player.getWonder().getResource(), 1);
-        //Remove status resources
+        //Add the status resources
         available.addResources(status);
         //complicated are cards where you must choose which resource they produce
         CardCollection complicated = new CardCollection();
         for(Card card : player.getPlayedCards()) {
-            //If we aren't including commercial, skip it now
-            if(! includeCommercial && card.getType() == Card.Type.COMMERCIAL) continue;
-            //We only care about cards that produce resources (commercial has already been skipped if necessary)
-            if(! (card.getType() == Card.Type.RESOURCE || card.getType() == Card.Type.INDUSTRY
-                    || card.getType() == Card.Type.COMMERCIAL)) continue;
+            //If we aren't including non-tradeables (everything but resource and industry) skip them now
+            if(! includeNonTradeable && card.getType() != Card.Type.RESOURCE && card.getType() != Card.Type.INDUSTRY) continue;
 
             ResQuant prod = card.getProducts();
 
@@ -225,6 +223,26 @@ public class TradeController {
                 }
             }
         }
+    }
+
+    public boolean overpaid(Card card) {
+        ResQuant status = new ResQuant().subtractResources(card.getCost());
+        status.put(Card.Resource.GOLD, 0); //Handle gold elsewhere
+        status.addResources(tradeEast);
+        status.addResources(tradeWest);
+        for(Card.Resource res : tradeable) {
+            if((tradeEast.get(res) > 0 || tradeWest.get(res) > 0) && status.get(res) > 0) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public boolean hasTrade() {
+        for(Card.Resource res : tradeable) {
+            if(tradeEast.get(res) > 0 || tradeWest.get(res) > 0) return true;
+        }
+        return false;
     }
 
     public boolean canAffordResources(Card card) {
