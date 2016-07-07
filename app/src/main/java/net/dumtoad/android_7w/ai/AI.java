@@ -11,7 +11,7 @@ public class AI {
         player.setWonderSide(true);
     }
 
-    public void doTurn() {
+    public void doTurn(boolean playDiscard) {
         //do fancy stuff
     }
 

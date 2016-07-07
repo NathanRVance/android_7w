@@ -28,6 +28,7 @@ public class TurnController {
     private int playerTurn;
     private int playerViewing;
     private Mode mode;
+    private boolean playDiscard;
 
     private enum Mode {
         wonder,
@@ -47,6 +48,7 @@ public class TurnController {
         this.playerTurn = savedInstanceState.getInt("playerTurn");
         this.playerViewing = savedInstanceState.getInt("playerViewing");
         this.mode = Mode.valueOf(savedInstanceState.getString("mode"));
+        this.playDiscard = savedInstanceState.getBoolean("playDiscard");
     }
 
     public Bundle getInstanceState() {
@@ -55,6 +57,7 @@ public class TurnController {
         outstate.putInt("playerViewing", playerViewing);
         outstate.putString("mode", mode.toString());
         outstate.putBundle("tradeController", tradeController.getInstanceState());
+        outstate.putBoolean("playDiscard", playDiscard);
         return outstate;
     }
 
@@ -62,12 +65,13 @@ public class TurnController {
         return mvc.getPlayer(playerTurn);
     }
 
-    public void startTurn(int playerNum) {
+    public void startTurn(int playerNum, boolean playDiscard) {
+        this.playDiscard = playDiscard;
         mode = Mode.handtrade;
         tradeController = new TradeController(mvc);
         playerTurn = playerViewing = playerNum;
         if(mvc.getPlayer(playerNum).isAI()) {
-            mvc.getPlayer(playerNum).getAI().doTurn();
+            mvc.getPlayer(playerNum).getAI().doTurn(playDiscard);
         } else {
             if(mvc.getTableController().getNumHumanPlayers() > 1) {
                 DialogFragment df = new PassThePhone();
@@ -151,7 +155,7 @@ public class TurnController {
         LinearLayout ll = (LinearLayout) sv.getChildAt(0);
 
         for(Card card : player.getWonderStages()) {
-            CardView cv = new CardView(card, mvc.getActivity(), false);
+            CardView cv = new CardView(card, mvc.getActivity(), player, false, playDiscard);
             if(! player.getPlayedCards().contains(card)) {
                 cv.setText(cv.getText() + " (not built)");
             }
@@ -162,7 +166,7 @@ public class TurnController {
         cc.sort();
         for(Card card : cc) {
             if(card.getType() == Card.Type.STAGE) continue;
-            CardView cv = new CardView(card, mvc.getActivity(), false);
+            CardView cv = new CardView(card, mvc.getActivity(), player, false, playDiscard);
             ll.addView(cv);
         }
 
@@ -219,10 +223,15 @@ public class TurnController {
         LinearLayout ll = (LinearLayout) sv.getChildAt(0);
 
         if(playerTurn == playerViewing) {
-            Hand hand = player.getHand();
+            Hand hand;
+            if(playDiscard) {
+                hand = mvc.getTableController().getDiscards();
+            } else {
+                hand = player.getHand();
+            }
             for (Card card : hand) {
-                CardView cv = new CardView(card, mvc.getActivity(), true);
-                if(! (getCurrentPlayer().hasCouponFor(card) || (tradeController.canAffordResources(card) && tradeController.canAffordGold(card)))) {
+                CardView cv = new CardView(card, mvc.getActivity(), player, true, playDiscard);
+                if(! (playDiscard || getCurrentPlayer().hasCouponFor(card) || (tradeController.canAffordResources(card) && tradeController.canAffordGold(card)))) {
                     //Darken it slightly
                     cv.getBackground().setColorFilter(ContextCompat.getColor(mvc.getActivity(), R.color.gray), PorterDuff.Mode.MULTIPLY);
                 }
@@ -266,11 +275,15 @@ public class TurnController {
     }
 
     public boolean requestBuild(Card card) {
-        boolean hasCoupon = getCurrentPlayer().hasCouponFor(card);
+        boolean hasCoupon = getCurrentPlayer().hasCouponFor(card) || playDiscard;
         if(getCurrentPlayer().getPlayedCards().contains(card.getName())) {
             Toast.makeText(mvc.getActivity(), "Already built " + card.getNameString(), Toast.LENGTH_SHORT).show();
         } else if(hasCoupon && tradeController.hasTrade()) {
-            Toast.makeText(mvc.getActivity(), "Don't trade, you have a coupon", Toast.LENGTH_SHORT).show();
+            if(playDiscard) {
+                Toast.makeText(mvc.getActivity(), "Don't trade, you can build for free", Toast.LENGTH_SHORT).show();
+            } else {
+                Toast.makeText(mvc.getActivity(), "Don't trade, you have a coupon", Toast.LENGTH_SHORT).show();
+            }
         } else if(tradeController.overpaid(card)) {
             Toast.makeText(mvc.getActivity(), "Overpaid, undo some trades", Toast.LENGTH_SHORT).show();
         } else if(hasCoupon || (tradeController.canAffordResources(card) && tradeController.canAffordGold(card))) {
@@ -286,6 +299,7 @@ public class TurnController {
     }
 
     private void endTurn() {
+        playDiscard = false;
         mvc.getTableController().nextPlayerStart();
     }
 

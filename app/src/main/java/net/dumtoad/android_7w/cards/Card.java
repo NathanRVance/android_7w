@@ -8,6 +8,7 @@ import android.text.style.CharacterStyle;
 import android.text.style.ForegroundColorSpan;
 
 import net.dumtoad.android_7w.MainActivity;
+import net.dumtoad.android_7w.player.Player;
 
 import java.util.ArrayList;
 
@@ -144,7 +145,7 @@ public class Card {
         sb.setSpan(style, sb.length()-text.length(), sb.length(), Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
     }
 
-    public SpannableStringBuilder getSummary()
+    public SpannableStringBuilder getSummary(Player player, boolean printSpecial)
     {
 
         SpannableStringBuilder sb = new SpannableStringBuilder();
@@ -199,6 +200,26 @@ public class Card {
         if(! message.isEmpty()) {
             sb.append(message);
             sb.append('\n');
+        }
+
+        if(printSpecial && (Special.isSpecialVps(this, player) || Special.isSpecialGold(this, player))) {
+            sb.append("Currently you would get\n");
+            if(Special.isSpecialVps(this, player)) {
+                sb.append(" ");
+                fcs = new ForegroundColorSpan(getColorId(Resource.VP.toString()));
+                appendSb(sb, Resource.VP.toString().toLowerCase(), fcs);
+                sb.append(": ");
+                sb.append(String.valueOf(Special.getSpecialVps(this, player)));
+                sb.append("\n");
+            }
+            if(Special.isSpecialGold(this, player)) {
+                sb.append(" ");
+                fcs = new ForegroundColorSpan(getColorId(Resource.GOLD.toString()));
+                appendSb(sb, Resource.GOLD.toString().toLowerCase(), fcs);
+                sb.append(": ");
+                sb.append(String.valueOf(Special.getSpecialGold(this, player)));
+                sb.append("\n");
+            }
         }
 
         if(! couponedBy.isEmpty()) {

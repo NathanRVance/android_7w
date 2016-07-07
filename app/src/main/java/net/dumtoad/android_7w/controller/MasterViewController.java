@@ -24,7 +24,7 @@ public class MasterViewController {
 
     private Activity activity;
     private Database database;
-    private Player players[];
+    private Player players[] = new Player[3];
     private TableController tc;
 
     public MasterViewController(Activity activity) {
@@ -77,6 +77,13 @@ public class MasterViewController {
 
     public Player getPlayer(int index) {
         return players[index];
+    }
+
+    public int getPlayerNum(Player player) {
+        for(int i = 0; i < players.length; i++) {
+            if(player == players[i]) return i;
+        }
+        return -1;
     }
 
     public Player[] getPlayers() {

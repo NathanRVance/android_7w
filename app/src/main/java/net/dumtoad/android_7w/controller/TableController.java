@@ -3,7 +3,6 @@ package net.dumtoad.android_7w.controller;
 import android.os.Bundle;
 
 import net.dumtoad.android_7w.cards.Card;
-import net.dumtoad.android_7w.cards.CardCollection;
 import net.dumtoad.android_7w.cards.Generate;
 import net.dumtoad.android_7w.cards.Hand;
 import net.dumtoad.android_7w.player.Player;
@@ -14,22 +13,23 @@ public class TableController {
 
     private MasterViewController mvc;
     private TurnController tc;
-    private CardCollection discards;
+    private Hand discards;
     private int era;
-    private int playerTurn = 0;
+    private int playerTurn = -1;
 
     public TableController(MasterViewController mvc) {
         this.mvc = mvc;
         this.tc = new TurnController(mvc);
-        discards = new CardCollection();
+        discards = new Hand();
         era = 0;
     }
 
     public TableController(MasterViewController mvc, Bundle savedInstanceState) {
         this.mvc = mvc;
-        discards = new CardCollection(mvc.getDatabase().getAllCards(), savedInstanceState.getString("discards"));
+        discards = new Hand(mvc.getDatabase().getAllCards(), savedInstanceState.getString("discards"));
         era = savedInstanceState.getInt("era");
         tc = new TurnController(mvc, savedInstanceState.getBundle("tc"));
+        playerTurn = savedInstanceState.getInt("playerTurn");
     }
 
     public Bundle getInstanceState() {
@@ -37,11 +37,16 @@ public class TableController {
         outstate.putString("discards", discards.getOrder());
         outstate.putInt("era", era);
         outstate.putBundle("tc", tc.getInstanceState());
+        outstate.putInt("playerTurn", playerTurn);
         return outstate;
     }
 
     public void discard(Card card) {
         discards.add(card);
+    }
+
+    public Hand getDiscards() {
+        return discards;
     }
 
     public TurnController getTurnController() {
@@ -57,7 +62,7 @@ public class TableController {
                 for(Card card : player.getPlayedCards()) {
                     if(card.getName() == Generate.WonderStages.Stage_2) {
                         if(player.getHand().size() == 0) return false;
-                        tc.startTurn(i);
+                        tc.startTurn(i, false);
                         return true;
                     }
                 }
@@ -115,10 +120,11 @@ public class TableController {
     }
 
     public void nextPlayerStart() {
+        playerTurn++;
         if (playerTurn < mvc.getNumPlayers() && mvc.getPlayer(playerTurn).getHand().size() > 1) {
-            tc.startTurn(playerTurn++);
+            tc.startTurn(playerTurn, false);
         } else {
-            playerTurn = 0;
+            playerTurn = -1;
             if (mvc.getPlayer(0).getHand().size() <= 1) { //end of era
                 if(play7thCard()) return;
                 discardHands();

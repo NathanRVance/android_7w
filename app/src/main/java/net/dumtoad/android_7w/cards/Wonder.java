@@ -58,7 +58,7 @@ public class Wonder {
         for(Card card : stages) {
             sb.append("\nStage " + i++);
             sb.append('\n');
-            sb.append(card.getSummary());
+            sb.append(card.getSummary(null, false));
             sb.append("\n--------\n");
         }
 

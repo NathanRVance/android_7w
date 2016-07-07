@@ -56,6 +56,9 @@ public class Player {
         this.wonderSide = savedInstanceState.getBoolean("wonderSide");
         this.gold = savedInstanceState.getInt("gold");
         this.score = new Score(this, mvc, savedInstanceState.getBundle("score"));
+        if(savedInstanceState.getBundle("turnBuffer") != null) {
+            turnBuffer = new TurnBuffer(savedInstanceState.getBundle("turnBuffer"));
+        }
     }
 
     public Bundle getInstanceState() {
@@ -68,6 +71,9 @@ public class Player {
         outstate.putBoolean("wonderSide", wonderSide);
         outstate.putInt("gold", gold);
         outstate.putBundle("score", score.getInstanceState());
+        if(turnBuffer != null) {
+            outstate.putBundle("turnBuffer", turnBuffer.getInstanceState());
+        }
         return outstate;
     }
 
@@ -247,6 +253,28 @@ public class Player {
             this.goldHere = goldHere;
             this.goldEast = goldEast;
             this.goldWest = goldWest;
+        }
+
+        public TurnBuffer(Bundle savedInstanceState) {
+            String cardName = savedInstanceState.getString("card");
+            for(Card card : mvc.getDatabase().getAllCards()) {
+                if(card.getName().toString().equals(cardName)) {
+                    this.card = card;
+                    break;
+                }
+            }
+            goldHere = savedInstanceState.getInt("goldHere");
+            goldEast = savedInstanceState.getInt("goldEast");
+            goldWest = savedInstanceState.getInt("goldWest");
+        }
+
+        public Bundle getInstanceState() {
+            Bundle bundle = new Bundle();
+            bundle.putString("card", card.getName().toString());
+            bundle.putInt("goldHere", goldHere);
+            bundle.putInt("goldEast", goldEast);
+            bundle.putInt("goldWest", goldWest);
+            return bundle;
         }
 
         public void resolve() {
