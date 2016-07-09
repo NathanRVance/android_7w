@@ -100,4 +100,21 @@ public class Special {
         return false;
     }
 
+    public enum TradeType {
+        resource,
+        industry,
+        none
+    }
+
+    public static TradeType getTradeType(Card card, Player player) {
+        if((player.getWonder().getName().equals(Generate.Wonders.The_Statue_of_Zeus_in_Olympia)
+                && ! player.getWonderSide() && card.getName() == Generate.WonderStages.Stage_2)
+                || card.getName() == Generate.Era0.West_Trading_Post
+                || card.getName() == Generate.Era0.East_Trading_Post)
+            return TradeType.resource;
+        else if(card.getName() == Generate.Era0.Marketplace)
+            return TradeType.industry;
+        else return TradeType.none;
+    }
+
 }

@@ -9,12 +9,12 @@ import net.dumtoad.android_7w.MainActivity;
 import net.dumtoad.android_7w.R;
 import net.dumtoad.android_7w.controller.TurnController;
 
-public class WonderFragment extends AbstractFragment {
+public class GameFragment extends AbstractFragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         this.mvc = MainActivity.getMasterViewController();
-        final View view = inflater.inflate(R.layout.wonder_view, container, false);
+        final View view = inflater.inflate(R.layout.game_view, container, false);
 
         view.findViewById(R.id.west).setOnClickListener(new View.OnClickListener() {
             @Override

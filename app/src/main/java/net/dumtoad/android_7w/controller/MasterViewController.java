@@ -12,11 +12,10 @@ import android.view.animation.TranslateAnimation;
 import android.widget.ScrollView;
 
 import net.dumtoad.android_7w.R;
-import net.dumtoad.android_7w.ai.AI;
 import net.dumtoad.android_7w.cards.Database;
-import net.dumtoad.android_7w.player.Player;
 import net.dumtoad.android_7w.fragment.SetupFragment;
 import net.dumtoad.android_7w.fragment.WonderSelectFragment;
+import net.dumtoad.android_7w.player.Player;
 
 import java.util.ArrayList;
 
@@ -60,9 +59,7 @@ public class MasterViewController {
             players[i] = new Player(this, ais[i], names[i]);
             players[i].setWonder(database.drawWonder());
 
-            if(players[i].isAI()) {
-                players[i].setAI(new AI(players[i]));
-            } else {
+            if(! players[i].isAI()) {
                 humanPlayerIndecies.add(i);
             }
         }
@@ -198,6 +195,10 @@ public class MasterViewController {
                         parent.removeView(current);
                     }
                 });
+
+    }
+
+    public void endGame() {
 
     }
 

@@ -21,25 +21,28 @@ import java.util.HashMap;
 
 public class TradeController {
     private MasterViewController mvc;
+    private Player player;
     private boolean west;
     private ResQuant tradeWest;
     private ResQuant tradeEast;
     private HashMap<Card.Resource, LinearLayout> westViews;
     private HashMap<Card.Resource, LinearLayout> eastViews;
     private TextView goldStatus;
-    private Card.Resource[] tradeable = new Card.Resource[] {Card.Resource.WOOD, Card.Resource.STONE, Card.Resource.CLAY,
+    public static final Card.Resource[] tradeable = new Card.Resource[] {Card.Resource.WOOD, Card.Resource.STONE, Card.Resource.CLAY,
             Card.Resource.ORE, Card.Resource.CLOTH, Card.Resource.GLASS, Card.Resource.PAPER };
 
-    public TradeController(MasterViewController mvc) {
+    public TradeController(MasterViewController mvc, Player player) {
         this.mvc = mvc;
+        this.player = player;
         tradeWest = new ResQuant();
         tradeEast = new ResQuant();
         westViews = new HashMap<>();
         eastViews = new HashMap<>();
     }
 
-    public TradeController(MasterViewController mvc, Bundle savedInstanceState) {
+    public TradeController(MasterViewController mvc, Player player, Bundle savedInstanceState) {
         this.mvc = mvc;
+        this.player = player;
         tradeWest = new ResQuant(savedInstanceState.getString("tradeWest"));
         tradeEast = new ResQuant(savedInstanceState.getString("tradeEast"));
         west = savedInstanceState.getBoolean("west");
@@ -53,6 +56,11 @@ public class TradeController {
         bundle.putString("tradeEast", tradeEast.getString());
         bundle.putBoolean("west", west);
         return bundle;
+    }
+
+    public void setTrades(ResQuant tradeEast, ResQuant tradeWest) {
+        this.tradeEast = tradeEast;
+        this.tradeWest = tradeWest;
     }
 
     public void trade(LinearLayout content, boolean west) {
@@ -95,7 +103,6 @@ public class TradeController {
     }
 
     public void updateViews() {
-        Player player = mvc.getTableController().getTurnController().getCurrentPlayer();
         if(west)
             updateViews(westViews, tradeWest, mvc.getTableController().getPlayerDirection(true, player));
         else
@@ -103,7 +110,7 @@ public class TradeController {
     }
 
     private void updateViews(HashMap<Card.Resource, LinearLayout> views, ResQuant currentTrade, Player other) {
-        int playerGold = mvc.getTableController().getTurnController().getCurrentPlayer().getGold();
+        int playerGold = player.getGold();
         goldStatus.setText("Gold available: " + (playerGold - getTotalCost()));
         ResQuant currentTradeInCorrectDirection = new ResQuant().subtractResources(currentTrade);
         ResQuant numAvailable = numAvailable(other, currentTradeInCorrectDirection, false);
@@ -119,7 +126,7 @@ public class TradeController {
                 Card.appendSb(sb, String.valueOf(currentTrade.get(res)),
                         new ForegroundColorSpan(ContextCompat.getColor(mvc.getActivity(), R.color.red)));
             }
-            int cost = getCost(mvc.getTableController().getTurnController().getCurrentPlayer(), west, res);
+            int cost = getCost(player, west, res);
             sb.append("\nCost: ").append(String.valueOf(cost));
             ((TextView) ll.findViewById(R.id.title)).setText(sb);
             ll.findViewById(R.id.add).setEnabled(numAvailable.get(res) > 0 && getTotalCost() + cost <= playerGold);
@@ -135,7 +142,7 @@ public class TradeController {
         int tot = 0;
         ResQuant trade = (west)? tradeWest : tradeEast;
         for(Card.Resource res : trade.keySet()) {
-            tot += getCost(mvc.getTableController().getTurnController().getCurrentPlayer(), true, res)
+            tot += getCost(player, true, res)
                     * trade.get(res);
         }
         return tot;
@@ -250,11 +257,11 @@ public class TradeController {
         status.put(Card.Resource.GOLD, 0); //Handle gold elsewhere
         status.addResources(tradeEast);
         status.addResources(tradeWest);
-        return numAvailable(mvc.getTableController().getTurnController().getCurrentPlayer(), status, true).allZeroOrAbove();
+        return numAvailable(player, status, true).allZeroOrAbove();
     }
 
     public boolean canAffordGold(Card card) {
-        int playerGold = mvc.getTableController().getTurnController().getCurrentPlayer().getGold();
+        int playerGold = player.getGold();
         return playerGold >= card.getCost().get(Card.Resource.GOLD) + getTotalCost();
     }
 

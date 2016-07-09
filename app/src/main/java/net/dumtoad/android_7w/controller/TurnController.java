@@ -19,7 +19,7 @@ import net.dumtoad.android_7w.cards.CardCollection;
 import net.dumtoad.android_7w.cards.Hand;
 import net.dumtoad.android_7w.player.Player;
 import net.dumtoad.android_7w.dialog.PassThePhone;
-import net.dumtoad.android_7w.fragment.WonderFragment;
+import net.dumtoad.android_7w.fragment.GameFragment;
 import net.dumtoad.android_7w.view.CardView;
 
 public class TurnController {
@@ -38,14 +38,14 @@ public class TurnController {
 
     public TurnController(MasterViewController mvc) {
         this.mvc = mvc;
-        tradeController = new TradeController(mvc);
+        tradeController = new TradeController(mvc, getCurrentPlayer());
         this.mode = Mode.wonder;
     }
 
     public TurnController(MasterViewController mvc, Bundle savedInstanceState) {
         this.mvc = mvc;
-        tradeController = new TradeController(mvc, savedInstanceState.getBundle("tradeController"));
         this.playerTurn = savedInstanceState.getInt("playerTurn");
+        tradeController = new TradeController(mvc, getCurrentPlayer(), savedInstanceState.getBundle("tradeController"));
         this.playerViewing = savedInstanceState.getInt("playerViewing");
         this.mode = Mode.valueOf(savedInstanceState.getString("mode"));
         this.playDiscard = savedInstanceState.getBoolean("playDiscard");
@@ -68,8 +68,8 @@ public class TurnController {
     public void startTurn(int playerNum, boolean playDiscard) {
         this.playDiscard = playDiscard;
         mode = Mode.handtrade;
-        tradeController = new TradeController(mvc);
         playerTurn = playerViewing = playerNum;
+        tradeController = new TradeController(mvc, getCurrentPlayer());
         if(mvc.getPlayer(playerNum).isAI()) {
             mvc.getPlayer(playerNum).getAI().doTurn(playDiscard);
         } else {
@@ -80,11 +80,15 @@ public class TurnController {
                 df.setArguments(args);
                 df.show(mvc.getActivity().getFragmentManager(), "passthephone");
             }
-            WonderFragment wf = new WonderFragment();
+            GameFragment wf = new GameFragment();
             mvc.getActivity().getFragmentManager().beginTransaction()
                     .replace(R.id.main_layout, wf, "WonderSelect")
                     .commit();
         }
+    }
+
+    public TradeController getTradeController() {
+        return tradeController;
     }
 
     //west is true, east is false
@@ -278,14 +282,18 @@ public class TurnController {
         boolean hasCoupon = getCurrentPlayer().hasCouponFor(card) || playDiscard;
         if(getCurrentPlayer().getPlayedCards().contains(card.getName())) {
             Toast.makeText(mvc.getActivity(), "Already built " + card.getNameString(), Toast.LENGTH_SHORT).show();
+            System.out.println("Already built " + card.getNameString());
         } else if(hasCoupon && tradeController.hasTrade()) {
             if(playDiscard) {
                 Toast.makeText(mvc.getActivity(), "Don't trade, you can build for free", Toast.LENGTH_SHORT).show();
+                System.out.println("Don't trade, you can build for free");
             } else {
                 Toast.makeText(mvc.getActivity(), "Don't trade, you have a coupon", Toast.LENGTH_SHORT).show();
+                System.out.println("Don't trade, you have a coupon");
             }
         } else if(tradeController.overpaid(card)) {
             Toast.makeText(mvc.getActivity(), "Overpaid, undo some trades", Toast.LENGTH_SHORT).show();
+            System.out.println("Overpaid, undo some trades");
         } else if(hasCoupon || (tradeController.canAffordResources(card) && tradeController.canAffordGold(card))) {
             int cardGoldCost = (tradeController.getTotalCost() * -1) - card.getCost().get(Card.Resource.GOLD);
             if(hasCoupon) cardGoldCost = 0;
@@ -297,6 +305,7 @@ public class TurnController {
             return true;
         } else {
             Toast.makeText(mvc.getActivity(), "Insufficient resources", Toast.LENGTH_SHORT).show();
+            System.out.println("Insufficient resources");
         }
         return false;
     }

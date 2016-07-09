@@ -34,6 +34,7 @@ public class Player {
         this.mvc = mvc;
         playedCards = new CardCollection();
         this.isAI = isAI;
+        ai = new AI(this);
         this.name = name;
         hand = new Hand();
         gold = 3;
@@ -43,6 +44,7 @@ public class Player {
     public Player(MasterViewController mvc, Bundle savedInstanceState) {
         this.mvc = mvc;
         this.isAI = savedInstanceState.getBoolean("isAI");
+        ai = new AI(this, savedInstanceState.getBundle("ai"));
         this.name = savedInstanceState.getString("name");
         this.hand = new Hand(mvc.getDatabase().getAllCards(), savedInstanceState.getString("handtrade"));
         this.playedCards = new CardCollection(mvc.getDatabase().getAllCards(), savedInstanceState.getString("playedCards"));
@@ -64,6 +66,7 @@ public class Player {
     public Bundle getInstanceState() {
         Bundle outstate = new Bundle();
         outstate.putBoolean("isAI", isAI);
+        outstate.putBundle("ai", ai.getInstanceState());
         outstate.putString("name", name);
         outstate.putString("handtrade", hand.getOrder());
         outstate.putString("playedCards", playedCards.getOrder());
@@ -79,6 +82,7 @@ public class Player {
 
     public void setWonder(Wonder wonder) {
         this.wonder = wonder;
+        ai.updateScientist();
     }
 
     public Wonder getWonder() {
@@ -91,10 +95,6 @@ public class Player {
 
     public boolean isAI() {
         return isAI;
-    }
-
-    public void setAI(AI ai) {
-        this.ai = ai;
     }
 
     public AI getAI() {
@@ -144,6 +144,15 @@ public class Player {
             }
         }
         return null;
+    }
+
+    public ResQuant getRawProduction() {
+        ResQuant ret = new ResQuant();
+        for(Card card : playedCards) {
+            ret.addResources(card.getProducts());
+        }
+        ret.put(Card.Resource.GOLD, gold);
+        return ret;
     }
 
     private Card.Resource[] ored = new Card.Resource[] {Card.Resource.WOOD, Card.Resource.STONE, Card.Resource.CLAY,
@@ -236,9 +245,7 @@ public class Player {
     }
 
     public boolean specialAction() {
-        if(turnBuffer != null)
-            return turnBuffer.resolveSpecialAction();
-        return false;
+        return turnBuffer != null && turnBuffer.resolveSpecialAction();
     }
 
     public void flush() {
@@ -293,7 +300,9 @@ public class Player {
         }
 
         public boolean resolveSpecialAction() {
-            return Special.specialAction(card, Player.this);
+            if(card != null)
+                return Special.specialAction(card, Player.this);
+            return false;
         }
     }
 

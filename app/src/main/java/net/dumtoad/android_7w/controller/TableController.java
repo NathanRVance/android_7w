@@ -85,6 +85,11 @@ public class TableController {
     }
 
     public void startEra() {
+        if(era == 3) { //We're done!
+            mvc.endGame();
+            return;
+        }
+
         ArrayList<Hand> hands = mvc.getDatabase().dealHands(era);
         for (int i = 0; i < mvc.getNumPlayers(); i++) {
             mvc.getPlayer(i).setHand(hands.get(i));
@@ -119,6 +124,14 @@ public class TableController {
             }
             mvc.getPlayer(0).setHand(tmp);
         }
+    }
+
+    public boolean getPassingDirection() {
+        return era != 1;
+    }
+
+    public int getEra() {
+        return era;
     }
 
     public void nextPlayerStart() {
