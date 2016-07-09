@@ -13,6 +13,7 @@ import android.widget.ScrollView;
 
 import net.dumtoad.android_7w.R;
 import net.dumtoad.android_7w.cards.Database;
+import net.dumtoad.android_7w.fragment.EndFragment;
 import net.dumtoad.android_7w.fragment.SetupFragment;
 import net.dumtoad.android_7w.fragment.WonderSelectFragment;
 import net.dumtoad.android_7w.player.Player;
@@ -28,7 +29,6 @@ public class MasterViewController {
 
     public MasterViewController(Activity activity) {
         this.activity = activity;
-        tc = new TableController(this);
     }
 
     public TableController getTableController() {
@@ -44,6 +44,7 @@ public class MasterViewController {
     }
 
     public void setup() {
+        tc = new TableController(this);
         activity.getFragmentManager().beginTransaction()
                 .replace(R.id.main_layout, new SetupFragment(), "Setup")
                 .commit();
@@ -199,7 +200,10 @@ public class MasterViewController {
     }
 
     public void endGame() {
-
+        EndFragment endFrag = new EndFragment();
+        activity.getFragmentManager().beginTransaction()
+                .replace(R.id.main_layout, endFrag, "EndFragment")
+                .commit();
     }
 
 }

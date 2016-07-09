@@ -155,7 +155,7 @@ public class TradeController {
         CardCollection cards = player.getPlayedCards();
         if(plainResource) {
             if(player.getWonder().getName().equals(Generate.Wonders.The_Statue_of_Zeus_in_Olympia)
-                    && ! player.getWonderSide() && cards.contains(Generate.WonderStages.Stage_2)) {
+                    && ! player.getWonderSide() && cards.contains(Generate.WonderStages.Stage_1)) {
                 return 1;
             }
             if(west && cards.contains(Generate.Era0.West_Trading_Post)) {
@@ -252,12 +252,16 @@ public class TradeController {
         return false;
     }
 
-    public boolean canAffordResources(Card card) {
+    public ResQuant getResAvailableAfterTrade(Card card) {
         ResQuant status = new ResQuant().subtractResources(card.getCost());
         status.put(Card.Resource.GOLD, 0); //Handle gold elsewhere
         status.addResources(tradeEast);
         status.addResources(tradeWest);
-        return numAvailable(player, status, true).allZeroOrAbove();
+        return numAvailable(player, status, true);
+    }
+
+    public boolean canAffordResources(Card card) {
+        return getResAvailableAfterTrade(card).allZeroOrAbove();
     }
 
     public boolean canAffordGold(Card card) {

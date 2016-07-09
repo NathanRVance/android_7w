@@ -108,11 +108,27 @@ public class AI {
             default:
                 break;
         }
-        addNextEffect(cardAction, player);
+        if(cardAction.weight != -1) {
+            addNextEffect(cardAction, player);
+        }
         return cardAction;
     }
 
     private void calcBuild(CardAction cardAction, Player player, boolean playDiscard) {
+        if(player.getPlayedCards().contains(cardAction.card.getName())) {
+            cardAction.weight = -1;
+            return;
+        }
+
+        if(! playDiscard && ! player.hasCouponFor(cardAction.card)) {
+            //Trade cost
+            int cost = getTradeGoldCost(cardAction, player);
+            if (cost == -1 || cost + cardAction.card.getCost().get(Card.Resource.GOLD) > player.getGold()) {
+                cardAction.weight = -1;
+                return;
+            } else cardAction.weight -= cost / 2; //Not quite divided by 3; there's an opportunity cost to spending.
+        }
+
         ResQuant prod = player.getRawProduction();
 
         //Tradeable resources get 5 for what we don't have, 1 for what we do.
@@ -171,22 +187,15 @@ public class AI {
                 if(prod.get(res) == 0) cardAction.weight += 2;
             }
         }
-
-        if(! playDiscard && ! player.hasCouponFor(cardAction.card)) {
-            //Trade cost
-            int cost = getTradeGoldCost(cardAction, player);
-            if (cost == -1) cardAction.weight = -1;
-            else cardAction.weight -= cost / 2; //Not quite divided by 3; there's an opportunity cost to spending.
-        }
     }
 
     private void calcWonder(CardAction cardAction) {
-        if(player.getPlayedCards().contains(player.getWonderStages().get(player.getWonderStages().size() - 1).getName())) {
+        Card nextStage = player.nextWonderStage();
+        if(nextStage == null) {
             //We've already played all our wonder stages!
             cardAction.weight = -1;
         } else {
-            cardAction.weight += mvc.getTableController().getEra() * -1 + 2;
-            Card nextStage = player.getWonderStages().get(player.getWonderStages().size() - 1);
+            cardAction.weight += mvc.getTableController().getEra() * -1 + 3;
             CardAction ca = new CardAction(nextStage);
             calcBuild(ca, player, false);
             cardAction.weight += ca.weight;
@@ -195,8 +204,9 @@ public class AI {
             int cost = getTradeGoldCost(ca, player);
             cardAction.tradeEast = ca.tradeEast;
             cardAction.tradeWest = ca.tradeWest;
-            if(cost == -1) cardAction.weight = -1;
-            else cardAction.weight -= cost / 2; //Not quite divided by 3; there's an opportunity cost to spending.
+            if(cost == -1 || cost + nextStage.getCost().get(Card.Resource.GOLD) > player.getGold()) {
+                cardAction.weight = -1;
+            } else cardAction.weight -= cost / 2; //Not quite divided by 3; there's an opportunity cost to spending.
         }
     }
 
@@ -219,14 +229,10 @@ public class AI {
         if(status.allZeroOrAbove()) return 0;
         while(makeOneTrade(tc, cardAction, status, player)) {
             tc.setTrades(cardAction.tradeEast, cardAction.tradeWest);
-            status = new ResQuant().subtractResources(cardAction.card.getCost());
-            status.put(Card.Resource.GOLD, 0);
-            status.addResources(cardAction.tradeEast);
-            status.addResources(cardAction.tradeWest);
-            status = tc.numAvailable(player, status, true);
+            status = tc.getResAvailableAfterTrade(cardAction.card);
             if(status.allZeroOrAbove()) {
                 int totalCost = tc.getTotalCost();
-                if(player.getGold() < totalCost) return -1;
+                if(! tc.canAffordResources(cardAction.card) || ! tc.canAffordGold(cardAction.card)) return -1;
                 return totalCost;
             }
         }
@@ -274,7 +280,7 @@ public class AI {
             tradeDir = ! tradeDir;
         }
 
-        return true;
+        return false;
     }
 
     private class CardAction implements Comparable<CardAction> {

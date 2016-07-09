@@ -22,15 +22,17 @@ public class WonderSelectFragment extends AbstractFragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        final View view = inflater.inflate(R.layout.wonder_select, container, false);
+
         this.mvc = MainActivity.getMasterViewController();
         final ArrayList<Integer> playerNums = getArguments().getIntegerArrayList("PlayerNums");
         if(playerNums == null || playerNums.isEmpty()) {
-            throw new RuntimeException("Can't have AI only game");
+            mvc.startMainGame();
+            return view;
+            //throw new RuntimeException("Can't have AI only game");
         }
         int playerNum = playerNums.get(0);
         final Player player = mvc.getPlayer(playerNum);
-
-        final View view = inflater.inflate(R.layout.wonder_select, container, false);
 
         ((TextView) view.findViewById(R.id.player_name)).setText(player.getName());
 

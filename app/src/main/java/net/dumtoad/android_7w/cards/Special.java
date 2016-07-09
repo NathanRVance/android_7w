@@ -63,6 +63,18 @@ public class Special {
             return valueHelper(Card.Type.STRUCTURE, 1, player, true, false);
         } else if(card.getName() == Generate.Era2.Builders_Guild) {
             return valueHelper(Card.Type.STAGE, 1, player, true, true);
+        } else if(player.getWonder().getName().equals(Generate.Wonders.The_Statue_of_Zeus_in_Olympia)
+                && ! player.getWonderSide() && card.getName() == Generate.WonderStages.Stage_3) {
+            int max = 0;
+            for(boolean direction : new boolean[]{true, false}) {
+                for(Card c : MainActivity.getMasterViewController().getTableController().getPlayerDirection(direction, player).getPlayedCards()) {
+                    if(c.getType() == Card.Type.GUILD) {
+                        int vps = c.getProducts().get(Card.Resource.VP) + getSpecialVps(c, player);
+                        max = (vps > max)? vps : max;
+                    }
+                }
+            }
+            return max;
         }
         return -1;
     }
@@ -108,7 +120,7 @@ public class Special {
 
     public static TradeType getTradeType(Card card, Player player) {
         if((player.getWonder().getName().equals(Generate.Wonders.The_Statue_of_Zeus_in_Olympia)
-                && ! player.getWonderSide() && card.getName() == Generate.WonderStages.Stage_2)
+                && ! player.getWonderSide() && card.getName() == Generate.WonderStages.Stage_1)
                 || card.getName() == Generate.Era0.West_Trading_Post
                 || card.getName() == Generate.Era0.East_Trading_Post)
             return TradeType.resource;

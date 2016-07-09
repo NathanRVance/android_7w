@@ -111,18 +111,18 @@ public class TableController {
     }
 
     public void passTheHand() {
-        if (era == 1) { //pass East
-            Hand tmp = mvc.getPlayer(0).getHand();
-            for (int i = 1; i < mvc.getNumPlayers() - 1; i++) {
-                mvc.getPlayer(i).setHand(mvc.getPlayer(i + 1).getHand());
-            }
-            mvc.getPlayer(mvc.getNumPlayers() - 1).setHand(tmp);
-        } else { //pass West
+        if (getPassingDirection()) { //pass West
             Hand tmp = mvc.getPlayer(mvc.getNumPlayers() - 1).getHand();
             for (int i = mvc.getNumPlayers() - 1; i > 0; i--) {
                 mvc.getPlayer(i).setHand(mvc.getPlayer(i - 1).getHand());
             }
             mvc.getPlayer(0).setHand(tmp);
+        } else { //pass East
+            Hand tmp = mvc.getPlayer(0).getHand();
+            for (int i = 0; i < mvc.getNumPlayers() - 1; i++) {
+                mvc.getPlayer(i).setHand(mvc.getPlayer(i + 1).getHand());
+            }
+            mvc.getPlayer(mvc.getNumPlayers() - 1).setHand(tmp);
         }
     }
 

@@ -267,13 +267,15 @@ public class TurnController {
         Card stage = getCurrentPlayer().nextWonderStage();
         if(stage == null) {
             Toast.makeText(mvc.getActivity(), "Already built all stages!", Toast.LENGTH_SHORT).show();
-        } else if(tradeController.canAffordResources(stage) && tradeController.canAffordGold(card)) {
-            getCurrentPlayer().buildWonder(stage, card, (tradeController.getTotalCost() * -1) - card.getCost().get(Card.Resource.GOLD),
+            System.out.println("Already built all stages!");
+        } else if(tradeController.canAffordResources(stage) && tradeController.canAffordGold(stage)) {
+            getCurrentPlayer().buildWonder(stage, card, (tradeController.getTotalCost() * -1) - stage.getCost().get(Card.Resource.GOLD),
                     tradeController.getCurrentCost(false), tradeController.getCurrentCost(true));
             endTurn();
             return true;
         } else {
             Toast.makeText(mvc.getActivity(), "Insufficient resources", Toast.LENGTH_SHORT).show();
+            System.out.println("Insufficient resources");
         }
         return false;
     }

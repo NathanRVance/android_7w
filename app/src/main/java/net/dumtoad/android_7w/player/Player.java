@@ -207,6 +207,9 @@ public class Player {
             sb.append(production.get(product).toString());
             sb.append("\n");
         }
+
+        sb.append("Net military points: ").append(String.valueOf(score.getMilitaryVps()));
+
         return sb;
     }
 

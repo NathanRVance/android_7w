@@ -23,6 +23,9 @@ public class Score {
         this.mvc = mvc;
         militaryLosses = savedInstanceState.getInt("militaryLosses");
         militaryVictories = savedInstanceState.getIntArray("militaryVictories");
+        if(militaryVictories.length != 3) {
+            throw new RuntimeException("Bundle messes up!");
+        }
     }
 
     public Bundle getInstanceState() {
@@ -63,6 +66,59 @@ public class Score {
         return militaryLosses;
     }
 
+    public int getGoldVps() {
+        return player.getGold() / 3;
+    }
+
+    public int getWonderVps() {
+        int vps = 0;
+        for(Card card : player.getPlayedCards()) {
+            if(card.getType() == Card.Type.STAGE) {
+                vps += card.getProducts().get(Card.Resource.VP);
+                if (Special.isSpecialVps(card, player)) {
+                    vps += Special.getSpecialVps(card, player);
+                }
+            }
+        }
+        return vps;
+    }
+
+    public int getStructureVps() {
+        int vps = 0;
+        for(Card card : player.getPlayedCards()) {
+            if(card.getType() == Card.Type.STRUCTURE) {
+                vps += card.getProducts().get(Card.Resource.VP);
+            }
+        }
+        return vps;
+    }
+
+    public int getCommercialVps() {
+        int vps = 0;
+        for(Card card : player.getPlayedCards()) {
+            if(card.getType() == Card.Type.COMMERCIAL) {
+                vps += card.getProducts().get(Card.Resource.VP);
+                if (Special.isSpecialVps(card, player)) {
+                    vps += Special.getSpecialVps(card, player);
+                }
+            }
+        }
+        return vps;
+    }
+
+    public int getGuildVps() {
+        int vps = 0;
+        for(Card card : player.getPlayedCards()) {
+            if(card.getType() == Card.Type.GUILD) {
+                vps += card.getProducts().get(Card.Resource.VP);
+                if (Special.isSpecialVps(card, player)) {
+                    vps += Special.getSpecialVps(card, player);
+                }
+            }
+        }
+        return vps;
+    }
+
     public int getScienceVps() {
         int sciences[] = new int[3];
         int wilds = 0;
@@ -91,31 +147,25 @@ public class Score {
                 maxVps = (vps > maxVps)? vps : maxVps;
             }
         } else {
-            return getScienceVps(sciences);
+            int vps = 0;
+            int min = sciences[0];
+            for(int i : sciences) {
+                vps += i * i;
+                min = (i < min)? i : min;
+            }
+            vps += min * 7;
+            return vps;
         }
         return maxVps;
     }
 
-    private int getScienceVps(int sciences[]) {
-        int vps = 0;
-        int min = sciences[0];
-        for(int i : sciences) {
-            vps += i * i;
-            min = (i < min)? i : min;
-        }
-        vps += min * 7;
-        return vps;
-    }
-
     public int getVPs() {
         int vps = getMilitaryVps();
-        vps += player.getGold() / 3;
-        for(Card card : player.getPlayedCards()) {
-            vps += card.getProducts().get(Card.Resource.VP);
-            if(Special.isSpecialVps(card, player)) {
-                vps += Special.getSpecialVps(card, player);
-            }
-        }
+        vps += getGoldVps();
+        vps += getWonderVps();
+        vps += getStructureVps();
+        vps += getCommercialVps();
+        vps += getGuildVps();
         vps += getScienceVps();
         return vps;
     }
