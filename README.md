@@ -1,2 +1,2 @@
-# android_7w
-An android implimentation of the board game 7 Wonders
+# srednow7
+An android implementation of the board game 7 Wonders
