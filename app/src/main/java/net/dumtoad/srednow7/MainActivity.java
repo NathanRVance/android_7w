@@ -45,8 +45,7 @@ public class MainActivity extends Activity {
 
     @Override
     public boolean dispatchTouchEvent(MotionEvent ev) {
-        gestureDetector.onTouchEvent(ev);
-        return super.dispatchTouchEvent(ev);
+        return gestureDetector.onTouchEvent(ev) || super.dispatchTouchEvent(ev);
     }
 
     private void onSwipeRight() {
@@ -76,11 +75,6 @@ public class MainActivity extends Activity {
         private static final int SWIPE_VELOCITY_THRESHOLD = 100;
 
         @Override
-        public boolean onDown(MotionEvent e) {
-            return true;
-        }
-
-        @Override
         public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
             boolean result = false;
             try {
@@ -93,16 +87,16 @@ public class MainActivity extends Activity {
                         } else {
                             onSwipeLeft();
                         }
+                        result = true;
                     }
-                    result = true;
                 } /*else if (Math.abs(diffY) > SWIPE_THRESHOLD && Math.abs(velocityY) > SWIPE_VELOCITY_THRESHOLD) {
                     if (diffY > 0) {
                         onSwipeBottom();
                     } else {
                         onSwipeTop();
                     }
+                    result = true;
                 }*/
-                result = true;
 
             } catch (Exception exception) {
                 exception.printStackTrace();

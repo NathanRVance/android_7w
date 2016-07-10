@@ -4,67 +4,81 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <android.support.v7.widget.Toolbar
+    <android.support.v7.widget.Toolbar xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
         android:id="@+id/top_toolbar"
         android:layout_width="match_parent"
         android:layout_height="40dp"
-        android:minHeight="40dp"
         android:background="@color/darkblue"
+        android:minHeight="40dp"
+        android:theme="@style/Theme.7w"
         app:contentInsetEnd="0dp"
-        app:contentInsetStart="0dp"
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        android:theme="@style/Theme.7w">
+        app:contentInsetStart="0dp">
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textColor="@color/white"
-            android:id="@+id/player_name"
-            android:layout_marginLeft="@dimen/activity_horizontal_margin"
-            android:layout_marginRight="@dimen/activity_horizontal_margin" />
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
 
-        <RadioGroup
-            android:id="@+id/wonder_switch"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:orientation="horizontal">
-
-            <RadioButton
-                android:id="@+id/wonder_switch_A"
+            <TextView
+                android:id="@+id/player_name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textColor="@color/white"
-                android:text="@string/wonder_side_a" />
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="@dimen/activity_horizontal_margin"
+                android:layout_marginRight="@dimen/activity_horizontal_margin"
+                android:layout_toLeftOf="@+id/wonder_switch"
+                android:layout_toStartOf="@+id/wonder_switch"
+                android:textColor="@color/white" />
 
-            <RadioButton
-                android:id="@+id/wonder_switch_B"
+            <RadioGroup
+                android:id="@+id/wonder_switch"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textColor="@color/white"
-                android:text="@string/wonder_side_b" />
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="@dimen/activity_horizontal_margin"
+                android:layout_marginRight="@dimen/activity_horizontal_margin"
+                android:orientation="horizontal">
 
-        </RadioGroup>
+                <RadioButton
+                    android:id="@+id/wonder_switch_A"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/wonder_side_a"
+                    android:textColor="@color/white" />
+
+                <RadioButton
+                    android:id="@+id/wonder_switch_B"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/wonder_side_b"
+                    android:textColor="@color/white" />
+
+            </RadioGroup>
+
+        </RelativeLayout>
 
     </android.support.v7.widget.Toolbar>
 
     <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_weight="1"
-        android:layout_height="0dp"
         android:id="@+id/content"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
         android:clickable="true"
         android:focusable="true"
         android:focusableInTouchMode="true">
 
         <ScrollView
             android:layout_width="match_parent"
-            android:layout_height="match_parent" >
+            android:layout_height="match_parent">
 
             <TextView
-                android:layout_height="wrap_content"
                 android:layout_width="match_parent"
+                android:layout_height="wrap_content"
                 android:layout_marginLeft="@dimen/activity_horizontal_margin"
                 android:layout_marginRight="@dimen/activity_horizontal_margin" />
 
@@ -72,24 +86,23 @@
 
     </RelativeLayout>
 
-    <android.support.v7.widget.Toolbar
+    <android.support.v7.widget.Toolbar xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
         android:id="@+id/bottom_toolbar"
         android:layout_width="match_parent"
         android:layout_height="40dp"
-        android:minHeight="40dp"
         android:background="@color/darkblue"
+        android:minHeight="40dp"
+        android:theme="@style/Theme.7w"
         app:contentInsetEnd="0dp"
-        app:contentInsetStart="0dp"
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        android:theme="@style/Theme.7w">
+        app:contentInsetStart="0dp">
 
         <Button
+            android:id="@+id/ok"
             style="?android:attr/buttonBarButtonStyle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/ok"
-            android:id="@+id/ok"/>
+            android:text="@string/ok" />
 
     </android.support.v7.widget.Toolbar>
 
