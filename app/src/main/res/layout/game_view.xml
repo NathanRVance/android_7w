@@ -25,7 +25,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="West" />
+                android:text="@string/west" />
 
             <TextView
                 android:id="@+id/title"
@@ -41,7 +41,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="East" />
+                android:text="@string/east" />
 
         </LinearLayout>
 
@@ -52,12 +52,6 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1">
-
-        <ScrollView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
-
-        </ScrollView>
 
     </RelativeLayout>
 
@@ -78,27 +72,27 @@
 
             <Button
                 android:id="@+id/wonder"
-                style="?android:attr/buttonBarButtonStyle"
+                style="@style/buttonStyle"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="Wonder" />
+                android:text="@string/wonder" />
 
             <Button
                 android:id="@+id/summary"
-                style="?android:attr/buttonBarButtonStyle"
+                style="@style/buttonStyle"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="Summary" />
+                android:text="@string/summary" />
 
             <Button
                 android:id="@+id/hand"
-                style="?android:attr/buttonBarButtonStyle"
+                style="@style/buttonStyle"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="Hand" />
+                android:text="@string/hand" />
 
         </LinearLayout>
 

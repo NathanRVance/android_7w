@@ -15,14 +15,14 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         style="?android:attr/buttonBarButtonStyle"
-        android:text="+"
+        android:text="@string/add"
         android:id="@+id/add" />
 
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         style="?android:attr/buttonBarButtonStyle"
-        android:text="-"
+        android:text="@string/subtract"
         android:id="@+id/subtract" />
 
 </LinearLayout>

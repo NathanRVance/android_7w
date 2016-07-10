@@ -32,12 +32,14 @@
             android:orientation="horizontal">
 
             <RadioButton
+                android:id="@+id/wonder_switch_A"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textColor="@color/white"
                 android:text="@string/wonder_side_a" />
 
             <RadioButton
+                android:id="@+id/wonder_switch_B"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textColor="@color/white"
@@ -51,7 +53,10 @@
         android:layout_width="match_parent"
         android:layout_weight="1"
         android:layout_height="0dp"
-        android:id="@+id/content">
+        android:id="@+id/content"
+        android:clickable="true"
+        android:focusable="true"
+        android:focusableInTouchMode="true">
 
         <ScrollView
             android:layout_width="match_parent"
@@ -81,7 +86,7 @@
 
         <Button
             style="?android:attr/buttonBarButtonStyle"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/ok"
             android:id="@+id/ok"/>

@@ -5,4 +5,9 @@
         <!-- Customize your theme here. -->
     </style>
 
+    <style name="buttonStyle">
+        <item name="android:textColor">@drawable/button_color</item>
+        <item name="android:background">#00000000</item>
+    </style>
+
 </resources>

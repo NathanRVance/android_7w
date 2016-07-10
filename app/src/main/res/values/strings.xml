@@ -1,9 +1,20 @@
 <resources>
-    <string name="app_name">7w</string>
+    <string name="app_name">srednow7</string>
     <string name="add_button">Add Player</string>
     <string name="subtract_button">Remove Player</string>
-    <string name="ai_checkbox">ai</string>
+    <string name="human">Human</string>
+    <string name="ai">AI</string>
     <string name="ok">OK</string>
     <string name="wonder_side_a">A</string>
     <string name="wonder_side_b">B</string>
+    <string name="gold_available">Gold available: %d</string>
+    <string name="hand">Hand</string>
+    <string name="trade">Trade</string>
+    <string name="wonder">Wonder</string>
+    <string name="summary">Summary</string>
+    <string name="east">East</string>
+    <string name="west">West</string>
+    <string name="not_built">%s (not built)</string>
+    <string name="add">+</string>
+    <string name="subtract">-</string>
 </resources>
