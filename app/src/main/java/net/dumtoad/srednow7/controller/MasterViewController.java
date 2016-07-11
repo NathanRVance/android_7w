@@ -5,6 +5,7 @@ import android.animation.AnimatorListenerAdapter;
 import android.app.Activity;
 import android.os.Bundle;
 import android.os.Handler;
+import android.util.DisplayMetrics;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
@@ -205,6 +206,12 @@ public class MasterViewController {
         activity.getFragmentManager().beginTransaction()
                 .replace(R.id.main_layout, endFrag, "EndFragment")
                 .commit();
+    }
+
+    public boolean isTablet()
+    {
+        DisplayMetrics metrics = activity.getResources().getDisplayMetrics();
+        return (metrics.widthPixels / metrics.density > 600);
     }
 
 }

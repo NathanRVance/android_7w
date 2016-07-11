@@ -2,6 +2,7 @@ package net.dumtoad.srednow7.view;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.LinearLayout;
@@ -63,6 +64,7 @@ public class SetupPlayerItem extends RelativeLayout implements EditTextDialog.Ed
             }
         });
         human.setText(getContext().getString(R.string.human));
+        human.setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources().getDimension(R.dimen.textsize));
         rg.addView(human);
 
         final RadioButton ai = new RadioButton(getContext());
@@ -73,6 +75,7 @@ public class SetupPlayerItem extends RelativeLayout implements EditTextDialog.Ed
             }
         });
         ai.setText(getContext().getString(R.string.ai));
+        ai.setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources().getDimension(R.dimen.textsize));
         rg.addView(ai);
 
         if(ais[index]) {

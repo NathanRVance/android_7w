@@ -40,7 +40,7 @@ public class GameFragment extends AbstractFragment implements MainActivity.LeftR
             @Override
             public void onClick(View v) {
                 TurnController tc = mvc.getTableController().getTurnController();
-                tc.crossfadeToView(tc.showWonder());
+                tc.switchToView(TurnController.Mode.wonder);
             }
         });
 
@@ -48,7 +48,7 @@ public class GameFragment extends AbstractFragment implements MainActivity.LeftR
             @Override
             public void onClick(View v) {
                 TurnController tc = mvc.getTableController().getTurnController();
-                tc.crossfadeToView(tc.showSummary());
+                tc.switchToView(TurnController.Mode.summary);
             }
         });
 
@@ -56,7 +56,7 @@ public class GameFragment extends AbstractFragment implements MainActivity.LeftR
             @Override
             public void onClick(View v) {
                 TurnController tc = mvc.getTableController().getTurnController();
-                tc.crossfadeToView(tc.showHand());
+                tc.switchToView(TurnController.Mode.handtrade);
             }
         });
 

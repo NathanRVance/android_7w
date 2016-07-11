@@ -148,7 +148,7 @@ public class TableController {
                 era++;
                 startEra();
             } else {
-                endTurn();
+                if(endTurn()) return;
                 passTheHand();
                 nextPlayerStart();
             }

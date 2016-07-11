@@ -1,6 +1,7 @@
 package net.dumtoad.srednow7.fragment;
 
 import android.os.Bundle;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -41,7 +42,7 @@ public class WonderSelectFragment extends AbstractFragment implements MainActivi
 
         final TextView tv = (TextView) ((ScrollView) content.getChildAt(0)).getChildAt(0);
         tv.setText(player.getWonder().getSummary(true));
-        tv.setTextSize(mvc.getActivity().getResources().getDimension(R.dimen.textsize));
+        tv.setTextSize(TypedValue.COMPLEX_UNIT_PX, mvc.getActivity().getResources().getDimension(R.dimen.textsize));
 
         RadioGroup rg = (RadioGroup) view.findViewById(R.id.wonder_switch);
         rg.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
@@ -55,7 +56,7 @@ public class WonderSelectFragment extends AbstractFragment implements MainActivi
                 ScrollView s2 = (ScrollView) inflater.inflate(R.layout.wonder_select_content, content, false);
                 TextView tv = (TextView) s2.getChildAt(0);
                 tv.setText(player.getWonder().getSummary(side));
-                tv.setTextSize(mvc.getActivity().getResources().getDimension(R.dimen.textsize));
+                tv.setTextSize(TypedValue.COMPLEX_UNIT_PX, mvc.getActivity().getResources().getDimension(R.dimen.textsize));
 
                 //Animate the swap
                 mvc.animateTranslate(content, s1, s2, ! side);

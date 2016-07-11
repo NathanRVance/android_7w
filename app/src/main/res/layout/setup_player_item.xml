@@ -9,9 +9,10 @@
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
+        android:layout_centerVertical="true"
         android:layout_toLeftOf="@+id/radio_group"
         android:layout_toStartOf="@+id/radio_group"
-        android:layout_centerVertical="true" />
+        android:textSize="@dimen/textsize" />
 
     <RadioGroup
         android:id="@+id/radio_group"
@@ -19,8 +20,8 @@
         android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
-        android:orientation="horizontal"
-        android:layout_centerVertical="true">
+        android:layout_centerVertical="true"
+        android:orientation="horizontal">
 
         <RadioButton
             android:id="@+id/button_human"

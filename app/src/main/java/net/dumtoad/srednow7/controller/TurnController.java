@@ -4,8 +4,10 @@ import android.app.DialogFragment;
 import android.graphics.PorterDuff;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -17,9 +19,9 @@ import net.dumtoad.srednow7.R;
 import net.dumtoad.srednow7.cards.Card;
 import net.dumtoad.srednow7.cards.CardCollection;
 import net.dumtoad.srednow7.cards.Hand;
-import net.dumtoad.srednow7.player.Player;
 import net.dumtoad.srednow7.dialog.PassThePhone;
 import net.dumtoad.srednow7.fragment.GameFragment;
+import net.dumtoad.srednow7.player.Player;
 import net.dumtoad.srednow7.view.CardView;
 
 public class TurnController {
@@ -29,12 +31,6 @@ public class TurnController {
     private int playerViewing;
     private Mode mode;
     private boolean playDiscard;
-
-    private enum Mode {
-        wonder,
-        summary,
-        handtrade
-    }
 
     public TurnController(MasterViewController mvc) {
         this.mvc = mvc;
@@ -70,10 +66,10 @@ public class TurnController {
         mode = Mode.handtrade;
         playerTurn = playerViewing = playerNum;
         tradeController = new TradeController(mvc, getCurrentPlayer());
-        if(mvc.getPlayer(playerNum).isAI()) {
+        if (mvc.getPlayer(playerNum).isAI()) {
             mvc.getPlayer(playerNum).getAI().doTurn(playDiscard);
         } else {
-            if(mvc.getTableController().getNumHumanPlayers() > 1) {
+            if (mvc.getTableController().getNumHumanPlayers() > 1) {
                 DialogFragment df = new PassThePhone();
                 Bundle args = new Bundle();
                 args.putString("name", mvc.getPlayer(playerNum).getName());
@@ -94,55 +90,91 @@ public class TurnController {
     //west is true, east is false
     public void go(boolean direction) {
         playerViewing = getPlayerDirection(playerViewing, direction);
-        ScrollView next = showMode();
+        ViewGroup next;
+        if (mvc.isTablet()) next = getTabletView();
+        else next = getMode();
         RelativeLayout content = (RelativeLayout) mvc.getActivity().findViewById(R.id.content);
-        ScrollView current = (ScrollView) content.getChildAt(content.getChildCount()-1);
-        mvc.animateTranslate(content, current, next, ! direction);
+        ViewGroup current = (ViewGroup) content.getChildAt(content.getChildCount() - 1);
+        mvc.animateTranslate(content, current, next, !direction);
     }
 
     private int getPlayerDirection(int start, boolean direction) {
-        if(direction) {
-            return (start+1) % mvc.getNumPlayers();
+        if (direction) {
+            return (start + 1) % mvc.getNumPlayers();
         } else {
             start--;
-            if(start < 0) {
+            if (start < 0) {
                 return mvc.getNumPlayers() - 1;
             }
         }
         return start;
     }
 
-    private ScrollView showMode() {
-        switch(mode) {
-            case wonder: return showWonder();
-            case summary: return showSummary();
-            case handtrade: return showHand();
-            default: return null;
+    private ScrollView getMode() {
+        switch (mode) {
+            case wonder:
+                return getWonder();
+            case summary:
+                return getSummary();
+            case handtrade:
+                return getHand();
+            default:
+                return null;
         }
     }
 
-    public void crossfadeToView(View view) {
+    public void switchToView(Mode mode) {
+        if (mvc.isTablet()) {
+            ((RelativeLayout) mvc.getActivity().findViewById(R.id.content)).addView(getTabletView());
+        } else {
+            this.mode = mode;
+            crossfadeToView(getMode());
+        }
+    }
+
+    private LinearLayout getTabletView() {
+        LayoutInflater inflater = mvc.getActivity().getLayoutInflater();
+        LinearLayout content = (LinearLayout) inflater.inflate(R.layout.tablet_view, (RelativeLayout) mvc.getActivity().findViewById(R.id.content), false);
+        ScrollView wonder = getWonder();
+        ((RelativeLayout) content.findViewById(R.id.wonder_view)).addView(wonder);
+        ScrollView summary = getSummary();
+        ((RelativeLayout) content.findViewById(R.id.summary_view)).addView(summary);
+        if (playerViewing != getPlayerDirection(playerTurn, true) && playerViewing != getPlayerDirection(playerTurn, false)
+                && playerViewing != playerTurn) {
+            content.removeView(content.findViewById(R.id.hand_view));
+        } else {
+            ScrollView hand = getHand();
+            ((RelativeLayout) content.findViewById(R.id.hand_view)).addView(hand);
+        }
+        mvc.getActivity().findViewById(R.id.wonder).setEnabled(false);
+        mvc.getActivity().findViewById(R.id.summary).setEnabled(false);
+        mvc.getActivity().findViewById(R.id.hand).setEnabled(false);
+        return content;
+    }
+
+    private void crossfadeToView(View view) {
         RelativeLayout content = (RelativeLayout) mvc.getActivity().findViewById(R.id.content);
-        ScrollView current = (ScrollView) content.getChildAt(content.getChildCount()-1);
+        ScrollView current = (ScrollView) content.getChildAt(content.getChildCount() - 1);
+        if(current == null) current = new ScrollView(mvc.getActivity());
         mvc.animateCrossfade(content, current, view);
     }
 
-    public void setupForTurn() {
+    private void setupForTurn() {
         mvc.getActivity().findViewById(R.id.hand).setVisibility(View.VISIBLE);
-        ((Button)mvc.getActivity().findViewById(R.id.hand)).setText(mvc.getActivity().getString(R.string.hand));
+        ((Button) mvc.getActivity().findViewById(R.id.hand)).setText(mvc.getActivity().getString(R.string.hand));
     }
 
-    public void setupForView() {
-        if(playerViewing == getPlayerDirection(playerTurn, true) || playerViewing == getPlayerDirection(playerTurn, false)) {
+    private void setupForView() {
+        if (playerViewing == getPlayerDirection(playerTurn, true) || playerViewing == getPlayerDirection(playerTurn, false)) {
             mvc.getActivity().findViewById(R.id.hand).setVisibility(View.VISIBLE);
-            ((Button)mvc.getActivity().findViewById(R.id.hand)).setText(mvc.getActivity().getString(R.string.trade));
+            ((Button) mvc.getActivity().findViewById(R.id.hand)).setText(mvc.getActivity().getString(R.string.trade));
         } else
-        mvc.getActivity().findViewById(R.id.hand).setVisibility(View.GONE);
+            mvc.getActivity().findViewById(R.id.hand).setVisibility(View.GONE);
     }
 
-    public ScrollView showWonder() {
+    private ScrollView getWonder() {
         mode = Mode.wonder;
-        if(playerTurn == playerViewing) {
+        if (playerTurn == playerViewing) {
             setupForTurn();
         } else {
             setupForView();
@@ -155,12 +187,12 @@ public class TurnController {
         ((TextView) mvc.getActivity().findViewById(R.id.title)).setText(player.getWonder().getNameString());
 
         LayoutInflater inflater = LayoutInflater.from(mvc.getActivity());
-        ScrollView sv = (ScrollView) inflater.inflate(R.layout.content_view,(RelativeLayout) mvc.getActivity().findViewById(R.id.content), false);
+        ScrollView sv = (ScrollView) inflater.inflate(R.layout.content_view, (RelativeLayout) mvc.getActivity().findViewById(R.id.content), false);
         LinearLayout ll = (LinearLayout) sv.getChildAt(0);
 
-        for(Card card : player.getWonderStages()) {
+        for (Card card : player.getWonderStages()) {
             CardView cv = new CardView(card, mvc.getActivity(), player, false, playDiscard);
-            if(! player.getPlayedCards().contains(card)) {
+            if (!player.getPlayedCards().contains(card)) {
                 cv.setText(mvc.getActivity().getString(R.string.not_built, cv.getText()));
             }
             ll.addView(cv);
@@ -168,8 +200,8 @@ public class TurnController {
 
         CardCollection cc = player.getPlayedCards();
         cc.sort();
-        for(Card card : cc) {
-            if(card.getType() == Card.Type.STAGE) continue;
+        for (Card card : cc) {
+            if (card.getType() == Card.Type.STAGE) continue;
             CardView cv = new CardView(card, mvc.getActivity(), player, false, playDiscard);
             ll.addView(cv);
         }
@@ -177,9 +209,9 @@ public class TurnController {
         return sv;
     }
 
-    public ScrollView showSummary() {
+    private ScrollView getSummary() {
         mode = Mode.summary;
-        if(playerTurn == playerViewing) {
+        if (playerTurn == playerViewing) {
             setupForTurn();
         } else {
             setupForView();
@@ -192,26 +224,26 @@ public class TurnController {
         ((TextView) mvc.getActivity().findViewById(R.id.title)).setText(player.getWonder().getNameString());
 
         LayoutInflater inflater = LayoutInflater.from(mvc.getActivity());
-        ScrollView sv = (ScrollView) inflater.inflate(R.layout.content_view,(RelativeLayout) mvc.getActivity().findViewById(R.id.content), false);
+        ScrollView sv = (ScrollView) inflater.inflate(R.layout.content_view, (RelativeLayout) mvc.getActivity().findViewById(R.id.content), false);
         LinearLayout ll = (LinearLayout) sv.getChildAt(0);
 
         TextView tv = new TextView(mvc.getActivity());
-        tv.setTextSize(mvc.getActivity().getResources().getDimension(R.dimen.textsize));
+        tv.setTextSize(TypedValue.COMPLEX_UNIT_PX, mvc.getActivity().getResources().getDimension(R.dimen.textsize));
         ll.addView(tv);
         tv.setText(player.getSummary());
 
         return sv;
     }
 
-    public ScrollView showHand() {
-        if(playerViewing != getPlayerDirection(playerTurn, true) && playerViewing != getPlayerDirection(playerTurn, false)
+    private ScrollView getHand() {
+        if (playerViewing != getPlayerDirection(playerTurn, true) && playerViewing != getPlayerDirection(playerTurn, false)
                 && playerViewing != playerTurn) {
-            ScrollView ret = showSummary();
+            ScrollView ret = getSummary();
             mode = Mode.handtrade;
             return ret;
         }
         mode = Mode.handtrade;
-        if(playerTurn == playerViewing) {
+        if (playerTurn == playerViewing) {
             setupForTurn();
         } else {
             setupForView();
@@ -224,26 +256,26 @@ public class TurnController {
         ((TextView) mvc.getActivity().findViewById(R.id.title)).setText(player.getWonder().getNameString());
 
         LayoutInflater inflater = LayoutInflater.from(mvc.getActivity());
-        ScrollView sv = (ScrollView) inflater.inflate(R.layout.content_view,(RelativeLayout) mvc.getActivity().findViewById(R.id.content), false);
+        ScrollView sv = (ScrollView) inflater.inflate(R.layout.content_view, (RelativeLayout) mvc.getActivity().findViewById(R.id.content), false);
         LinearLayout ll = (LinearLayout) sv.getChildAt(0);
 
-        if(playerTurn == playerViewing) {
+        if (playerTurn == playerViewing) {
             Hand hand;
-            if(playDiscard) {
+            if (playDiscard) {
                 hand = mvc.getTableController().getDiscards();
             } else {
                 hand = player.getHand();
             }
             for (Card card : hand) {
                 CardView cv = new CardView(card, mvc.getActivity(), player, true, playDiscard);
-                if(! (playDiscard || getCurrentPlayer().hasCouponFor(card) || (tradeController.canAffordResources(card) && tradeController.canAffordGold(card)))) {
+                if (!(playDiscard || getCurrentPlayer().hasCouponFor(card) || (tradeController.canAffordResources(card) && tradeController.canAffordGold(card)))) {
                     //Darken it slightly
                     cv.getBackground().setColorFilter(ContextCompat.getColor(mvc.getActivity(), R.color.gray), PorterDuff.Mode.MULTIPLY);
                 }
                 ll.addView(cv);
             }
         } else {
-            if(playerViewing == getPlayerDirection(playerTurn, true))
+            if (playerViewing == getPlayerDirection(playerTurn, true))
                 tradeController.trade(ll, true);
             else
                 tradeController.trade(ll, false);
@@ -255,7 +287,7 @@ public class TurnController {
     public void onComplete() {
         RelativeLayout content = (RelativeLayout) mvc.getActivity().findViewById(R.id.content);
         content.removeAllViews();
-        content.addView(showMode());
+        switchToView(mode);
     }
 
     public boolean requestDiscard(Card card) {
@@ -266,10 +298,10 @@ public class TurnController {
 
     public boolean requestWonder(Card card) {
         Card stage = getCurrentPlayer().nextWonderStage();
-        if(stage == null) {
+        if (stage == null) {
             Toast.makeText(mvc.getActivity(), "Already built all stages!", Toast.LENGTH_SHORT).show();
             System.out.println("Already built all stages!");
-        } else if(tradeController.canAffordResources(stage) && tradeController.canAffordGold(stage)) {
+        } else if (tradeController.canAffordResources(stage) && tradeController.canAffordGold(stage)) {
             getCurrentPlayer().buildWonder(stage, card, (tradeController.getTotalCost() * -1) - stage.getCost().get(Card.Resource.GOLD),
                     tradeController.getCurrentCost(false), tradeController.getCurrentCost(true));
             endTurn();
@@ -283,25 +315,25 @@ public class TurnController {
 
     public boolean requestBuild(Card card) {
         boolean hasCoupon = getCurrentPlayer().hasCouponFor(card) || playDiscard;
-        if(getCurrentPlayer().getPlayedCards().contains(card.getName())) {
+        if (getCurrentPlayer().getPlayedCards().contains(card.getName())) {
             Toast.makeText(mvc.getActivity(), "Already built " + card.getNameString(), Toast.LENGTH_SHORT).show();
             System.out.println("Already built " + card.getNameString());
-        } else if(hasCoupon && tradeController.hasTrade()) {
-            if(playDiscard) {
+        } else if (hasCoupon && tradeController.hasTrade()) {
+            if (playDiscard) {
                 Toast.makeText(mvc.getActivity(), "Don't trade, you can build for free", Toast.LENGTH_SHORT).show();
                 System.out.println("Don't trade, you can build for free");
             } else {
                 Toast.makeText(mvc.getActivity(), "Don't trade, you have a coupon", Toast.LENGTH_SHORT).show();
                 System.out.println("Don't trade, you have a coupon");
             }
-        } else if(tradeController.overpaid(card)) {
+        } else if (tradeController.overpaid(card)) {
             Toast.makeText(mvc.getActivity(), "Overpaid, undo some trades", Toast.LENGTH_SHORT).show();
             System.out.println("Overpaid, undo some trades");
-        } else if(hasCoupon || (tradeController.canAffordResources(card) && tradeController.canAffordGold(card))) {
+        } else if (hasCoupon || (tradeController.canAffordResources(card) && tradeController.canAffordGold(card))) {
             int cardGoldCost = (tradeController.getTotalCost() * -1) - card.getCost().get(Card.Resource.GOLD);
-            if(hasCoupon) cardGoldCost = 0;
+            if (hasCoupon) cardGoldCost = 0;
             Hand hand;
-            if(playDiscard) hand = mvc.getTableController().getDiscards();
+            if (playDiscard) hand = mvc.getTableController().getDiscards();
             else hand = getCurrentPlayer().getHand();
             getCurrentPlayer().buildCard(card, cardGoldCost, tradeController.getCurrentCost(false), tradeController.getCurrentCost(true), hand);
             endTurn();
@@ -316,6 +348,12 @@ public class TurnController {
     private void endTurn() {
         playDiscard = false;
         mvc.getTableController().nextPlayerStart();
+    }
+
+    public enum Mode {
+        wonder,
+        summary,
+        handtrade
     }
 
 }
