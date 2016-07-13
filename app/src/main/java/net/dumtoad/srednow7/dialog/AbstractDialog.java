@@ -64,7 +64,7 @@ public class AbstractDialog extends DialogFragment {
     }
 
     public EditText makeEditTextClearable(final EditText et, Activity activity) {
-        final Drawable X = ContextCompat.getDrawable(activity, R.drawable.ic_action_clear).mutate();
+        final Drawable X = ContextCompat.getDrawable(activity, R.drawable.ic_clear).mutate();
         X.setColorFilter(ContextCompat.getColor(getActivity(), R.color.gray), PorterDuff.Mode.SRC_IN);
         X.setBounds(0, 0, X.getIntrinsicWidth(), X.getIntrinsicHeight());
         et.setCompoundDrawables(et.getCompoundDrawables()[0], et.getCompoundDrawables()[1], X, et.getCompoundDrawables()[3]);

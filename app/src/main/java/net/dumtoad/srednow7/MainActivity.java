@@ -1,11 +1,13 @@
 package net.dumtoad.srednow7;
 
 import android.app.Activity;
+import android.app.DialogFragment;
 import android.os.Bundle;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 
 import net.dumtoad.srednow7.controller.MasterViewController;
+import net.dumtoad.srednow7.dialog.WelcomeDialog;
 
 
 public class MainActivity extends Activity {
@@ -31,10 +33,16 @@ public class MainActivity extends Activity {
         mvc = new MasterViewController(this);
         gestureDetector = new GestureDetector(this, new GestureListener());
 
-        if (savedInstanceState == null)
-            mvc.setup();
-        else
+        if (savedInstanceState != null)
             mvc.onRestoreInstanceState(savedInstanceState);
+        else  {
+            DialogFragment welcomeDialog = new WelcomeDialog();
+            Bundle args = new Bundle();
+            args.putBoolean("continue", mvc.hasAutosave());
+            welcomeDialog.setArguments(args);
+            welcomeDialog.show(getFragmentManager(), "welcomeDialog");
+            mvc.setup(); //So there's something in the background if the user exits the dialog
+        }
     }
 
     @Override
@@ -49,13 +57,13 @@ public class MainActivity extends Activity {
     }
 
     private void onSwipeRight() {
-        if(lrs != null) {
+        if (lrs != null) {
             lrs.swipeRight();
         }
     }
 
     private void onSwipeLeft() {
-        if(lrs != null) {
+        if (lrs != null) {
             lrs.swipeLeft();
         }
     }
@@ -66,6 +74,7 @@ public class MainActivity extends Activity {
 
     public interface LeftRightSwipe {
         void swipeLeft();
+
         void swipeRight();
     }
 

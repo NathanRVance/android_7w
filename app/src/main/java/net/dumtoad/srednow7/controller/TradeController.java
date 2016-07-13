@@ -113,12 +113,15 @@ public class TradeController {
 
     private void updateViews(HashMap<Card.Resource, LinearLayout> views, ResQuant currentTrade, Player other) {
         int playerGold = player.getGold();
-        goldStatus.setText(mvc.getActivity().getString(R.string.gold_available, playerGold - getTotalCost()));
+        SpannableStringBuilder sb = new SpannableStringBuilder();
+        Card.appendSb(sb, "Gold", new ForegroundColorSpan(Card.getColorId(Card.Resource.GOLD.toString())));
+        sb.append(" available: ").append(String.valueOf(playerGold - getTotalCost()));
+        goldStatus.setText(sb);
         ResQuant currentTradeInCorrectDirection = new ResQuant().subtractResources(currentTrade);
         ResQuant numAvailable = numAvailable(other, currentTradeInCorrectDirection, false);
         for (Card.Resource res : views.keySet()) {
             LinearLayout ll = views.get(res);
-            SpannableStringBuilder sb = new SpannableStringBuilder();
+            sb = new SpannableStringBuilder();
             Card.appendSb(sb, res.toString().toLowerCase(), new ForegroundColorSpan(Card.getColorId(res.toString())));
             sb.append(": ").append(String.valueOf(numAvailable.get(res)));
             sb.append("\nBought: ");

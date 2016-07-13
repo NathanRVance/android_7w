@@ -14,6 +14,7 @@ import android.widget.TextView;
 import net.dumtoad.srednow7.MainActivity;
 import net.dumtoad.srednow7.R;
 import net.dumtoad.srednow7.player.Player;
+import net.dumtoad.srednow7.util.Util;
 
 import java.util.ArrayList;
 
@@ -59,7 +60,7 @@ public class WonderSelectFragment extends AbstractFragment implements MainActivi
                 tv.setTextSize(TypedValue.COMPLEX_UNIT_PX, mvc.getActivity().getResources().getDimension(R.dimen.textsize));
 
                 //Animate the swap
-                mvc.animateTranslate(content, s1, s2, ! side);
+                Util.animateTranslate(content, s1, s2, ! side);
             }
         });
 

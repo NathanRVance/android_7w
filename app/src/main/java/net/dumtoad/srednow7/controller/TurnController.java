@@ -22,6 +22,7 @@ import net.dumtoad.srednow7.cards.Hand;
 import net.dumtoad.srednow7.dialog.PassThePhone;
 import net.dumtoad.srednow7.fragment.GameFragment;
 import net.dumtoad.srednow7.player.Player;
+import net.dumtoad.srednow7.util.Util;
 import net.dumtoad.srednow7.view.CardView;
 
 public class TurnController {
@@ -61,6 +62,10 @@ public class TurnController {
         return mvc.getPlayer(playerTurn);
     }
 
+    public int getCurrentPlayerNum() {
+        return playerTurn;
+    }
+
     public void startTurn(int playerNum, boolean playDiscard) {
         this.playDiscard = playDiscard;
         mode = Mode.handtrade;
@@ -76,9 +81,10 @@ public class TurnController {
                 df.setArguments(args);
                 df.show(mvc.getActivity().getFragmentManager(), "passthephone");
             }
-            GameFragment wf = new GameFragment();
+            mvc.autosave(); //Autosave now, when the user is distracted, so a slight lag is less noticeable.
+            GameFragment gf = new GameFragment();
             mvc.getActivity().getFragmentManager().beginTransaction()
-                    .replace(R.id.main_layout, wf, "WonderSelect")
+                    .replace(R.id.main_layout, gf, "WonderSelect")
                     .commit();
         }
     }
@@ -91,11 +97,11 @@ public class TurnController {
     public void go(boolean direction) {
         playerViewing = getPlayerDirection(playerViewing, direction);
         ViewGroup next;
-        if (mvc.isTablet()) next = getTabletView();
+        if (Util.isTablet()) next = getTabletView();
         else next = getMode();
         RelativeLayout content = (RelativeLayout) mvc.getActivity().findViewById(R.id.content);
         ViewGroup current = (ViewGroup) content.getChildAt(content.getChildCount() - 1);
-        mvc.animateTranslate(content, current, next, !direction);
+        Util.animateTranslate(content, current, next, !direction);
     }
 
     private int getPlayerDirection(int start, boolean direction) {
@@ -124,7 +130,7 @@ public class TurnController {
     }
 
     public void switchToView(Mode mode) {
-        if (mvc.isTablet()) {
+        if (Util.isTablet()) {
             ((RelativeLayout) mvc.getActivity().findViewById(R.id.content)).addView(getTabletView());
         } else {
             this.mode = mode;
@@ -156,7 +162,7 @@ public class TurnController {
         RelativeLayout content = (RelativeLayout) mvc.getActivity().findViewById(R.id.content);
         ScrollView current = (ScrollView) content.getChildAt(content.getChildCount() - 1);
         if(current == null) current = new ScrollView(mvc.getActivity());
-        mvc.animateCrossfade(content, current, view);
+        Util.animateCrossfade(content, current, view);
     }
 
     private void setupForTurn() {
@@ -260,6 +266,15 @@ public class TurnController {
         LinearLayout ll = (LinearLayout) sv.getChildAt(0);
 
         if (playerTurn == playerViewing) {
+
+            TextView tv = new TextView(mvc.getActivity());
+            tv.setTextSize(TypedValue.COMPLEX_UNIT_PX, mvc.getActivity().getResources().getDimension(R.dimen.textsize));
+            ll.addView(tv);
+            String direction = (mvc.getTableController().getPassingDirection())?
+                    mvc.getActivity().getResources().getString(R.string.west)
+                    : mvc.getActivity().getResources().getString(R.string.east);
+            tv.setText(mvc.getActivity().getResources().getString(R.string.passing_direction, direction));
+
             Hand hand;
             if (playDiscard) {
                 hand = mvc.getTableController().getDiscards();

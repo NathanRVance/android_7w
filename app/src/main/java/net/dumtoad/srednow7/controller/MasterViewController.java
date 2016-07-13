@@ -1,16 +1,7 @@
 package net.dumtoad.srednow7.controller;
 
-import android.animation.Animator;
-import android.animation.AnimatorListenerAdapter;
 import android.app.Activity;
 import android.os.Bundle;
-import android.os.Handler;
-import android.util.DisplayMetrics;
-import android.view.View;
-import android.view.ViewGroup;
-import android.view.animation.Animation;
-import android.view.animation.TranslateAnimation;
-import android.widget.ScrollView;
 
 import net.dumtoad.srednow7.R;
 import net.dumtoad.srednow7.cards.Database;
@@ -18,6 +9,7 @@ import net.dumtoad.srednow7.fragment.EndFragment;
 import net.dumtoad.srednow7.fragment.SetupFragment;
 import net.dumtoad.srednow7.fragment.WonderSelectFragment;
 import net.dumtoad.srednow7.player.Player;
+import net.dumtoad.srednow7.util.Util;
 
 import java.util.ArrayList;
 
@@ -27,6 +19,7 @@ public class MasterViewController {
     private Database database;
     private Player players[] = new Player[3];
     private TableController tc;
+    private boolean hasAutosave = false;
 
     public MasterViewController(Activity activity) {
         this.activity = activity;
@@ -112,6 +105,7 @@ public class MasterViewController {
         else {
             outstate.putBoolean("databaseCreated", false);
         }
+        outstate.putBoolean("hasAutosave", hasAutosave);
     }
 
     public void onRestoreInstanceState (Bundle savedInstanceState) {
@@ -125,80 +119,7 @@ public class MasterViewController {
             }
             tc = new TableController(this, savedInstanceState.getBundle("tc"));
         }
-    }
-
-    public void animateTranslate(final ViewGroup parent, final View current, final View next, boolean left) {
-        //Animate the swap
-        int duration = getActivity().getResources().getInteger(android.R.integer.config_shortAnimTime);
-        int viewWidth = parent.getWidth();
-
-        //If there's a scrollbar, we want it invisible
-        current.setVerticalScrollBarEnabled(false);
-
-        TranslateAnimation ta;
-        if(left) {
-            ta = new TranslateAnimation(0, viewWidth * -1, 0, 0);
-        } else {
-            ta = new TranslateAnimation(0, viewWidth, 0, 0);
-        }
-        ta.setDuration(duration);
-        new Handler().postDelayed(new Runnable() {
-            public void run() {
-                parent.removeView(current);
-            }
-        }, ta.getDuration());
-        current.startAnimation(ta);
-
-        next.setVisibility(View.INVISIBLE);
-        next.setVerticalScrollBarEnabled(false);
-        parent.addView(next);
-        if(left) {
-            ta = new TranslateAnimation(viewWidth, 0, 0, 0);
-        } else {
-            ta = new TranslateAnimation(viewWidth * -1, 0, 0, 0);
-        }
-        ta.setDuration(duration);
-        ta.setAnimationListener(new Animation.AnimationListener() {
-            @Override
-            public void onAnimationStart(Animation animation) {
-                next.setVisibility(View.VISIBLE);
-            }
-
-            @Override
-            public void onAnimationEnd(Animation animation) {
-                if(next instanceof ScrollView) {
-                    next.setVerticalScrollBarEnabled(true);
-                }
-            }
-
-            @Override
-            public void onAnimationRepeat(Animation animation) {
-
-            }
-        });
-        next.startAnimation(ta);
-    }
-
-    public void animateCrossfade(final ViewGroup parent, final View current, final View next) {
-        int duration = getActivity().getResources().getInteger(android.R.integer.config_shortAnimTime);
-
-        next.setAlpha(0f);
-        parent.addView(next);
-        next.animate()
-                .alpha(1f)
-                .setDuration(duration)
-                .setListener(null);
-
-        current.animate()
-                .alpha(0f)
-                .setDuration(duration)
-                .setListener(new AnimatorListenerAdapter() {
-                    @Override
-                    public void onAnimationEnd(Animator animation) {
-                        parent.removeView(current);
-                    }
-                });
-
+        hasAutosave = savedInstanceState.getBoolean("hasAutosave");
     }
 
     public void endGame() {
@@ -206,12 +127,42 @@ public class MasterViewController {
         activity.getFragmentManager().beginTransaction()
                 .replace(R.id.main_layout, endFrag, "EndFragment")
                 .commit();
+        hasAutosave = false;
+        autosave();
     }
 
-    public boolean isTablet()
-    {
-        DisplayMetrics metrics = activity.getResources().getDisplayMetrics();
-        return (metrics.widthPixels / metrics.density > 600);
+    public void deleteSave() {
+        hasAutosave = false;
+        Bundle save = new Bundle();
+        onSaveInstanceState(save);
+        Util.saveBundle(save);
+    }
+
+    public void autosave() {
+        hasAutosave = true;
+        Bundle save = new Bundle();
+        onSaveInstanceState(save);
+        Util.saveBundle(save);
+    }
+
+    public boolean hasAutosave() {
+        Bundle bundle = Util.retrieveBundle();
+        return bundle.getBoolean("hasAutosave", false);
+    }
+
+    public boolean restore() {
+        try {
+            Bundle bundle = Util.retrieveBundle();
+            if (bundle.getBoolean("hasAutosave", false)) {
+                onRestoreInstanceState(bundle);
+                tc.getTurnController().startTurn(tc.getTurnController().getCurrentPlayerNum(), false);
+                return true;
+            }
+        } catch(Exception e) {
+            e.printStackTrace();
+            return false; //Whoever called us will just start a regular new game now.
+        }
+        return false;
     }
 
 }

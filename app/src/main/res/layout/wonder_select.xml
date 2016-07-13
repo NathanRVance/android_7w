@@ -8,12 +8,12 @@
         xmlns:app="http://schemas.android.com/apk/res-auto"
         android:id="@+id/top_toolbar"
         android:layout_width="match_parent"
-        android:layout_height="40dp"
+        android:layout_height="?attr/actionBarSize"
         android:background="@color/darkblue"
-        android:minHeight="40dp"
+        android:minHeight="?attr/actionBarSize"
         android:theme="@style/Theme.7w"
-        app:contentInsetEnd="0dp"
-        app:contentInsetStart="0dp">
+        app:contentInsetEnd="@dimen/activity_horizontal_margin"
+        app:contentInsetStart="@dimen/activity_horizontal_margin">
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -26,21 +26,18 @@
                 android:layout_alignParentLeft="true"
                 android:layout_alignParentStart="true"
                 android:layout_centerVertical="true"
-                android:layout_marginLeft="@dimen/activity_horizontal_margin"
-                android:layout_marginRight="@dimen/activity_horizontal_margin"
                 android:layout_toLeftOf="@+id/wonder_switch"
                 android:layout_toStartOf="@+id/wonder_switch"
-                android:textColor="@color/white" />
+                android:textColor="@color/white"
+                android:textSize="@dimen/textsize" />
 
             <RadioGroup
                 android:id="@+id/wonder_switch"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignParentEnd="true"
-                android:layout_alignParentRight="true"
+                android:layout_toLeftOf="@+id/help"
+                android:layout_toStartOf="@+id/help"
                 android:layout_centerVertical="true"
-                android:layout_marginLeft="@dimen/activity_horizontal_margin"
-                android:layout_marginRight="@dimen/activity_horizontal_margin"
                 android:orientation="horizontal">
 
                 <RadioButton
@@ -48,16 +45,29 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/wonder_side_a"
-                    android:textColor="@color/white" />
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/textsize" />
 
                 <RadioButton
                     android:id="@+id/wonder_switch_B"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/wonder_side_b"
-                    android:textColor="@color/white" />
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/textsize" />
 
             </RadioGroup>
+
+            <Button
+                android:id="@+id/help"
+                style="?android:attr/buttonBarButtonStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:text="@string/help_button"
+                android:textSize="@dimen/textsize" />
 
         </RelativeLayout>
 
@@ -80,7 +90,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="@dimen/activity_horizontal_margin"
-                android:layout_marginRight="@dimen/activity_horizontal_margin" />
+                android:layout_marginRight="@dimen/activity_horizontal_margin"
+                android:textSize="@dimen/textsize" />
 
         </ScrollView>
 
@@ -90,9 +101,9 @@
         xmlns:app="http://schemas.android.com/apk/res-auto"
         android:id="@+id/bottom_toolbar"
         android:layout_width="match_parent"
-        android:layout_height="40dp"
+        android:layout_height="?attr/actionBarSize"
         android:background="@color/darkblue"
-        android:minHeight="40dp"
+        android:minHeight="?attr/actionBarSize"
         android:theme="@style/Theme.7w"
         app:contentInsetEnd="0dp"
         app:contentInsetStart="0dp">
@@ -102,7 +113,8 @@
             style="?android:attr/buttonBarButtonStyle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/ok" />
+            android:text="@string/ok"
+            android:textSize="@dimen/textsize" />
 
     </android.support.v7.widget.Toolbar>
 
