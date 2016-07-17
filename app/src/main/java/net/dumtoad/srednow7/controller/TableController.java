@@ -55,16 +55,17 @@ public class TableController {
 
     private boolean play7thCard() {
         //Babylon side B stage 2 can play their 7th card
-        for(int i = 0; i < mvc.getNumPlayers(); i++) {
+        for (int i = 0; i < mvc.getNumPlayers(); i++) {
             Player player = mvc.getPlayer(i);
-            if(player.getWonder().getName() == Generate.Wonders.The_Hanging_Gardens_of_Babylon
-                    && ! player.getWonderSide()) {
-                for(Card card : player.getPlayedCards()) {
-                    if(card.getName() == Generate.WonderStages.Stage_2) {
-                        if(player.getHand().size() == 0) return false;
-                        tc.startTurn(i, false);
-                        return true;
-                    }
+            if (player.getWonder().getName() == Generate.Wonders.The_Hanging_Gardens_of_Babylon
+                    && !player.getWonderSide()) {
+                if (player.getPlayedCards().contains(Generate.WonderStages.Stage_2)
+                        || player.getBufferCard() != null && player.getBufferCard().getName() == Generate.WonderStages.Stage_2) {
+                    if (player.getHand().size() == 0) return false;
+                    player.finishTurn();
+                    player.flush();
+                    tc.startTurn(i, false);
+                    return true;
                 }
             }
         }
@@ -72,20 +73,21 @@ public class TableController {
     }
 
     private void discardHands() {
-        for(Player player : mvc.getPlayers()) {
+        for (Player player : mvc.getPlayers()) {
             //If player could play his 7th card, there's nothing to discard
-            if(player.getHand().size() ==  1) discard(player.getHand().get(0));
+            if (player.getHand().size() == 1) discard(player.getHand().get(0));
         }
     }
 
     private void endEra() {
         for (Player player : mvc.getPlayers()) {
             player.getScore().resolveMilitary(era);
+            player.refreshFreeBuild();
         }
     }
 
     public void startEra() {
-        if(era == 3) { //We're done!
+        if (era == 3) { //We're done!
             mvc.endGame();
             return;
         }
@@ -141,21 +143,21 @@ public class TableController {
         } else {
             playerTurn = -1;
             if (mvc.getPlayer(0).getHand().size() <= 1) { //end of era
-                if(play7thCard()) return;
+                if (play7thCard()) return;
                 discardHands();
-                if(endTurn()) return;
+                if (endTurn()) return;
                 endEra();
                 era++;
                 startEra();
             } else {
-                if(endTurn()) return;
+                if (endTurn()) return;
                 passTheHand();
                 nextPlayerStart();
             }
         }
     }
 
-    public Player getPlayerDirection(boolean west, Player asker) {
+    public Player getPlayerDirection(Player asker, boolean west) {
         int playerNum;
         for (playerNum = 0; playerNum < mvc.getNumPlayers(); playerNum++) {
             if (asker == mvc.getPlayer(playerNum)) break;
@@ -168,6 +170,18 @@ public class TableController {
             if (playerNum < 0) playerNum = mvc.getNumPlayers() - 1;
         }
         return mvc.getPlayer(playerNum);
+    }
+
+    public int getPlayerDirection(int start, boolean direction) {
+        if (direction) {
+            return (start + 1) % mvc.getNumPlayers();
+        } else {
+            start--;
+            if (start < 0) {
+                return mvc.getNumPlayers() - 1;
+            }
+        }
+        return start;
     }
 
     public int getNumHumanPlayers() {

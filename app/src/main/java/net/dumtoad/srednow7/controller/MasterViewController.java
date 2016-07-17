@@ -51,11 +51,11 @@ public class MasterViewController {
 
         players = new Player[numPlayers];
         ArrayList<Integer> humanPlayerIndecies = new ArrayList<>();
-        for(int i = 0; i < numPlayers; i++) {
+        for (int i = 0; i < numPlayers; i++) {
             players[i] = new Player(this, ais[i], names[i]);
             players[i].setWonder(database.drawWonder());
 
-            if(! players[i].isAI()) {
+            if (!players[i].isAI()) {
                 humanPlayerIndecies.add(i);
             }
         }
@@ -73,8 +73,8 @@ public class MasterViewController {
     }
 
     public int getPlayerNum(Player player) {
-        for(int i = 0; i < players.length; i++) {
-            if(player == players[i]) return i;
+        for (int i = 0; i < players.length; i++) {
+            if (player == players[i]) return i;
         }
         return -1;
     }
@@ -91,30 +91,28 @@ public class MasterViewController {
         return database;
     }
 
-    public void onSaveInstanceState(Bundle outstate)
-    {
+    public void onSaveInstanceState(Bundle outstate) {
         outstate.putInt("numPlayers", players.length);
-        if(database != null) {
+        if (database != null) {
             outstate.putBoolean("databaseCreated", true);
             outstate.putBundle("database", database.getInstanceState());
-            for(int i = 0; i < players.length; i++) {
+            for (int i = 0; i < players.length; i++) {
                 outstate.putBundle("player" + i, players[i].getInstanceState());
             }
             outstate.putBundle("tc", tc.getInstanceState());
-        }
-        else {
+        } else {
             outstate.putBoolean("databaseCreated", false);
         }
         outstate.putBoolean("hasAutosave", hasAutosave);
     }
 
-    public void onRestoreInstanceState (Bundle savedInstanceState) {
+    public void onRestoreInstanceState(Bundle savedInstanceState) {
         int numPlayers = savedInstanceState.getInt("numPlayers");
-        if(savedInstanceState.getBoolean("databaseCreated")) {
+        if (savedInstanceState.getBoolean("databaseCreated")) {
             database = new Database(numPlayers);
             database.onRestoreInstanceState(savedInstanceState);
             players = new Player[numPlayers];
-            for(int i = 0; i < numPlayers; i++) {
+            for (int i = 0; i < numPlayers; i++) {
                 players[i] = new Player(this, savedInstanceState.getBundle("player" + i));
             }
             tc = new TableController(this, savedInstanceState.getBundle("tc"));
@@ -124,8 +122,12 @@ public class MasterViewController {
 
     public void endGame() {
         EndFragment endFrag = new EndFragment();
+        Bundle args = new Bundle();
+        args.putInt("playerTurn", 0);
+        args.putBoolean("playDiscard", false);
+        endFrag.setArguments(args);
         activity.getFragmentManager().beginTransaction()
-                .replace(R.id.main_layout, endFrag, "EndFragment")
+                .replace(R.id.main_layout, endFrag, EndFragment.GAME_FRAGMENT_TAG)
                 .commit();
         hasAutosave = false;
         autosave();
@@ -158,7 +160,7 @@ public class MasterViewController {
                 tc.getTurnController().startTurn(tc.getTurnController().getCurrentPlayerNum(), false);
                 return true;
             }
-        } catch(Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
             return false; //Whoever called us will just start a regular new game now.
         }

@@ -2,6 +2,8 @@ package net.dumtoad.srednow7.fragment;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
+import android.app.DialogFragment;
+import android.app.Fragment;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,6 +13,8 @@ import android.widget.LinearLayout;
 
 import net.dumtoad.srednow7.MainActivity;
 import net.dumtoad.srednow7.R;
+import net.dumtoad.srednow7.dialog.EditTextDialog;
+import net.dumtoad.srednow7.dialog.HelpDialog;
 import net.dumtoad.srednow7.view.SetupPlayerItem;
 
 import java.util.ArrayList;
@@ -28,8 +32,26 @@ public class SetupFragment extends AbstractFragment {
     @Override
     public View onCreateView(final LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
     {
+        //Start out by dismissing any previously active dialogs
+        Fragment frag = getFragmentManager().findFragmentByTag(SetupPlayerItem.EDIT_TEXT_DIALOG_TAG);
+        if(frag != null) {
+            ((EditTextDialog) frag).dismiss();
+        }
+
         final View view = inflater.inflate(R.layout.setup, container, false);
         playerSelectLayout = (LinearLayout) view.findViewById(R.id.player_select_layout);
+
+        view.findViewById(R.id.help).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                DialogFragment helpDialog = new HelpDialog();
+                Bundle bundle = new Bundle();
+                bundle.putString("title", getString(R.string.help_setup_title));
+                bundle.putString("message", getString(R.string.help_setup));
+                helpDialog.setArguments(bundle);
+                helpDialog.show(getFragmentManager(), "helpDialog");
+            }
+        });
 
         setupItems = new ArrayList<>();
 

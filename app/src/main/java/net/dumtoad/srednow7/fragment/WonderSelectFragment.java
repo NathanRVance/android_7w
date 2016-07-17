@@ -1,5 +1,6 @@
 package net.dumtoad.srednow7.fragment;
 
+import android.app.DialogFragment;
 import android.os.Bundle;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
@@ -13,6 +14,7 @@ import android.widget.TextView;
 
 import net.dumtoad.srednow7.MainActivity;
 import net.dumtoad.srednow7.R;
+import net.dumtoad.srednow7.dialog.HelpDialog;
 import net.dumtoad.srednow7.player.Player;
 import net.dumtoad.srednow7.util.Util;
 
@@ -26,6 +28,18 @@ public class WonderSelectFragment extends AbstractFragment implements MainActivi
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         final View view = inflater.inflate(R.layout.wonder_select, container, false);
+
+        view.findViewById(R.id.help).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                DialogFragment helpDialog = new HelpDialog();
+                Bundle bundle = new Bundle();
+                bundle.putString("title", getString(R.string.help_wonderselect_title));
+                bundle.putString("message", getString(R.string.help_wonderselect));
+                helpDialog.setArguments(bundle);
+                helpDialog.show(getFragmentManager(), "helpDialog");
+            }
+        });
 
         this.mvc = MainActivity.getMasterViewController();
         final ArrayList<Integer> playerNums = getArguments().getIntegerArrayList("PlayerNums");

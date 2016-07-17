@@ -29,6 +29,7 @@ public class Player {
     private int gold;
     private TurnBuffer turnBuffer;
     private Score score;
+    private boolean hasOneFreeBuild;
 
     public Player(MasterViewController mvc, boolean isAI, String name) {
         this.mvc = mvc;
@@ -39,6 +40,7 @@ public class Player {
         hand = new Hand();
         gold = 3;
         score = new Score(this, mvc);
+        hasOneFreeBuild = false;
     }
 
     public Player(MasterViewController mvc, Bundle savedInstanceState) {
@@ -61,6 +63,7 @@ public class Player {
         if(savedInstanceState.getBundle("turnBuffer") != null) {
             turnBuffer = new TurnBuffer(savedInstanceState.getBundle("turnBuffer"));
         }
+        this.hasOneFreeBuild = savedInstanceState.getBoolean("hasOneFreeBuild");
     }
 
     public Bundle getInstanceState() {
@@ -77,12 +80,28 @@ public class Player {
         if(turnBuffer != null) {
             outstate.putBundle("turnBuffer", turnBuffer.getInstanceState());
         }
+        outstate.putBoolean("hasOneFreeBuild", hasOneFreeBuild);
         return outstate;
     }
 
     public void setWonder(Wonder wonder) {
         this.wonder = wonder;
         ai.updateScientist();
+    }
+
+    public boolean hasOneFreeBuild() {
+        return hasOneFreeBuild;
+    }
+
+    public void refreshFreeBuild() {
+        if(getPlayedCards().contains(Generate.WonderStages.Stage_2) && getWonder().getName() == Generate.Wonders.The_Statue_of_Zeus_in_Olympia
+                && getWonderSide()) {
+            hasOneFreeBuild = true;
+        }
+    }
+
+    public void spendFreeBuild() {
+        hasOneFreeBuild = false;
     }
 
     public Wonder getWonder() {
@@ -251,6 +270,13 @@ public class Player {
         return turnBuffer != null && turnBuffer.resolveSpecialAction();
     }
 
+    public Card getBufferCard() {
+        if(turnBuffer != null) {
+            return turnBuffer.card;
+        }
+        return null;
+    }
+
     public void flush() {
         turnBuffer = null;
     }
@@ -299,8 +325,8 @@ public class Player {
                 }
             }
             addGold(goldHere);
-            mvc.getTableController().getPlayerDirection(false, Player.this).addGold(goldEast);
-            mvc.getTableController().getPlayerDirection(true, Player.this).addGold(goldWest);
+            mvc.getTableController().getPlayerDirection(Player.this, false).addGold(goldEast);
+            mvc.getTableController().getPlayerDirection(Player.this, true).addGold(goldWest);
         }
 
         public boolean resolveSpecialAction() {

@@ -45,8 +45,8 @@ public class Card {
         COMPASS,
         GEAR,
         TABLET,
-        SHIELD,
-        VP
+        VP,
+        SHIELD
     }
 
     boolean isBaseResource(String name) {

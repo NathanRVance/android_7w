@@ -7,6 +7,7 @@ import android.text.style.ForegroundColorSpan;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -19,6 +20,7 @@ import net.dumtoad.srednow7.cards.ResQuant;
 import net.dumtoad.srednow7.player.Player;
 
 import java.util.HashMap;
+import java.util.Stack;
 
 public class TradeController {
     public static final Card.Resource[] tradeable = new Card.Resource[]{Card.Resource.WOOD, Card.Resource.STONE, Card.Resource.CLAY,
@@ -64,7 +66,7 @@ public class TradeController {
         this.tradeWest = tradeWest;
     }
 
-    public void trade(LinearLayout content, boolean west) {
+    public void trade(ViewGroup content, boolean west) {
         this.west = west;
         content.removeAllViews();
         if (west)
@@ -74,7 +76,7 @@ public class TradeController {
         updateViews();
     }
 
-    private void addTradeItems(LinearLayout content, final ResQuant currentTrade,
+    private void addTradeItems(ViewGroup content, final ResQuant currentTrade,
                                HashMap<Card.Resource, LinearLayout> views) {
         views.clear();
         goldStatus = new TextView(mvc.getActivity());
@@ -106,9 +108,9 @@ public class TradeController {
 
     public void updateViews() {
         if (west)
-            updateViews(westViews, tradeWest, mvc.getTableController().getPlayerDirection(true, player));
+            updateViews(westViews, tradeWest, mvc.getTableController().getPlayerDirection(player, true));
         else
-            updateViews(eastViews, tradeEast, mvc.getTableController().getPlayerDirection(false, player));
+            updateViews(eastViews, tradeEast, mvc.getTableController().getPlayerDirection(player, false));
     }
 
     private void updateViews(HashMap<Card.Resource, LinearLayout> views, ResQuant currentTrade, Player other) {
@@ -185,7 +187,7 @@ public class TradeController {
         //Add the status resources
         available.addResources(status);
         //complicated are cards where you must choose which resource they produce
-        CardCollection complicated = new CardCollection();
+        Stack<Card> complicated = new Stack<>();
         for (Card card : player.getPlayedCards()) {
             //If we aren't including non-tradeables (everything but resource and industry) skip them now
             if (!includeNonTradeable && card.getType() != Card.Type.RESOURCE && card.getType() != Card.Type.INDUSTRY)
@@ -203,9 +205,8 @@ public class TradeController {
                     available.put(res, available.get(res) + prod.get(res));
                 }
             } else if (numProducts > 1) { //Ugh, it's complicated. Deal with it later
-                complicated.add(card);
+                complicated.push(card);
             }
-            //If it doen't produce a tradeable resource, we don't care about it.
         }
 
         //We're left with some cards that could be in one of several categories. I think (not sure)
@@ -217,17 +218,8 @@ public class TradeController {
         return answer;
     }
 
-    private void availableRecurse(CardCollection cards, ResQuant available, ResQuant answer) {
-        if (cards.size() > 0) {
-            Card card = cards.remove(0);
-            for (Card.Resource res : tradeable) {
-                if (card.getProducts().get(res) > 0) {
-                    available.put(res, available.get(res) + 1);
-                    availableRecurse(cards, available, answer);
-                    available.put(res, available.get(res) - 1);
-                }
-            }
-        } else {
+    private void availableRecurse(Stack<Card> cards, ResQuant available, ResQuant answer) {
+        if (cards.empty()) {
             if (available.allZeroOrAbove()) {
                 for (Card.Resource res : tradeable) {
                     if (available.get(res) > answer.get(res)) {
@@ -235,6 +227,16 @@ public class TradeController {
                     }
                 }
             }
+        } else {
+            Card card = cards.pop();
+            for (Card.Resource res : tradeable) {
+                if (card.getProducts().get(res) > 0) {
+                    available.put(res, available.get(res) + 1);
+                    availableRecurse(cards, available, answer);
+                    available.put(res, available.get(res) - 1);
+                }
+            }
+            cards.push(card);
         }
     }
 

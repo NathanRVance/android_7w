@@ -21,6 +21,7 @@ public class SetupPlayerItem extends RelativeLayout implements EditTextDialog.Ed
     private String names[];
     private boolean ais[];
     private int index;
+    public static String EDIT_TEXT_DIALOG_TAG ="edittextdialog";
 
     public SetupPlayerItem(Context context) {
         super(context);
@@ -49,7 +50,7 @@ public class SetupPlayerItem extends RelativeLayout implements EditTextDialog.Ed
                 Bundle args = new Bundle();
                 args.putString("name", names[index]);
                 df.setArguments(args);
-                df.show(MainActivity.getMainActivity().getFragmentManager(), "edittextdialog");
+                df.show(MainActivity.getMainActivity().getFragmentManager(), EDIT_TEXT_DIALOG_TAG);
             }
         });
 

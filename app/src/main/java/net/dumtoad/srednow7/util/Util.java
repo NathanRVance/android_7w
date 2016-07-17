@@ -12,7 +12,6 @@ import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.TranslateAnimation;
 import android.widget.ScrollView;
-import android.widget.Toast;
 
 import net.dumtoad.srednow7.MainActivity;
 

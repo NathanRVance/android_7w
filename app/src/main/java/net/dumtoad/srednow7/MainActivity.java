@@ -7,8 +7,7 @@ import android.view.GestureDetector;
 import android.view.MotionEvent;
 
 import net.dumtoad.srednow7.controller.MasterViewController;
-import net.dumtoad.srednow7.dialog.WelcomeDialog;
-
+import net.dumtoad.srednow7.dialog.LoadDialog;
 
 public class MainActivity extends Activity {
 
@@ -35,13 +34,12 @@ public class MainActivity extends Activity {
 
         if (savedInstanceState != null)
             mvc.onRestoreInstanceState(savedInstanceState);
-        else  {
-            DialogFragment welcomeDialog = new WelcomeDialog();
-            Bundle args = new Bundle();
-            args.putBoolean("continue", mvc.hasAutosave());
-            welcomeDialog.setArguments(args);
-            welcomeDialog.show(getFragmentManager(), "welcomeDialog");
-            mvc.setup(); //So there's something in the background if the user exits the dialog
+        else {
+            if (mvc.hasAutosave()) {
+                DialogFragment loadDialog = new LoadDialog();
+                loadDialog.show(getFragmentManager(), "loadDialog");
+            }
+            mvc.setup(); //So that there's something in the background if the user exits the dialog
         }
     }
 

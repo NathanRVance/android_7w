@@ -52,7 +52,7 @@ public class Special {
         } else if(card.getName() == Generate.Era2.Strategy_Guild) {
             int ret = 0;
             for (boolean direction : new boolean[]{true, false}) {
-                ret += MainActivity.getMasterViewController().getTableController().getPlayerDirection(direction, player).getScore().getMilitaryLosses();
+                ret += MainActivity.getMasterViewController().getTableController().getPlayerDirection(player, direction).getScore().getMilitaryLosses();
             }
             return ret;
         } else if(card.getName() == Generate.Era2.Shipowners_Guild) {
@@ -67,7 +67,7 @@ public class Special {
                 && ! player.getWonderSide() && card.getName() == Generate.WonderStages.Stage_3) {
             int max = 0;
             for(boolean direction : new boolean[]{true, false}) {
-                for(Card c : MainActivity.getMasterViewController().getTableController().getPlayerDirection(direction, player).getPlayedCards()) {
+                for(Card c : MainActivity.getMasterViewController().getTableController().getPlayerDirection(player, direction).getPlayedCards()) {
                     if(c.getType() == Card.Type.GUILD) {
                         int vps = c.getProducts().get(Card.Resource.VP) + getSpecialVps(c, player);
                         max = (vps > max)? vps : max;
@@ -83,7 +83,7 @@ public class Special {
         int ret = 0;
         if(includeAdjacent) {
             for (boolean direction : new boolean[]{true, false}) {
-                for (Card c : MainActivity.getMasterViewController().getTableController().getPlayerDirection(direction, player).getPlayedCards()) {
+                for (Card c : MainActivity.getMasterViewController().getTableController().getPlayerDirection(player, direction).getPlayedCards()) {
                     if (c.getType() == type) {
                         ret += amount;
                     }
@@ -108,6 +108,11 @@ public class Special {
                 MainActivity.getMasterViewController().getTableController().getTurnController().startTurn(playerNum, true);
                 return true;
             }
+        }
+        else if(card.getType() == Card.Type.STAGE && player.getWonder().getName() == Generate.Wonders.The_Statue_of_Zeus_in_Olympia
+                && player.getWonderSide() && card.getName() == Generate.WonderStages.Stage_2) {
+            player.refreshFreeBuild();
+            //Returning true would interrupt the turn, which we don't want.
         }
         return false;
     }

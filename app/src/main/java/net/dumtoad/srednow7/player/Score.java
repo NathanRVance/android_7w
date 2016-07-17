@@ -39,7 +39,7 @@ public class Score {
         }
         for(boolean direction : new boolean[]{true, false}) {
             int otherMilitary = 0;
-            for(Card card : mvc.getTableController().getPlayerDirection(direction, player).getPlayedCards()) {
+            for(Card card : mvc.getTableController().getPlayerDirection(player, direction).getPlayedCards()) {
                 otherMilitary += card.getProducts().get(Card.Resource.SHIELD);
             }
             if(otherMilitary > playerMilitary) {

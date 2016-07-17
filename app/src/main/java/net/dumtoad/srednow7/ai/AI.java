@@ -156,7 +156,7 @@ public class AI {
         if(shields > 0) {
             int myShields = prod.get(Card.Resource.SHIELD);
             for(boolean direction : new boolean[]{true, false}) {
-                int sh = mvc.getTableController().getPlayerDirection(direction, player).getRawProduction().get(Card.Resource.SHIELD);
+                int sh = mvc.getTableController().getPlayerDirection(player, direction).getRawProduction().get(Card.Resource.SHIELD);
                 if((myShields < sh && myShields + shields >= sh) || (myShields == sh)) {
                     cardAction.weight += shields * 2;
                 } else {
@@ -217,7 +217,7 @@ public class AI {
 
     private void addNextEffect(CardAction cardAction, Player player) {
         CardAction ca = new CardAction(cardAction.card);
-        Player p = mvc.getTableController().getPlayerDirection(mvc.getTableController().getPassingDirection(), player);
+        Player p = mvc.getTableController().getPlayerDirection(player, mvc.getTableController().getPassingDirection());
         calcBuild(ca, p, false);
         //Perhaps we'll play a card just to spite our opponents!
         cardAction.weight += ca.weight / 2;
@@ -242,9 +242,9 @@ public class AI {
     }
 
     private boolean makeOneTrade(TradeController tc, CardAction cardAction, ResQuant resAvail, Player player) {
-        ResQuant availableEast = tc.numAvailable(mvc.getTableController().getPlayerDirection(false, player),
+        ResQuant availableEast = tc.numAvailable(mvc.getTableController().getPlayerDirection(player, false),
                 new ResQuant().subtractResources(cardAction.tradeEast), false);
-        ResQuant availableWest = tc.numAvailable(mvc.getTableController().getPlayerDirection(true, player),
+        ResQuant availableWest = tc.numAvailable(mvc.getTableController().getPlayerDirection(player, true),
                 new ResQuant().subtractResources(cardAction.tradeWest), false);
         ArrayList<Card.Resource> resources = new ArrayList<>();
 

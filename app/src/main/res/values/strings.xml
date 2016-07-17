@@ -6,6 +6,10 @@
     <string name="continue_game">Continue last game</string>
     <string name="help">Help</string>
     <string name="help_button">\?</string>
+    <string name="load_title">Load…</string>
+    <string name="load_message">Would you like to load your last saved game?</string>
+    <string name="yes">Yes</string>
+    <string name="no">No</string>
     <string name="add_button">Add Player</string>
     <string name="subtract_button">Remove Player</string>
     <string name="human">Human</string>
@@ -17,10 +21,41 @@
     <string name="trade">Trade</string>
     <string name="wonder">Wonder</string>
     <string name="summary">Summary</string>
+    <string name="score">Score</string>
     <string name="east">East</string>
     <string name="west">West</string>
     <string name="passing_direction">Passing direction: %s</string>
     <string name="not_built">%s (not built)</string>
     <string name="add">+</string>
     <string name="subtract">-</string>
+
+    <!-->
+        I'm using an admittedly odd syntax for colored strings in which *COLOR-text* will apply a color to a text.
+    !-->
+    <string name="help_setup_title">Setup</string>
+    <string name="help_setup">Play with 3–7 AI or Human players. Each player will be to the West of the previous one.</string>
+    <string name="help_wonderselect_title">Select a Wonder Side</string>
+    <string name="help_wonderselect">Select the side of the wonder to use. If unsure, side A is typically better for beginners.</string>
+    <string name="help_wonder_title">Wonder</string>
+    <string name="help_wonder">These are the cards you have already built. They contribute to your production or victory points.</string>
+    <string name="help_summary_title">Summary</string>
+    <string name="help_summary">*GOLD-Gold* is used to trade for resources from other players.
+        *RESOURCE-Resources* and *INDUSTRY-industries* (*WOOD-wood*, *STONE-stone*, *CLAY-clay*, *ORE-ore*, *CLOTH-cloth*, *GLASS-glass*, and *PAPER-paper*) are used to build cards.
+        *SCIENCE-Scientific products* (*COMPASS-compass*, *GEAR-gear*, and *TABLET-tablet*) contribute to the *SCIENCE-scientific* victory points at the end of the game.
+        Victory points (*VP-vp*) contribute directly to your score at the end of the game.
+        At the end of each era, the army (*SHIELD-shield*) battles the armies of the neighboring nations, awarding or subtracting *MILITARY-military* victory points.
+    </string>
+    <string name="help_hand_title">Hand</string>
+    <string name="help_hand">Each turn you either build a card, build a wonder stage, or discard a card for 3 *GOLD-gold*.</string>
+    <string name="help_trade_title">Trade</string>
+    <string name="help_trade">Trade for resources from your neighbors to build cards.</string>
+    <string name="help_score_title">Score</string>
+    <string name="help_score">*MILITARY-Military* points come from *MILITARY-military* victories. In era 1, 1 point is awarded. In era 2, 3. In era 3, 5. Defeats are subtracted from victories.
+        The *GOLD-gold* score is the ending amount of *GOLD-gold* divided by 3, rounded down.
+        *STAGE-Wonder* points come from building the *STAGE-wonder*.
+        *STRUCTURE-Structure* points come from *STRUCTURE-civilian structures*.
+        *COMMERCIAL-Commerce* points are from *COMMERCIAL-commercial structures*.
+        *GUILD-Guild* points come from *GUILD-guilds*.
+        *SCIENCE-Science* points are awarded by 7 points for each complete set of the three *SCIENCE-science* products, plus the square of the number of each *SCIENCE-science* product.
+    </string>
 </resources>
