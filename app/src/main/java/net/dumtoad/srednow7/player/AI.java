@@ -1,4 +1,4 @@
-package net.dumtoad.srednow7.ai;
+package net.dumtoad.srednow7.player;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -12,7 +12,6 @@ import net.dumtoad.srednow7.cards.Special;
 import net.dumtoad.srednow7.controller.MasterViewController;
 import net.dumtoad.srednow7.controller.TradeController;
 import net.dumtoad.srednow7.controller.TurnController;
-import net.dumtoad.srednow7.player.Player;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -32,7 +31,7 @@ public class AI {
 
     public AI(Player player) {
         this.player = player;
-        player.setWonderSide(true);
+        player.setWonderSide(new Random().nextBoolean());
         mvc = MainActivity.getMasterViewController();
     }
 
@@ -61,6 +60,7 @@ public class AI {
         Hand hand;
         if(playDiscard) {
             hand = mvc.getTableController().getDiscards();
+            if(hand.size() == 0) return;
         } else {
             hand = player.getHand();
         }
@@ -187,6 +187,11 @@ public class AI {
             for(Card.Resource res : new Card.Resource[]{Card.Resource.CLOTH, Card.Resource.GLASS, Card.Resource.PAPER}) {
                 if(prod.get(res) == 0) cardAction.weight += 2;
             }
+        }
+
+        //Speshul card does speshul stuffs...
+        if(Special.isSpecialAction(cardAction.card, player)) {
+            cardAction.weight += 5;
         }
     }
 

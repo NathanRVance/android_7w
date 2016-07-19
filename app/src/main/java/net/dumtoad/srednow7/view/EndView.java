@@ -5,14 +5,18 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.text.SpannableStringBuilder;
+import android.text.style.ForegroundColorSpan;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
 import net.dumtoad.srednow7.R;
+import net.dumtoad.srednow7.cards.Card;
 import net.dumtoad.srednow7.controller.MasterViewController;
 import net.dumtoad.srednow7.dialog.HelpDialog;
+import net.dumtoad.srednow7.fragment.GameFragment;
 import net.dumtoad.srednow7.player.Player;
 
 import java.util.ArrayList;
@@ -64,7 +68,9 @@ public class EndView extends GameView {
         }
         Collections.sort(scores);
 
-        for(PlayerScore ps : scores) {
+        final GameFragment gameFragment = (GameFragment) mvc.getActivity().getFragmentManager().findFragmentByTag(GameFragment.GAME_FRAGMENT_TAG);
+
+        for(final PlayerScore ps : scores) {
             SpannableStringBuilder sb = new SpannableStringBuilder();
             sb.append(ps.player.getName())
                     .append(" (")
@@ -72,17 +78,32 @@ public class EndView extends GameView {
                     .append(") VPs: ")
                     .append(String.valueOf(ps.score))
                     .append("\n");
-            sb.append(" Military: ").append(String.valueOf(ps.player.getScore().getMilitaryVps())).append("\n");
-            sb.append(" Gold: ").append(String.valueOf(ps.player.getScore().getGoldVps())).append("\n");
-            sb.append(" Wonder: ").append(String.valueOf(ps.player.getScore().getWonderVps())).append("\n");
-            sb.append(" Structure: ").append(String.valueOf(ps.player.getScore().getStructureVps())).append("\n");
-            sb.append(" Commerce: ").append(String.valueOf(ps.player.getScore().getCommercialVps())).append("\n");
-            sb.append(" Guild: ").append(String.valueOf(ps.player.getScore().getGuildVps())).append("\n");
-            sb.append(" Science: ").append(String.valueOf(ps.player.getScore().getScienceVps())).append("\n");
+            Card.appendSb(sb, " Military", new ForegroundColorSpan(Card.getColorId(Card.Type.MILITARY.toString())));
+            sb.append(": ").append(String.valueOf(ps.player.getScore().getMilitaryVps())).append("\n");
+            Card.appendSb(sb, " Gold", new ForegroundColorSpan(Card.getColorId(Card.Resource.GOLD.toString())));
+            sb.append(": ").append(String.valueOf(ps.player.getScore().getGoldVps())).append("\n");
+            Card.appendSb(sb, " Wonder", new ForegroundColorSpan(Card.getColorId(Card.Type.STAGE.toString())));
+            sb.append(": ").append(String.valueOf(ps.player.getScore().getWonderVps())).append("\n");
+            Card.appendSb(sb, " Structure", new ForegroundColorSpan(Card.getColorId(Card.Type.STRUCTURE.toString())));
+            sb.append(": ").append(String.valueOf(ps.player.getScore().getStructureVps())).append("\n");
+            Card.appendSb(sb, " Commerce", new ForegroundColorSpan(Card.getColorId(Card.Type.COMMERCIAL.toString())));
+            sb.append(": ").append(String.valueOf(ps.player.getScore().getCommercialVps())).append("\n");
+            Card.appendSb(sb, " Guild", new ForegroundColorSpan(Card.getColorId(Card.Type.GUILD.toString())));
+            sb.append(": ").append(String.valueOf(ps.player.getScore().getGuildVps())).append("\n");
+            Card.appendSb(sb, " Science", new ForegroundColorSpan(Card.getColorId(Card.Type.SCIENCE.toString())));
+            sb.append(": ").append(String.valueOf(ps.player.getScore().getScienceVps())).append("\n");
             sb.append("\n");
 
             final TextView tv = new TextView(mvc.getActivity());
             tv.setText(sb);
+            tv.setTextSize(TypedValue.COMPLEX_UNIT_PX, mvc.getActivity().getResources().getDimension(R.dimen.textsize));
+            tv.setOnClickListener(new OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if(mvc.getPlayerNum(ps.player) != gameFragment.getPlayerViewing())
+                        gameFragment.goTo(mvc.getPlayerNum(ps.player));
+                }
+            });
             content.addView(tv);
             if(mvc.getPlayerNum(ps.player) == playerViewing) {
                 findViewById(R.id.content_scroll_view).post(new Runnable() {

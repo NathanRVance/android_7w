@@ -37,7 +37,7 @@ public class TurnController {
         return outstate;
     }
 
-    public Player getCurrentPlayer() {
+    private Player getCurrentPlayer() {
         return mvc.getPlayer(playerTurn);
     }
 

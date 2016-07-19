@@ -4,7 +4,6 @@ import android.os.Bundle;
 import android.text.SpannableStringBuilder;
 import android.text.style.ForegroundColorSpan;
 
-import net.dumtoad.srednow7.ai.AI;
 import net.dumtoad.srednow7.cards.Card;
 import net.dumtoad.srednow7.cards.CardCollection;
 import net.dumtoad.srednow7.cards.Generate;

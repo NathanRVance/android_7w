@@ -46,7 +46,6 @@ public class MasterViewController {
     }
 
     public void postSetup(String names[], boolean ais[], int numPlayers) {
-
         database = new Database(numPlayers);
 
         players = new Player[numPlayers];
@@ -129,8 +128,7 @@ public class MasterViewController {
         activity.getFragmentManager().beginTransaction()
                 .replace(R.id.main_layout, endFrag, EndFragment.GAME_FRAGMENT_TAG)
                 .commit();
-        hasAutosave = false;
-        autosave();
+        deleteSave();
     }
 
     public void deleteSave() {

@@ -36,7 +36,13 @@ public class TabletView extends GameView {
         ((ViewGroup) findViewById(R.id.wonder_view)).addView(new WonderView(mvc, playerTurn, playerViewing));
         ((ViewGroup) findViewById(R.id.summary_view)).addView(new SummaryView(mvc, playerTurn, playerViewing));
         GameFragment gameFragment = (GameFragment) mvc.getActivity().getFragmentManager().findFragmentByTag(GameFragment.GAME_FRAGMENT_TAG);
-        ((ViewGroup) findViewById(R.id.hand_view)).addView(gameFragment.getHandTradeView());
+        View handView = gameFragment.getHandTradeView();
+        if(handView instanceof SummaryView) {
+            //We already have one of those...
+            findViewById(R.id.hand_view).setVisibility(GONE);
+        } else {
+            ((ViewGroup) findViewById(R.id.hand_view)).addView(handView);
+        }
 
         mvc.getActivity().findViewById(R.id.help).setOnClickListener(new View.OnClickListener() {
             @Override

@@ -130,7 +130,21 @@ public class GameFragment extends AbstractFragment implements MainActivity.LeftR
 
     //west is true, east is false
     public void go(boolean direction) {
-        playerViewing = mvc.getTableController().getPlayerDirection(playerViewing, direction);
+        goTo(mvc.getTableController().getPlayerDirection(playerViewing, direction));
+    }
+
+    public void goTo(int playerNum) {
+        int distanceWest;
+        int distanceEast;
+        if(playerNum > playerViewing) {
+            distanceWest = playerNum - playerViewing;
+            distanceEast = mvc.getNumPlayers() - distanceWest;
+        } else {
+            distanceEast = playerViewing - playerNum;
+            distanceWest = mvc.getNumPlayers() - distanceEast;
+        }
+        boolean direction = (distanceWest < distanceEast);
+        playerViewing = playerNum;
         ViewGroup next;
         if (Util.isTablet())
             next = new TabletView(mvc, playerTurn, playerViewing);
@@ -138,6 +152,10 @@ public class GameFragment extends AbstractFragment implements MainActivity.LeftR
         RelativeLayout content = (RelativeLayout) mvc.getActivity().findViewById(R.id.content);
         ViewGroup current = (ViewGroup) content.getChildAt(content.getChildCount() - 1);
         Util.animateTranslate(content, current, next, !direction);
+    }
+
+    public int getPlayerViewing() {
+        return playerViewing;
     }
 
     @Override
