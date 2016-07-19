@@ -137,7 +137,7 @@ public class Special {
             int playerNum = MainActivity.getMasterViewController().getPlayerNum(player);
             MainActivity.getMasterViewController().getTableController().getTurnController().startTurn(playerNum, true);
             return true;
-        } else if (isPlay7thCard(card, player)) {
+        } else if (isOneFreeCard(card, player)) {
             player.refreshFreeBuild();
             //Returning true would interrupt the turn, which we don't want.
         }

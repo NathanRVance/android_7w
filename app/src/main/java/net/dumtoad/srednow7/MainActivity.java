@@ -6,6 +6,8 @@ import android.os.Bundle;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 
+import com.crashlytics.android.Crashlytics;
+import io.fabric.sdk.android.Fabric;
 import net.dumtoad.srednow7.controller.MasterViewController;
 import net.dumtoad.srednow7.dialog.LoadDialog;
 
@@ -27,14 +29,15 @@ public class MainActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Fabric.with(this, new Crashlytics());
         mainActivity = this;
         setContentView(R.layout.activity_main);
         mvc = new MasterViewController(this);
         gestureDetector = new GestureDetector(this, new GestureListener());
 
-        if (savedInstanceState != null)
+        if (savedInstanceState != null) {
             mvc.onRestoreInstanceState(savedInstanceState);
-        else {
+        } else {
             if (mvc.hasAutosave()) {
                 DialogFragment loadDialog = new LoadDialog();
                 loadDialog.show(getFragmentManager(), "loadDialog");

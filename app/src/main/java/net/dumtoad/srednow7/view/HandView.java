@@ -16,18 +16,17 @@ import net.dumtoad.srednow7.cards.Hand;
 import net.dumtoad.srednow7.controller.MasterViewController;
 import net.dumtoad.srednow7.controller.TradeController;
 import net.dumtoad.srednow7.dialog.HelpDialog;
+import net.dumtoad.srednow7.fragment.GameFragment;
 import net.dumtoad.srednow7.player.Player;
 
 public class HandView extends GameView {
-    private boolean playDiscard;
 
     public HandView(Context context) {
         super(context);
     }
 
-    public HandView(MasterViewController mvc, int playerTurn, boolean playDiscard) {
+    public HandView(MasterViewController mvc, int playerTurn) {
         super(mvc, playerTurn, playerTurn);
-        this.playDiscard = playDiscard;
     }
 
     @Override
@@ -59,6 +58,8 @@ public class HandView extends GameView {
         Player player = mvc.getPlayer(playerViewing);
         TradeController tc = mvc.getTableController().getTurnController().getTradeController();
         Hand hand;
+        GameFragment gameFragment = (GameFragment) mvc.getActivity().getFragmentManager().findFragmentByTag(GameFragment.GAME_FRAGMENT_TAG);
+        boolean playDiscard = gameFragment.isPlayDiscard();
         if (playDiscard) {
             hand = mvc.getTableController().getDiscards();
         } else {

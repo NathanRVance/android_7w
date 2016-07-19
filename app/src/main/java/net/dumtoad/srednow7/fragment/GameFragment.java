@@ -87,6 +87,10 @@ public class GameFragment extends AbstractFragment implements MainActivity.LeftR
         outstate.putString("mode", mode.toString());
     }
 
+    public boolean isPlayDiscard() {
+        return playDiscard;
+    }
+
     public void switchToView(Mode mode) {
         this.mode = mode;
         if (Util.isTablet()) {
@@ -122,7 +126,7 @@ public class GameFragment extends AbstractFragment implements MainActivity.LeftR
         }
 
         if (playerTurn == playerViewing) {
-            return new HandView(mvc, playerTurn, playDiscard);
+            return new HandView(mvc, playerTurn);
         } else {
             return new TradeView(mvc, playerTurn, playerViewing);
         }

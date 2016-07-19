@@ -295,10 +295,12 @@ public class Player {
 
         public TurnBuffer(Bundle savedInstanceState) {
             String cardName = savedInstanceState.getString("card");
-            for(Card card : mvc.getDatabase().getAllCards()) {
-                if(card.getName().toString().equals(cardName)) {
-                    this.card = card;
-                    break;
+            if(cardName != null) {
+                for (Card card : mvc.getDatabase().getAllCards()) {
+                    if (card.getName().toString().equals(cardName)) {
+                        this.card = card;
+                        break;
+                    }
                 }
             }
             goldHere = savedInstanceState.getInt("goldHere");
@@ -308,7 +310,9 @@ public class Player {
 
         public Bundle getInstanceState() {
             Bundle bundle = new Bundle();
-            bundle.putString("card", card.getName().toString());
+            if(card != null) {
+                bundle.putString("card", card.getName().toString());
+            }
             bundle.putInt("goldHere", goldHere);
             bundle.putInt("goldEast", goldEast);
             bundle.putInt("goldWest", goldWest);
