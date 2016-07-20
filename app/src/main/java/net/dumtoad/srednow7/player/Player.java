@@ -48,7 +48,6 @@ public class Player {
         ai = new AI(this, savedInstanceState.getBundle("ai"));
         this.name = savedInstanceState.getString("name");
         this.hand = new Hand(mvc.getDatabase().getAllCards(), savedInstanceState.getString("handtrade"));
-        this.playedCards = new CardCollection(mvc.getDatabase().getAllCards(), savedInstanceState.getString("playedCards"));
         String wonderName = savedInstanceState.getString("wonder");
         for(Wonder wonder : Generate.getWonders()) {
             if(wonder.getName().toString().equals(wonderName)) {
@@ -57,6 +56,9 @@ public class Player {
             }
         }
         this.wonderSide = savedInstanceState.getBoolean("wonderSide");
+        CardCollection cc = mvc.getDatabase().getAllCards();
+        cc.addAll(wonder.getStages(wonderSide));
+        this.playedCards = new CardCollection(cc, savedInstanceState.getString("playedCards"));
         this.gold = savedInstanceState.getInt("gold");
         this.score = new Score(this, mvc, savedInstanceState.getBundle("score"));
         if(savedInstanceState.getBundle("turnBuffer") != null) {
