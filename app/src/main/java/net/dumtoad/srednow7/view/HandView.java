@@ -56,7 +56,7 @@ public class HandView extends GameView {
         content.addView(tv);
 
         Player player = mvc.getPlayer(playerViewing);
-        TradeController tc = mvc.getTableController().getTurnController().getTradeController();
+        TradeController tc = player.getTradeController();
         Hand hand;
         GameFragment gameFragment = (GameFragment) mvc.getActivity().getFragmentManager().findFragmentByTag(GameFragment.GAME_FRAGMENT_TAG);
         boolean playDiscard = gameFragment.isPlayDiscard();

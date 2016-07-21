@@ -134,8 +134,7 @@ public class Special {
 
     public static boolean specialAction(Card card, Player player) {
         if (isPlayDiscard(card, player)) {
-            int playerNum = MainActivity.getMasterViewController().getPlayerNum(player);
-            MainActivity.getMasterViewController().getTableController().getTurnController().startTurn(playerNum, true);
+            player.startTurn(true);
             return true;
         } else if (isOneFreeCard(card, player)) {
             player.refreshFreeBuild();

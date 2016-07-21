@@ -27,6 +27,12 @@ public class GameFragment extends AbstractFragment implements MainActivity.LeftR
     private int playerTurn;
     private boolean playDiscard;
 
+    public enum Mode {
+        wonder,
+        summary,
+        handtrade
+    }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         if (savedInstanceState == null) savedInstanceState = new Bundle(); //Avoid null pointers
@@ -178,11 +184,5 @@ public class GameFragment extends AbstractFragment implements MainActivity.LeftR
     @Override
     public void swipeRight() {
         west.performClick();
-    }
-
-    public enum Mode {
-        wonder,
-        summary,
-        handtrade
     }
 }

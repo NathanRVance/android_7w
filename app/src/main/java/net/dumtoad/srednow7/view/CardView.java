@@ -7,7 +7,6 @@ import android.util.TypedValue;
 import android.view.View;
 import android.widget.Button;
 
-import net.dumtoad.srednow7.MainActivity;
 import net.dumtoad.srednow7.R;
 import net.dumtoad.srednow7.cards.Card;
 import net.dumtoad.srednow7.controller.TurnController;
@@ -31,7 +30,7 @@ public class CardView extends Button {
         setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                final TurnController tc = MainActivity.getMasterViewController().getTableController().getTurnController();
+                final TurnController tc = player.getTurnController();
                 new AlertDialog.Builder(getContext())
                         .setTitle(card.getNameString())
                         .setMessage(card.getSummary(player, true))

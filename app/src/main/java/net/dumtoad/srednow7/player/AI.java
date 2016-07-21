@@ -56,7 +56,7 @@ public class AI {
         }
     }
 
-    public void doTurn(boolean playDiscard) {
+    public void doTurn(boolean playDiscard, TurnController turnController) {
         Hand hand;
         if(playDiscard) {
             hand = mvc.getTableController().getDiscards();
@@ -71,11 +71,10 @@ public class AI {
             }
         }
         Collections.sort(actions);
-        doAction(actions.get(0));
+        doAction(actions.get(0), turnController);
     }
 
-    private void doAction(CardAction cardAction) {
-        TurnController turnController = mvc.getTableController().getTurnController();
+    private void doAction(CardAction cardAction, TurnController turnController) {
         turnController.getTradeController().setTrades(cardAction.tradeEast, cardAction.tradeWest);
         switch(cardAction.action) {
             case build:
@@ -237,9 +236,8 @@ public class AI {
             tc.setTrades(cardAction.tradeEast, cardAction.tradeWest);
             status = tc.getResAvailableAfterTrade(cardAction.card);
             if(status.allZeroOrAbove()) {
-                int totalCost = tc.getTotalCost();
                 if(! tc.canAffordResources(cardAction.card) || ! tc.canAffordGold(cardAction.card)) return -1;
-                return totalCost;
+                return tc.getTotalCost();
             }
         }
 

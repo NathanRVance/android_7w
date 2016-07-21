@@ -155,7 +155,8 @@ public class MasterViewController {
             Bundle bundle = Util.retrieveBundle();
             if (bundle.getBoolean("hasAutosave", false)) {
                 onRestoreInstanceState(bundle);
-                tc.getTurnController().startTurn(tc.getTurnController().getCurrentPlayerNum(), false);
+                Player playerTurn = getPlayer(tc.getCurrentPlayerNum());
+                playerTurn.startTurn(playerTurn.isPlayingDiscard());
                 return true;
             }
         } catch (Exception e) {

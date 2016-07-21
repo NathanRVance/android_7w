@@ -39,9 +39,9 @@ public class TradeView extends GameView {
         });
 
         if (playerViewing == mvc.getTableController().getPlayerDirection(playerTurn, true))
-            mvc.getTableController().getTurnController().getTradeController().trade(content, true);
+            mvc.getPlayer(playerTurn).getTradeController().trade(content, true);
         else
-            mvc.getTableController().getTurnController().getTradeController().trade(content, false);
+            mvc.getPlayer(playerTurn).getTradeController().trade(content, false);
     }
 
 }

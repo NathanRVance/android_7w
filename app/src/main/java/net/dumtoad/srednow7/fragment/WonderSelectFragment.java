@@ -43,7 +43,7 @@ public class WonderSelectFragment extends AbstractFragment implements MainActivi
 
         this.mvc = MainActivity.getMasterViewController();
         final ArrayList<Integer> playerNums = getArguments().getIntegerArrayList("PlayerNums");
-        if (playerNums == null || playerNums.isEmpty()) {
+        if (playerNums == null || playerNums.size() == 0) {
             mvc.startMainGame();
             return view;
             //throw new RuntimeException("Can't have AI only game");

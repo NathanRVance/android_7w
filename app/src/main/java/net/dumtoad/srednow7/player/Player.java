@@ -12,6 +12,8 @@ import net.dumtoad.srednow7.cards.ResQuant;
 import net.dumtoad.srednow7.cards.Special;
 import net.dumtoad.srednow7.cards.Wonder;
 import net.dumtoad.srednow7.controller.MasterViewController;
+import net.dumtoad.srednow7.controller.TradeController;
+import net.dumtoad.srednow7.controller.TurnController;
 
 import java.util.ArrayList;
 
@@ -29,6 +31,8 @@ public class Player {
     private TurnBuffer turnBuffer;
     private Score score;
     private boolean hasOneFreeBuild;
+    private boolean playDiscard;
+    private TurnController tc;
 
     public Player(MasterViewController mvc, boolean isAI, String name) {
         this.mvc = mvc;
@@ -40,6 +44,7 @@ public class Player {
         gold = 3;
         score = new Score(this, mvc);
         hasOneFreeBuild = false;
+        this.tc = new TurnController(mvc, this);
     }
 
     public Player(MasterViewController mvc, Bundle savedInstanceState) {
@@ -64,7 +69,9 @@ public class Player {
         if(savedInstanceState.getBundle("turnBuffer") != null) {
             turnBuffer = new TurnBuffer(savedInstanceState.getBundle("turnBuffer"));
         }
+        this.playDiscard = savedInstanceState.getBoolean("playDiscard");
         this.hasOneFreeBuild = savedInstanceState.getBoolean("hasOneFreeBuild");
+        tc = new TurnController(mvc, this, savedInstanceState.getBundle("tc"));
     }
 
     public Bundle getInstanceState() {
@@ -81,8 +88,40 @@ public class Player {
         if(turnBuffer != null) {
             outstate.putBundle("turnBuffer", turnBuffer.getInstanceState());
         }
+        outstate.putBoolean("playDiscard", playDiscard);
         outstate.putBoolean("hasOneFreeBuild", hasOneFreeBuild);
+        outstate.putBundle("tc", tc.getInstanceState());
         return outstate;
+    }
+
+    public void startTurn(boolean playDiscard) {
+        if(playDiscard && mvc.getTableController().getDiscards().isEmpty() || !playDiscard && hand.isEmpty()) {
+            endTurn();
+            return;
+        }
+        this.playDiscard = playDiscard;
+        if(isAI) {
+            ai.doTurn(playDiscard, tc);
+        } else {
+            mvc.autosave(); //Autosave at beginning of each player's turn
+            tc.startTurn(playDiscard);
+        }
+    }
+
+    public void endTurn() {
+        mvc.getTableController().iFinishedMyTurn(this);
+    }
+
+    public boolean isPlayingDiscard() {
+        return playDiscard;
+    }
+
+    public TradeController getTradeController() {
+        return tc.getTradeController();
+    }
+
+    public TurnController getTurnController() {
+        return tc;
     }
 
     public void setWonder(Wonder wonder) {
@@ -115,10 +154,6 @@ public class Player {
 
     public boolean isAI() {
         return isAI;
-    }
-
-    public AI getAI() {
-        return ai;
     }
 
     public void setWonderSide(boolean wonderSide) {
@@ -335,7 +370,9 @@ public class Player {
         }
 
         public boolean resolveSpecialAction() {
-            return card != null && Special.specialAction(card, Player.this);
+            Card c = card;
+            card = null;
+            return c != null && Special.specialAction(c, Player.this);
         }
     }
 

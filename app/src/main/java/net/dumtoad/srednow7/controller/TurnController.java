@@ -13,62 +13,44 @@ import net.dumtoad.srednow7.player.Player;
 
 public class TurnController {
     private MasterViewController mvc;
+    private Player player;
     private TradeController tradeController;
-    private int playerTurn;
-    private boolean playDiscard;
 
-    public TurnController(MasterViewController mvc) {
+    public TurnController(MasterViewController mvc, Player player) {
         this.mvc = mvc;
-        tradeController = new TradeController(mvc, getCurrentPlayer());
+        this.player = player;
+        tradeController = new TradeController(mvc, player);
     }
 
-    public TurnController(MasterViewController mvc, Bundle savedInstanceState) {
+    public TurnController(MasterViewController mvc, Player player, Bundle savedInstanceState) {
         this.mvc = mvc;
-        this.playerTurn = savedInstanceState.getInt("playerTurn");
-        tradeController = new TradeController(mvc, getCurrentPlayer(), savedInstanceState.getBundle("tradeController"));
-        this.playDiscard = savedInstanceState.getBoolean("playDiscard");
+        this.player = player;
+        tradeController = new TradeController(mvc, player, savedInstanceState.getBundle("tradeController"));
     }
 
     public Bundle getInstanceState() {
         Bundle outstate = new Bundle();
-        outstate.putInt("playerTurn", playerTurn);
         outstate.putBundle("tradeController", tradeController.getInstanceState());
-        outstate.putBoolean("playDiscard", playDiscard);
         return outstate;
     }
 
-    private Player getCurrentPlayer() {
-        return mvc.getPlayer(playerTurn);
-    }
-
-    public int getCurrentPlayerNum() {
-        return playerTurn;
-    }
-
-    public void startTurn(int playerNum, boolean playDiscard) {
-        this.playDiscard = playDiscard;
-        playerTurn = playerNum;
-        tradeController = new TradeController(mvc, getCurrentPlayer());
-        if (mvc.getPlayer(playerNum).isAI()) {
-            mvc.getPlayer(playerNum).getAI().doTurn(playDiscard);
-        } else {
-            if (mvc.getTableController().getNumHumanPlayers() > 1) {
-                DialogFragment df = new PassThePhone();
-                Bundle args = new Bundle();
-                args.putString("name", mvc.getPlayer(playerNum).getName());
-                df.setArguments(args);
-                df.show(mvc.getActivity().getFragmentManager(), "passthephone");
-            }
-            mvc.autosave(); //Autosave now, when the user is distracted, so a slight lag is less noticeable.
-            GameFragment gf = new GameFragment();
+    public void startTurn(boolean playDiscard) {
+        tradeController = new TradeController(mvc, player);
+        if (mvc.getTableController().getNumHumanPlayers() > 1) {
+            DialogFragment df = new PassThePhone();
             Bundle args = new Bundle();
-            args.putInt("playerTurn", playerTurn);
-            args.putBoolean("playDiscard", playDiscard);
-            gf.setArguments(args);
-            mvc.getActivity().getFragmentManager().beginTransaction()
-                    .replace(R.id.main_layout, gf, GameFragment.GAME_FRAGMENT_TAG)
-                    .commit();
+            args.putString("name", player.getName());
+            df.setArguments(args);
+            df.show(mvc.getActivity().getFragmentManager(), "passthephone");
         }
+        GameFragment gf = new GameFragment();
+        Bundle args = new Bundle();
+        args.putInt("playerTurn", mvc.getPlayerNum(player));
+        args.putBoolean("playDiscard", playDiscard);
+        gf.setArguments(args);
+        mvc.getActivity().getFragmentManager().beginTransaction()
+                .replace(R.id.main_layout, gf, GameFragment.GAME_FRAGMENT_TAG)
+                .commit();
     }
 
     public TradeController getTradeController() {
@@ -76,20 +58,20 @@ public class TurnController {
     }
 
     public boolean requestDiscard(Card card) {
-        getCurrentPlayer().discardCard(card);
-        endTurn();
+        player.discardCard(card);
+        player.endTurn();
         return true;
     }
 
     public boolean requestWonder(Card card) {
-        Card stage = getCurrentPlayer().nextWonderStage();
+        Card stage = player.nextWonderStage();
         if (stage == null) {
             Toast.makeText(mvc.getActivity(), "Already built all stages!", Toast.LENGTH_SHORT).show();
             System.out.println("Already built all stages!");
         } else if (tradeController.canAffordResources(stage) && tradeController.canAffordGold(stage)) {
-            getCurrentPlayer().buildWonder(stage, card, (tradeController.getTotalCost() * -1) - stage.getCost().get(Card.Resource.GOLD),
+            player.buildWonder(stage, card, (tradeController.getTotalCost() * -1) - stage.getCost().get(Card.Resource.GOLD),
                     tradeController.getCurrentCost(false), tradeController.getCurrentCost(true));
-            endTurn();
+            player.endTurn();
             return true;
         } else {
             Toast.makeText(mvc.getActivity(), "Insufficient resources", Toast.LENGTH_SHORT).show();
@@ -99,12 +81,12 @@ public class TurnController {
     }
 
     public boolean requestBuild(Card card) {
-        boolean hasCoupon = getCurrentPlayer().hasCouponFor(card) || playDiscard;
-        if (getCurrentPlayer().getPlayedCards().contains(card.getName())) {
+        boolean hasCoupon = player.hasCouponFor(card) || player.isPlayingDiscard();
+        if (player.getPlayedCards().contains(card.getName())) {
             Toast.makeText(mvc.getActivity(), "Already built " + card.getNameString(), Toast.LENGTH_SHORT).show();
             System.out.println("Already built " + card.getNameString());
         } else if (hasCoupon && tradeController.hasTrade()) {
-            if (playDiscard) {
+            if (player.isPlayingDiscard()) {
                 Toast.makeText(mvc.getActivity(), "Don't trade, you can build for free", Toast.LENGTH_SHORT).show();
                 System.out.println("Don't trade, you can build for free");
             } else {
@@ -114,30 +96,25 @@ public class TurnController {
         } else if (tradeController.overpaid(card)) {
             Toast.makeText(mvc.getActivity(), "Overpaid, undo some trades", Toast.LENGTH_SHORT).show();
             System.out.println("Overpaid, undo some trades");
-        } else if (getCurrentPlayer().hasOneFreeBuild() || hasCoupon || (tradeController.canAffordResources(card) && tradeController.canAffordGold(card))) {
+        } else if (player.hasOneFreeBuild() || hasCoupon || (tradeController.canAffordResources(card) && tradeController.canAffordGold(card))) {
             int cardGoldCost = (tradeController.getTotalCost() * -1) - card.getCost().get(Card.Resource.GOLD);
             if (hasCoupon) cardGoldCost = 0;
             Hand hand;
-            if (playDiscard) hand = mvc.getTableController().getDiscards();
-            else hand = getCurrentPlayer().getHand();
-            if (getCurrentPlayer().hasOneFreeBuild() && !(hasCoupon || (tradeController.canAffordResources(card) && tradeController.canAffordGold(card)))) {
-                getCurrentPlayer().spendFreeBuild();
-                getCurrentPlayer().buildCard(card, 0, 0, 0, hand);
+            if (player.isPlayingDiscard()) hand = mvc.getTableController().getDiscards();
+            else hand = player.getHand();
+            if (player.hasOneFreeBuild() && !(hasCoupon || (tradeController.canAffordResources(card) && tradeController.canAffordGold(card)))) {
+                player.spendFreeBuild();
+                player.buildCard(card, 0, 0, 0, hand);
             } else {
-                getCurrentPlayer().buildCard(card, cardGoldCost, tradeController.getCurrentCost(false), tradeController.getCurrentCost(true), hand);
+                player.buildCard(card, cardGoldCost, tradeController.getCurrentCost(false), tradeController.getCurrentCost(true), hand);
             }
-            endTurn();
+            player.endTurn();
             return true;
         } else {
             Toast.makeText(mvc.getActivity(), "Insufficient resources", Toast.LENGTH_SHORT).show();
             System.out.println("Insufficient resources");
         }
         return false;
-    }
-
-    private void endTurn() {
-        playDiscard = false;
-        mvc.getTableController().nextPlayerStart();
     }
 
 }
