@@ -359,6 +359,7 @@ public class Player {
         public void resolve() {
             if(card != null) {
                 playedCards.add(card);
+                playedCards.sort();
                 addGold(card.getProducts().get(Card.Resource.GOLD));
                 if(Special.isSpecialGold(card, Player.this)) {
                     addGold(Special.getSpecialGold(card, Player.this));

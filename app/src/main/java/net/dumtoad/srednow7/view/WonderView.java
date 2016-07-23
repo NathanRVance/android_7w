@@ -8,7 +8,6 @@ import android.view.ViewGroup;
 
 import net.dumtoad.srednow7.R;
 import net.dumtoad.srednow7.cards.Card;
-import net.dumtoad.srednow7.cards.CardCollection;
 import net.dumtoad.srednow7.controller.MasterViewController;
 import net.dumtoad.srednow7.dialog.HelpDialog;
 import net.dumtoad.srednow7.player.Player;
@@ -50,9 +49,7 @@ public class WonderView extends GameView {
             content.addView(cv);
         }
 
-        CardCollection cc = player.getPlayedCards();
-        cc.sort();
-        for (Card card : cc) {
+        for (Card card : player.getPlayedCards()) {
             if (card.getType() == Card.Type.STAGE) continue;
             CardView cv = new CardView(card, mvc.getActivity(), player, false, false);
             content.addView(cv);

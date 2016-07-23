@@ -161,7 +161,7 @@ public class TableController {
             }
         }
         //Perform trades, build cards, etc.
-        if(phase == Phase.main) {
+        if (phase == Phase.main) {
             for (Player player : mvc.getPlayers()) {
                 player.finishTurn();
             }
