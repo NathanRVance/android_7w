@@ -600,7 +600,7 @@ public class Generate {
         cards.add(card);
 
         card = new Card(Card.Type.SCIENCE, Era2.Academy);
-        card.setCost(Card.Resource.GLASS, 2);
+        card.setCost(Card.Resource.GLASS, 1);
         card.setCost(Card.Resource.STONE, 3);
         card.setProducts(Card.Resource.COMPASS, 1);
         cards.add(card);

@@ -27,7 +27,14 @@ public class Special {
     }
 
     public static boolean isSpecialVps(Card card, Player player) {
-        return getSpecialVps(card, player) != -1;
+        boolean isSpecial;
+        try {
+            isSpecial = getSpecialVps(card, player) != -1;
+        } catch (Exception e) {
+            //The player hasn't been initialized yet
+            return false;
+        }
+        return isSpecial;
     }
 
     public static int getSpecialVps(Card card, Player player) {

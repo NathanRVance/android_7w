@@ -37,7 +37,7 @@
     <string name="help_wonderselect_title">Select a Wonder Side</string>
     <string name="help_wonderselect">Select the side of the wonder to use. If unsure, side A is typically better for beginners.</string>
     <string name="help_wonder_title">Wonder</string>
-    <string name="help_wonder">These are the cards you have already built. They contribute to your production or victory points.</string>
+    <string name="help_wonder">These cards have already been built. They contribute to production or victory points.</string>
     <string name="help_summary_title">Summary</string>
     <string name="help_summary">*GOLD-Gold* is used to trade for resources from other players.
         *RESOURCE-Resources* and *INDUSTRY-industries* (*WOOD-wood*, *STONE-stone*, *CLAY-clay*, *ORE-ore*, *CLOTH-cloth*, *GLASS-glass*, and *PAPER-paper*) are used to build cards.
