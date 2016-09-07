@@ -13,6 +13,7 @@ import net.dumtoad.srednow7.R;
 import net.dumtoad.srednow7.controller.MasterViewController;
 import net.dumtoad.srednow7.controller.TableController;
 import net.dumtoad.srednow7.player.Player;
+import net.dumtoad.srednow7.util.Util;
 
 public abstract class GameView extends RelativeLayout {
     protected MasterViewController mvc;
@@ -30,7 +31,12 @@ public abstract class GameView extends RelativeLayout {
         this.playerViewing = playerViewing;
 
         Player player = mvc.getPlayer(playerViewing);
-        ((TextView) mvc.getActivity().findViewById(R.id.title)).setText(player.getWonder().getNameString());
+        String wonderName = player.getWonder().getNameString();
+        if(! Util.isTablet()) {
+            String[] parts = wonderName.split(" ");
+            wonderName = parts[parts.length-1];
+        }
+        ((TextView) mvc.getActivity().findViewById(R.id.title)).setText(wonderName);
 
         if(playerTurn == playerViewing) {
             setupForTurn();

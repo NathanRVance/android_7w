@@ -1,9 +1,6 @@
 <resources>
     <string name="app_name">srednow7</string>
-    <string name="welcome_title">Welcome to srednow7!</string>
-    <string name="welcome_message">What would you like to do?</string>
     <string name="new_game">New game</string>
-    <string name="continue_game">Continue last game</string>
     <string name="help">Help</string>
     <string name="help_button">\?</string>
     <string name="load_title">Load…</string>
