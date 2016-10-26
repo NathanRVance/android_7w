@@ -14,8 +14,6 @@ import android.widget.TextView;
 
 import net.dumtoad.srednow7.R;
 import net.dumtoad.srednow7.cards.Card;
-import net.dumtoad.srednow7.cards.CardCollection;
-import net.dumtoad.srednow7.cards.Generate;
 import net.dumtoad.srednow7.cards.ResQuant;
 import net.dumtoad.srednow7.player.Player;
 
@@ -43,7 +41,7 @@ public class TradeController {
         eastViews = new HashMap<>();
     }
 
-    public TradeController(MasterViewController mvc, Player player, Bundle savedInstanceState) {
+    TradeController(MasterViewController mvc, Player player, Bundle savedInstanceState) {
         this.mvc = mvc;
         this.player = player;
         tradeWest = new ResQuant(savedInstanceState.getString("tradeWest"));
@@ -53,7 +51,7 @@ public class TradeController {
         eastViews = new HashMap<>();
     }
 
-    public Bundle getInstanceState() {
+    Bundle getInstanceState() {
         Bundle bundle = new Bundle();
         bundle.putString("tradeWest", tradeWest.getString());
         bundle.putString("tradeEast", tradeEast.getString());
@@ -106,7 +104,7 @@ public class TradeController {
         }
     }
 
-    public void updateViews() {
+    private void updateViews() {
         if (west)
             updateViews(westViews, tradeWest, mvc.getTableController().getPlayerDirection(player, true));
         else
@@ -145,7 +143,7 @@ public class TradeController {
         return getCurrentCost(true) + getCurrentCost(false);
     }
 
-    public int getCurrentCost(boolean west) {
+    int getCurrentCost(boolean west) {
         int tot = 0;
         ResQuant trade = (west) ? tradeWest : tradeEast;
         for (Card.Resource res : trade.keySet()) {
@@ -156,25 +154,13 @@ public class TradeController {
     }
 
     public int getCost(Player player, boolean west, Card.Resource res) {
-        boolean plainResource = true;
-        if (res == Card.Resource.CLOTH || res == Card.Resource.GLASS || res == Card.Resource.PAPER)
-            plainResource = false;
-        CardCollection cards = player.getPlayedCards();
-        if (plainResource) {
-            if (player.getWonder().getName().equals(Generate.Wonders.The_Statue_of_Zeus_in_Olympia)
-                    && !player.getWonderSide() && cards.contains(Generate.WonderStages.Stage_1)) {
+        Card.TradeType tradeType = (res == Card.Resource.CLOTH || res == Card.Resource.GLASS || res == Card.Resource.PAPER) ?
+                Card.TradeType.industry : Card.TradeType.resource;
+        Card.TradeDirection direction = (west) ? Card.TradeDirection.west : Card.TradeDirection.east;
+        for (Card card : player.getPlayedCards()) {
+            if (card.getTradeType() == tradeType
+                    && (card.getTradeDirection() == direction || card.getTradeDirection() == Card.TradeDirection.both))
                 return 1;
-            }
-            if (west && cards.contains(Generate.Era0.West_Trading_Post)) {
-                return 1;
-            }
-            if (!west && cards.contains(Generate.Era0.East_Trading_Post)) {
-                return 1;
-            }
-        } else {
-            if (cards.contains(Generate.Era0.Marketplace)) {
-                return 1;
-            }
         }
         return 2;
     }
@@ -240,7 +226,7 @@ public class TradeController {
         }
     }
 
-    public boolean overpaid(Card card) {
+    boolean overpaid(Card card) {
         ResQuant status = new ResQuant().subtractResources(card.getCost());
         status.put(Card.Resource.GOLD, 0); //Handle gold elsewhere
         status.addResources(tradeEast);
@@ -253,7 +239,7 @@ public class TradeController {
         return false;
     }
 
-    public boolean hasTrade() {
+    boolean hasTrade() {
         for (Card.Resource res : tradeable) {
             if (tradeEast.get(res) > 0 || tradeWest.get(res) > 0) return true;
         }

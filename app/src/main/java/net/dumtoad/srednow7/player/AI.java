@@ -17,37 +17,37 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Random;
 
-public class AI {
+class AI {
 
     private Player player;
     private MasterViewController mvc;
     private boolean scientist = false;
 
-    public enum Action {
+    private enum Action {
         build,
         wonder,
         discard
     }
 
-    public AI(Player player) {
+    AI(Player player) {
         this.player = player;
         player.setWonderSide(new Random().nextBoolean());
         mvc = MainActivity.getMasterViewController();
     }
 
-    public AI(Player player, Bundle bundle) {
+    AI(Player player, Bundle bundle) {
         this.player = player;
         mvc = MainActivity.getMasterViewController();
         scientist = bundle.getBoolean("scientist");
     }
 
-    public Bundle getInstanceState() {
+    Bundle getInstanceState() {
         Bundle bundle = new Bundle();
         bundle.putBoolean("scientist", scientist);
         return bundle;
     }
 
-    public void updateScientist() {
+    void updateScientist() {
         if(player.getWonder().getResource() == Card.Resource.CLOTH
                 || player.getWonder().getResource() == Card.Resource.PAPER
                 || player.getWonder().getResource() == Card.Resource.GLASS
@@ -56,7 +56,7 @@ public class AI {
         }
     }
 
-    public void doTurn(boolean playDiscard, TurnController turnController) {
+    void doTurn(boolean playDiscard, TurnController turnController) {
         Hand hand;
         if(playDiscard) {
             hand = mvc.getTableController().getDiscards();
@@ -139,16 +139,12 @@ public class AI {
 
         //Gold gets 1 for every 3 gold
         int gold = cardAction.card.getProducts().get(Card.Resource.GOLD);
-        if(Special.isSpecialGold(cardAction.card, player)) {
-            gold += Special.getSpecialGold(cardAction.card, player);
-        }
+        gold += cardAction.card.getSpecialGold(player);
         cardAction.weight += gold / 3;
 
         //VPs get 1 weight each
         cardAction.weight += cardAction.card.getProducts().get(Card.Resource.VP);
-        if(Special.isSpecialVps(cardAction.card, player)) {
-            cardAction.weight += Special.getSpecialVps(cardAction.card, player);
-        }
+        cardAction.weight += cardAction.card.getSpecialVps(player);
 
         //Military is worth 2 for each shield for each battle it will turn the tide in, 1(ish) otherwise
         int shields = cardAction.card.getProducts().get(Card.Resource.SHIELD);
@@ -178,17 +174,17 @@ public class AI {
         }
 
         //Commercial
-        if(Special.getTradeType(cardAction.card, player) == Special.TradeType.resource) {
+        if(cardAction.card.getTradeType() == Card.TradeType.resource) {
             for(Card.Resource res : new Card.Resource[]{Card.Resource.WOOD, Card.Resource.STONE, Card.Resource.CLAY, Card.Resource.ORE}) {
                 if(prod.get(res) == 0) cardAction.weight++;
             }
-        } else if(Special.getTradeType(cardAction.card, player) == Special.TradeType.industry) {
+        } else if(cardAction.card.getTradeType() == Card.TradeType.industry) {
             for(Card.Resource res : new Card.Resource[]{Card.Resource.CLOTH, Card.Resource.GLASS, Card.Resource.PAPER}) {
                 if(prod.get(res) == 0) cardAction.weight += 2;
             }
         }
 
-        //Speshul card does speshul stuffs...
+        //Speshul card does speshul shtuffs...
         if(Special.isSpecialAction(cardAction.card, player)) {
             cardAction.weight += 5;
         }
@@ -290,12 +286,12 @@ public class AI {
     private class CardAction implements Comparable<CardAction> {
 
         public Card card;
-        public int weight;
-        public Action action;
-        public ResQuant tradeEast = new ResQuant();
-        public ResQuant tradeWest = new ResQuant();
+        int weight;
+        Action action;
+        ResQuant tradeEast = new ResQuant();
+        ResQuant tradeWest = new ResQuant();
 
-        public CardAction(Card card) {
+        CardAction(Card card) {
             this.card = card;
         }
 

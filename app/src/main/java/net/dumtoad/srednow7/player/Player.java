@@ -180,7 +180,7 @@ public class Player {
         return playedCards;
     }
 
-    public void addGold(int amount) {
+    private void addGold(int amount) {
         gold += amount;
     }
 
@@ -201,7 +201,7 @@ public class Player {
         return null;
     }
 
-    public ResQuant getRawProduction() {
+    ResQuant getRawProduction() {
         ResQuant ret = new ResQuant();
         for(Card card : playedCards) {
             ret.addResources(card.getProducts());
@@ -323,14 +323,14 @@ public class Player {
         int goldEast;
         int goldWest;
 
-        public TurnBuffer(Card card, int goldHere, int goldEast, int goldWest) {
+        TurnBuffer(Card card, int goldHere, int goldEast, int goldWest) {
             this.card = card;
             this.goldHere = goldHere;
             this.goldEast = goldEast;
             this.goldWest = goldWest;
         }
 
-        public TurnBuffer(Bundle savedInstanceState) {
+        TurnBuffer(Bundle savedInstanceState) {
             String cardName = savedInstanceState.getString("card");
             if(cardName != null) {
                 for (Card card : mvc.getDatabase().getAllCards()) {
@@ -345,7 +345,7 @@ public class Player {
             goldWest = savedInstanceState.getInt("goldWest");
         }
 
-        public Bundle getInstanceState() {
+        Bundle getInstanceState() {
             Bundle bundle = new Bundle();
             if(card != null) {
                 bundle.putString("card", card.getName().toString());
@@ -356,21 +356,19 @@ public class Player {
             return bundle;
         }
 
-        public void resolve() {
+        void resolve() {
             if(card != null) {
                 playedCards.add(card);
                 playedCards.sort();
                 addGold(card.getProducts().get(Card.Resource.GOLD));
-                if(Special.isSpecialGold(card, Player.this)) {
-                    addGold(Special.getSpecialGold(card, Player.this));
-                }
+                addGold(card.getSpecialGold(Player.this));
             }
             addGold(goldHere);
             mvc.getTableController().getPlayerDirection(Player.this, false).addGold(goldEast);
             mvc.getTableController().getPlayerDirection(Player.this, true).addGold(goldWest);
         }
 
-        public boolean resolveSpecialAction() {
+        boolean resolveSpecialAction() {
             Card c = card;
             card = null;
             return c != null && Special.specialAction(c, Player.this);

@@ -3,7 +3,6 @@ package net.dumtoad.srednow7.player;
 import android.os.Bundle;
 
 import net.dumtoad.srednow7.cards.Card;
-import net.dumtoad.srednow7.cards.Special;
 import net.dumtoad.srednow7.controller.MasterViewController;
 
 public class Score {
@@ -13,19 +12,19 @@ public class Score {
     private int militaryLosses = 0;
     private int[] militaryVictories = new int[3];
 
-    public Score(Player player, MasterViewController mvc) {
+    Score(Player player, MasterViewController mvc) {
         this.player = player;
         this.mvc = mvc;
     }
 
-    public Score(Player player, MasterViewController mvc, Bundle savedInstanceState) {
+    Score(Player player, MasterViewController mvc, Bundle savedInstanceState) {
         this.player = player;
         this.mvc = mvc;
         militaryLosses = savedInstanceState.getInt("militaryLosses");
         militaryVictories = savedInstanceState.getIntArray("militaryVictories");
     }
 
-    public Bundle getInstanceState() {
+    Bundle getInstanceState() {
         Bundle outstate = new Bundle();
         outstate.putInt("militaryLosses", militaryLosses);
         outstate.putIntArray("militaryVictories", militaryVictories);
@@ -34,17 +33,17 @@ public class Score {
 
     public void resolveMilitary(int era) {
         int playerMilitary = 0;
-        for(Card card : player.getPlayedCards()) {
+        for (Card card : player.getPlayedCards()) {
             playerMilitary += card.getProducts().get(Card.Resource.SHIELD);
         }
-        for(boolean direction : new boolean[]{true, false}) {
+        for (boolean direction : new boolean[]{true, false}) {
             int otherMilitary = 0;
-            for(Card card : mvc.getTableController().getPlayerDirection(player, direction).getPlayedCards()) {
+            for (Card card : mvc.getTableController().getPlayerDirection(player, direction).getPlayedCards()) {
                 otherMilitary += card.getProducts().get(Card.Resource.SHIELD);
             }
-            if(otherMilitary > playerMilitary) {
+            if (otherMilitary > playerMilitary) {
                 militaryLosses++;
-            } else if(otherMilitary < playerMilitary) {
+            } else if (otherMilitary < playerMilitary) {
                 militaryVictories[era]++;
             }
         }
@@ -69,12 +68,10 @@ public class Score {
 
     public int getWonderVps() {
         int vps = 0;
-        for(Card card : player.getPlayedCards()) {
-            if(card.getType() == Card.Type.STAGE) {
+        for (Card card : player.getPlayedCards()) {
+            if (card.getType() == Card.Type.STAGE) {
                 vps += card.getProducts().get(Card.Resource.VP);
-                if (Special.isSpecialVps(card, player)) {
-                    vps += Special.getSpecialVps(card, player);
-                }
+                vps += card.getSpecialVps(player);
             }
         }
         return vps;
@@ -82,8 +79,8 @@ public class Score {
 
     public int getStructureVps() {
         int vps = 0;
-        for(Card card : player.getPlayedCards()) {
-            if(card.getType() == Card.Type.STRUCTURE) {
+        for (Card card : player.getPlayedCards()) {
+            if (card.getType() == Card.Type.STRUCTURE) {
                 vps += card.getProducts().get(Card.Resource.VP);
             }
         }
@@ -92,12 +89,10 @@ public class Score {
 
     public int getCommercialVps() {
         int vps = 0;
-        for(Card card : player.getPlayedCards()) {
-            if(card.getType() == Card.Type.COMMERCIAL) {
+        for (Card card : player.getPlayedCards()) {
+            if (card.getType() == Card.Type.COMMERCIAL) {
                 vps += card.getProducts().get(Card.Resource.VP);
-                if (Special.isSpecialVps(card, player)) {
-                    vps += Special.getSpecialVps(card, player);
-                }
+                vps += card.getSpecialVps(player);
             }
         }
         return vps;
@@ -105,12 +100,10 @@ public class Score {
 
     public int getGuildVps() {
         int vps = 0;
-        for(Card card : player.getPlayedCards()) {
-            if(card.getType() == Card.Type.GUILD) {
+        for (Card card : player.getPlayedCards()) {
+            if (card.getType() == Card.Type.GUILD) {
                 vps += card.getProducts().get(Card.Resource.VP);
-                if (Special.isSpecialVps(card, player)) {
-                    vps += Special.getSpecialVps(card, player);
-                }
+                vps += card.getSpecialVps(player);
             }
         }
         return vps;
@@ -119,15 +112,15 @@ public class Score {
     public int getScienceVps() {
         int sciences[] = new int[3];
         int wilds = 0;
-        for(Card card : player.getPlayedCards()) {
-            if(card.getProducts().get(Card.Resource.COMPASS) == 1 && card.getProducts().get(Card.Resource.GEAR) == 1
+        for (Card card : player.getPlayedCards()) {
+            if (card.getProducts().get(Card.Resource.COMPASS) == 1 && card.getProducts().get(Card.Resource.GEAR) == 1
                     && card.getProducts().get(Card.Resource.TABLET) == 1) {
                 wilds++;
-            } else if(card.getProducts().get(Card.Resource.COMPASS) == 1) {
+            } else if (card.getProducts().get(Card.Resource.COMPASS) == 1) {
                 sciences[0]++;
-            } else if(card.getProducts().get(Card.Resource.GEAR) == 1) {
+            } else if (card.getProducts().get(Card.Resource.GEAR) == 1) {
                 sciences[1]++;
-            } else if(card.getProducts().get(Card.Resource.TABLET) == 1) {
+            } else if (card.getProducts().get(Card.Resource.TABLET) == 1) {
                 sciences[2]++;
             }
         }
@@ -136,19 +129,19 @@ public class Score {
 
     private int recurseForScience(int sciences[], int wilds) {
         int maxVps = 0;
-        if(wilds > 0) {
-            for(int i = 0; i < sciences.length; i++) {
+        if (wilds > 0) {
+            for (int i = 0; i < sciences.length; i++) {
                 sciences[i]++;
                 int vps = recurseForScience(sciences, wilds - 1);
                 sciences[i]--;
-                maxVps = (vps > maxVps)? vps : maxVps;
+                maxVps = (vps > maxVps) ? vps : maxVps;
             }
         } else {
             int vps = 0;
             int min = sciences[0];
-            for(int i : sciences) {
+            for (int i : sciences) {
                 vps += i * i;
-                min = (i < min)? i : min;
+                min = (i < min) ? i : min;
             }
             vps += min * 7;
             return vps;

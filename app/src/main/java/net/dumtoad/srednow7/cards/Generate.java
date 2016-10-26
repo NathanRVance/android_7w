@@ -1,5 +1,10 @@
 package net.dumtoad.srednow7.cards;
 
+import net.dumtoad.srednow7.cards.special.AdjacentMilitaryLosses;
+import net.dumtoad.srednow7.cards.special.BestAdjacentGuildVps;
+import net.dumtoad.srednow7.cards.special.MultiSpecial;
+import net.dumtoad.srednow7.cards.special.SpecialDependsPlayed;
+
 import java.util.ArrayList;
 
 public class Generate {
@@ -10,7 +15,7 @@ public class Generate {
 
     private static ArrayList<Wonder> wonders;
 
-    public static void generateCards() {
+    static void generateCards() {
         era0 = getEra0Cards();
         era1 = getEra1Cards();
         era2 = getEra2Cards();
@@ -19,19 +24,19 @@ public class Generate {
         wonders = getWonders_private();
     }
 
-    public static Deck getEra0Deck(int numPlayers) {
+    static Deck getEra0Deck(int numPlayers) {
         return getDeck(era0deck, numPlayers * 7);
     }
 
-    public static Deck getEra1Deck(int numPlayers) {
+    static Deck getEra1Deck(int numPlayers) {
         return getDeck(era1deck, numPlayers * 7);
     }
 
-    public static Deck getEra2Cards(int numPlayers) {
+    static Deck getEra2Cards(int numPlayers) {
         return getDeck(era2deck, numPlayers * 6 - 2);
     }
 
-    public static Deck getGuildCards() {
+    static Deck getGuildCards() {
         return getDeck(guilds, 10);
     }
 
@@ -89,7 +94,7 @@ public class Generate {
         throw new RuntimeException("That shouldn't have happended!");
     }
 
-    public enum Era0 {
+    private enum Era0 {
         Lumber_Yard,
         Stone_Pit,
         Clay_Pool,
@@ -126,7 +131,7 @@ public class Generate {
     Era0.Barracks, Era0.Apothecary, Era0.Tree_Farm, Era0.Mine, Era0.Loom, Era0.Glassworks, Era0.Press, Era0.Theater, Era0.Marketplace, Era0.Pawnshop,
     Era0.Baths, Era0.Tavern, Era0.East_Trading_Post, Era0.West_Trading_Post, Era0.Stockade, Era0.Workshop};
 
-    public enum Era1 {
+    private enum Era1 {
         Sawmill,
         Quarry,
         Brickyard,
@@ -159,7 +164,7 @@ public class Generate {
     Era1.Forum, Era1.Caravansery, Era1.Vineyard, Era1.Training_Ground, Era1.Archery_Range, Era1.Library, Era1.Aqueduct, Era1.Statue, Era1.Forum,
     Era1.Bazaar, Era1.Walls, Era1.Training_Ground, Era1.School };
 
-    public enum Era2 {
+    private enum Era2 {
         Pantheon,
         Gardens,
         Town_Hall,
@@ -307,14 +312,20 @@ public class Generate {
 
         card = new Card(Card.Type.COMMERCIAL, Era0.East_Trading_Post);
         card.setMessage("Can trade 1 coin for resources with player to the east.");
+        card.setTradeType(Card.TradeType.resource);
+        card.setTradeDirection(Card.TradeDirection.east);
         cards.add(card);
 
         card = new Card(Card.Type.COMMERCIAL, Era0.West_Trading_Post);
         card.setMessage("Can trade 1 coin for resources with player to the west.");
+        card.setTradeType(Card.TradeType.resource);
+        card.setTradeDirection(Card.TradeDirection.west);
         cards.add(card);
 
         card = new Card(Card.Type.COMMERCIAL, Era0.Marketplace);
         card.setMessage("Can trade 1 coin for industry products with adjacent players.");
+        card.setTradeType(Card.TradeType.industry);
+        card.setTradeDirection(Card.TradeDirection.both);
         cards.add(card);
 
         card = new Card(Card.Type.MILITARY, Era0.Stockade);
@@ -427,10 +438,12 @@ public class Generate {
 
         card = new Card(Card.Type.COMMERCIAL, Era1.Vineyard);
         card.setMessage("1 coin for each resource card of adjacent players or your own.");
+        card.setSpecialGold(new SpecialDependsPlayed(Card.Type.RESOURCE, 1, true, true));
         cards.add(card);
 
         card = new Card(Card.Type.COMMERCIAL, Era1.Bazaar);
         card.setMessage("2 coins for each industry card of adjacent players or your own.");
+        card.setSpecialGold(new SpecialDependsPlayed(Card.Type.INDUSTRY, 2, true, true));
         cards.add(card);
 
         card = new Card(Card.Type.MILITARY, Era1.Walls);
@@ -533,24 +546,32 @@ public class Generate {
         card.setCost(Card.Resource.WOOD, 1);
         card.setCost(Card.Resource.CLOTH, 1);
         card.setMessage("1 coin and 1 vp for each resource card.");
+        card.setSpecialGold(new SpecialDependsPlayed(Card.Type.RESOURCE, 1, false, true));
+        card.setSpecialVps(new SpecialDependsPlayed(Card.Type.RESOURCE, 1, false, true));
         cards.add(card);
 
         card = new Card(Card.Type.COMMERCIAL, Era2.Lighthouse);
         card.setCost(Card.Resource.STONE, 1);
         card.setCost(Card.Resource.GLASS, 1);
         card.setMessage("1 coin and 1 vp for each commercial card.");
+        card.setSpecialGold(new SpecialDependsPlayed(Card.Type.COMMERCIAL, 1, false, true));
+        card.setSpecialVps(new SpecialDependsPlayed(Card.Type.COMMERCIAL, 1, false, true));
         cards.add(card);
 
         card = new Card(Card.Type.COMMERCIAL, Era2.Chamber_Of_Commerce);
         card.setCost(Card.Resource.CLAY, 2);
         card.setCost(Card.Resource.PAPER, 1);
         card.setMessage("2 coins and 2 vps for each industrial card.");
+        card.setSpecialGold(new SpecialDependsPlayed(Card.Type.INDUSTRY, 2, false, true));
+        card.setSpecialVps(new SpecialDependsPlayed(Card.Type.INDUSTRY, 2, false, true));
         cards.add(card);
 
         card = new Card(Card.Type.COMMERCIAL, Era2.Arena);
         card.setCost(Card.Resource.STONE, 2);
         card.setCost(Card.Resource.ORE, 1);
         card.setMessage("3 coins and 1 vp for each completed wonder stage");
+        card.setSpecialGold(new SpecialDependsPlayed(Card.Type.STAGE, 3, false, true));
+        card.setSpecialVps(new SpecialDependsPlayed(Card.Type.STAGE, 1, false, true));
         cards.add(card);
 
         card = new Card(Card.Type.MILITARY, Era2.Fortifications);
@@ -619,6 +640,7 @@ public class Generate {
         card.setCost(Card.Resource.WOOD, 1);
         card.setMessage(
                 "1 vp for each resource card owned by adjacent players.");
+        card.setSpecialVps(new SpecialDependsPlayed(Card.Type.RESOURCE, 1, true, false));
         cards.add(card);
 
         card = new Card(Card.Type.GUILD, Era2.Craftmens_Guild);
@@ -626,6 +648,7 @@ public class Generate {
         card.setCost(Card.Resource.STONE, 2);
         card.setMessage(
                 "2 vps for each industrial card owned by adjacent players.");
+        card.setSpecialVps(new SpecialDependsPlayed(Card.Type.INDUSTRY, 2, true, false));
         cards.add(card);
 
         card = new Card(Card.Type.GUILD, Era2.Traders_Guild);
@@ -634,6 +657,7 @@ public class Generate {
         card.setCost(Card.Resource.GLASS, 1);
         card.setMessage(
                 "1 vp for each commercial card owned by adjacent players.");
+        card.setSpecialVps(new SpecialDependsPlayed(Card.Type.COMMERCIAL, 1, true, false));
         cards.add(card);
 
         card = new Card(Card.Type.GUILD, Era2.Philosophers_Guild);
@@ -642,6 +666,7 @@ public class Generate {
         card.setCost(Card.Resource.PAPER, 1);
         card.setMessage(
                 "1 vp for each scientific card owned by adjacent players.");
+        card.setSpecialVps(new SpecialDependsPlayed(Card.Type.SCIENCE, 1, true, false));
         cards.add(card);
 
         card = new Card(Card.Type.GUILD, Era2.Spy_Guild);
@@ -649,6 +674,7 @@ public class Generate {
         card.setCost(Card.Resource.GLASS, 1);
         card.setMessage(
                 "1 vp for each military card owned by adjacent players.");
+        card.setSpecialVps(new SpecialDependsPlayed(Card.Type.MILITARY, 1, true, false));
         cards.add(card);
 
         card = new Card(Card.Type.GUILD, Era2.Strategy_Guild);
@@ -657,6 +683,7 @@ public class Generate {
         card.setCost(Card.Resource.CLOTH, 1);
         card.setMessage(
                 "1 vp for each military defeat by adjacent players.");
+        card.setSpecialVps(new AdjacentMilitaryLosses());
         cards.add(card);
 
         card = new Card(Card.Type.GUILD, Era2.Shipowners_Guild);
@@ -665,6 +692,11 @@ public class Generate {
         card.setCost(Card.Resource.GLASS, 1);
         card.setMessage(
                 "1 vp for each resource, industrial, and guild card.");
+        card.setSpecialVps(new MultiSpecial(
+                new SpecialDependsPlayed(Card.Type.RESOURCE, 1, false, true),
+                new SpecialDependsPlayed(Card.Type.INDUSTRY, 1, false, true),
+                new SpecialDependsPlayed(Card.Type.GUILD, 1, false, true)
+        ));
         cards.add(card);
 
         card = new Card(Card.Type.GUILD, Era2.Scientists_Guild);
@@ -682,6 +714,7 @@ public class Generate {
         card.setCost(Card.Resource.CLOTH, 1);
         card.setMessage(
                 "1 vp for each structure card owned by adjacent players.");
+        card.setSpecialVps(new SpecialDependsPlayed(Card.Type.STRUCTURE, 1, true, false));
         cards.add(card);
 
         card = new Card(Card.Type.GUILD, Era2.Builders_Guild);
@@ -690,6 +723,7 @@ public class Generate {
         card.setCost(Card.Resource.GLASS, 1);
         card.setMessage(
                 "1 vp for each completed wonder stage by you or adjacent players.");
+        card.setSpecialVps(new SpecialDependsPlayed(Card.Type.STAGE, 1, true, false));
         cards.add(card);
 
         return cards;
@@ -900,6 +934,8 @@ public class Generate {
         card = new Card(Card.Type.STAGE, WonderStages.Stage_1);
         card.setCost(Card.Resource.WOOD, 2);
         card.setMessage("Can trade 1 coin for resources with adjacent players.");
+        card.setTradeType(Card.TradeType.resource);
+        card.setTradeDirection(Card.TradeDirection.both);
         stages.add(card);
 
         card = new Card(Card.Type.STAGE, WonderStages.Stage_2);
@@ -911,6 +947,7 @@ public class Generate {
         card.setCost(Card.Resource.ORE, 2);
         card.setCost(Card.Resource.CLOTH, 1);
         card.setMessage("Can copy one Guild card built by an adjacent player.");
+        card.setSpecialVps(new BestAdjacentGuildVps());
         stages.add(card);
         wonder.setStagesB(stages);
         wonders.add(wonder);

@@ -18,13 +18,13 @@ public class TableController {
     private Thread[] threads = new Thread[0]; //Initialize to avoid null pointer
     private Phase phase = Phase.main;
 
-    public TableController(MasterViewController mvc) {
+    TableController(MasterViewController mvc) {
         this.mvc = mvc;
         discards = new Hand();
         era = 0;
     }
 
-    public TableController(MasterViewController mvc, Bundle savedInstanceState) {
+    TableController(MasterViewController mvc, Bundle savedInstanceState) {
         this.mvc = mvc;
         discards = new Hand(mvc.getDatabase().getAllCards(), savedInstanceState.getString("discards"));
         era = savedInstanceState.getInt("era");
@@ -32,7 +32,7 @@ public class TableController {
         phase = Phase.valueOf(savedInstanceState.getString("phase"));
     }
 
-    public Bundle getInstanceState() {
+    Bundle getInstanceState() {
         Bundle outstate = new Bundle();
         outstate.putString("discards", discards.getOrder());
         outstate.putInt("era", era);
@@ -49,7 +49,7 @@ public class TableController {
         return discards;
     }
 
-    public void startEra() {
+    void startEra() {
         if (era == 3) { //We're done!
             mvc.endGame();
             return;
@@ -62,7 +62,7 @@ public class TableController {
         doTurn();
     }
 
-    public void passTheHand() {
+    private void passTheHand() {
         if (getPassingDirection()) { //pass West
             Hand tmp = mvc.getPlayer(mvc.getNumPlayers() - 1).getHand();
             for (int i = mvc.getNumPlayers() - 1; i > 0; i--) {
@@ -135,7 +135,7 @@ public class TableController {
 
     public void iFinishedMyTurn(Player player) {
         /**
-         * This could have been called by serveral things.
+         * This could have been called by several things.
          * 1) An AI player finishing a turn
          * 2) A human player finishing a turn
          * 3) An AI or human player playing a 7th card
@@ -253,11 +253,11 @@ public class TableController {
         return start;
     }
 
-    public int getCurrentPlayerNum() {
+    int getCurrentPlayerNum() {
         return playerTurn;
     }
 
-    public int getNumHumanPlayers() {
+    int getNumHumanPlayers() {
         int num = 0;
         for (Player player : mvc.getPlayers())
             if (!player.isAI()) num++;

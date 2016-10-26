@@ -8,19 +8,25 @@ import android.text.style.CharacterStyle;
 import android.text.style.ForegroundColorSpan;
 
 import net.dumtoad.srednow7.MainActivity;
+import net.dumtoad.srednow7.cards.special.NotSoSpecial;
+import net.dumtoad.srednow7.cards.special.SpecialValue;
 import net.dumtoad.srednow7.player.Player;
 
 import java.util.ArrayList;
 
 public class Card {
 
-    public ArrayList<Card> couponsFor;
-    public ArrayList<Card> couponedBy;
+    private ArrayList<Card> couponsFor;
+    private ArrayList<Card> couponedBy;
     private Type type;
     private Enum name;
     private String message = "";
     private ResQuant cost;
     private ResQuant products;
+    private SpecialValue specialGold = new NotSoSpecial();
+    private SpecialValue specialVps = new NotSoSpecial();
+    private TradeType tradeType = TradeType.none;
+    private TradeDirection tradeDirection = TradeDirection.both;
 
     public Card(Type type, Enum name) {
         this.type = type;
@@ -42,6 +48,38 @@ public class Card {
         couponsFor = new ArrayList<>();
     }
 
+    void setSpecialGold(SpecialValue specialGold) {
+        this.specialGold = specialGold;
+    }
+
+    public int getSpecialGold(Player player) {
+        return specialGold.getSpecialValue(player);
+    }
+
+    void setSpecialVps(SpecialValue specialVps) {
+        this.specialVps = specialVps;
+    }
+
+    public int getSpecialVps(Player player) {
+        return specialVps.getSpecialValue(player);
+    }
+
+    void setTradeType(TradeType tradeType) {
+        this.tradeType = tradeType;
+    }
+
+    public TradeType getTradeType() {
+        return tradeType;
+    }
+
+    void setTradeDirection(TradeDirection tradeDirection) {
+        this.tradeDirection = tradeDirection;
+    }
+
+    public TradeDirection getTradeDirection() {
+        return tradeDirection;
+    }
+
     public static int getColorId(String id) {
         Context context = MainActivity.getMainActivity();
         return ContextCompat.getColor(context, context.getResources().getIdentifier(id, "color", context.getPackageName()));
@@ -52,7 +90,7 @@ public class Card {
         sb.setSpan(style, sb.length() - text.length(), sb.length(), Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
     }
 
-    boolean isBaseResource(String name) {
+    private boolean isBaseResource(String name) {
         switch (name.toLowerCase()) {
             case "wood":
             case "stone":
@@ -86,7 +124,7 @@ public class Card {
         this.message = message;
     }
 
-    public void setCost(Resource resource, int num) {
+    void setCost(Resource resource, int num) {
         cost.put(resource, num);
     }
 
@@ -94,7 +132,7 @@ public class Card {
         return cost;
     }
 
-    public void setProducts(Resource product, int num) {
+    void setProducts(Resource product, int num) {
         products.put(product, num);
     }
 
@@ -109,13 +147,9 @@ public class Card {
         return false;
     }
 
-    public void couponFor(Card card) {
+    void couponFor(Card card) {
         couponsFor.add(card);
-        card.couponedBy(this);
-    }
-
-    public void couponedBy(Card card) {
-        couponedBy.add(card);
+        card.couponedBy.add(this);
     }
 
     public SpannableStringBuilder getSummary(Player player, boolean printSpecialGold) {
@@ -174,24 +208,24 @@ public class Card {
             sb.append('\n');
         }
 
-        if (Special.isSpecialVps(this, player)) {
+        if (specialVps.isSpecial()) {
             sb.append("Currently produces:\n");
             sb.append(" ");
             fcs = new ForegroundColorSpan(getColorId(Resource.VP.toString()));
             appendSb(sb, Resource.VP.toString().toLowerCase(), fcs);
             sb.append(": ");
-            sb.append(String.valueOf(Special.getSpecialVps(this, player)));
+            sb.append(String.valueOf(getSpecialVps(player)));
             sb.append("\n");
         }
 
-        if (printSpecialGold && Special.isSpecialGold(this, player)) {
-            if (!Special.isSpecialVps(this, player))
+        if (printSpecialGold && specialGold.isSpecial()) {
+            if (!specialVps.isSpecial())
                 sb.append("Currently produces:\n");
             sb.append(" ");
             fcs = new ForegroundColorSpan(getColorId(Resource.GOLD.toString()));
             appendSb(sb, Resource.GOLD.toString().toLowerCase(), fcs);
             sb.append(": ");
-            sb.append(String.valueOf(Special.getSpecialGold(this, player)));
+            sb.append(String.valueOf(getSpecialGold(player)));
             sb.append("\n");
         }
 
@@ -241,5 +275,17 @@ public class Card {
         TABLET,
         VP,
         SHIELD
+    }
+
+    public enum TradeType {
+        resource,
+        industry,
+        none
+    }
+
+    public enum TradeDirection {
+        west,
+        east,
+        both
     }
 }
