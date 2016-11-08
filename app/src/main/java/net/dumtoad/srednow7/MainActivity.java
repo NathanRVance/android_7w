@@ -8,22 +8,20 @@ import android.view.MotionEvent;
 
 import com.crashlytics.android.Crashlytics;
 import io.fabric.sdk.android.Fabric;
-import net.dumtoad.srednow7.controller.MasterViewController;
-import net.dumtoad.srednow7.dialog.LoadDialog;
+
+import net.dumtoad.srednow7.backend.util.SaveUtil;
+import net.dumtoad.srednow7.bus.Bus;
+import net.dumtoad.srednow7.ui.dialog.LoadDialog;
+import net.dumtoad.srednow7.ui.LeftRightSwipe;
 
 public class MainActivity extends Activity {
 
     private static MainActivity mainActivity;
-    private MasterViewController mvc;
     private GestureDetector gestureDetector;
     private LeftRightSwipe lrs;
 
     public static MainActivity getMainActivity() {
         return mainActivity;
-    }
-
-    public static MasterViewController getMasterViewController() {
-        return getMainActivity().mvc;
     }
 
     @Override
@@ -32,24 +30,27 @@ public class MainActivity extends Activity {
         Fabric.with(this, new Crashlytics());
         mainActivity = this;
         setContentView(R.layout.activity_main);
-        mvc = new MasterViewController(this);
         gestureDetector = new GestureDetector(this, new GestureListener());
 
         if (savedInstanceState != null) {
-            mvc.onRestoreInstanceState(savedInstanceState);
+            try {
+                Bus.bus.getBackend().restoreContents(savedInstanceState.getSerializable("backend"));
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         } else {
-            if (mvc.hasAutosave()) {
+            if (SaveUtil.hasSave()) {
                 DialogFragment loadDialog = new LoadDialog();
                 loadDialog.show(getFragmentManager(), "loadDialog");
             }
-            mvc.setup(); //So that there's something in the background if the user exits the dialog
+            Bus.bus.getUI().displaySetup(); //So that there's something meaningful in the background if the user exits the dialog
         }
     }
 
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        mvc.onSaveInstanceState(outState);
+        outState.putSerializable("backend", Bus.bus.getBackend().getContents());
     }
 
     @Override
@@ -73,12 +74,6 @@ public class MainActivity extends Activity {
         this.lrs = lrs;
     }
 
-    public interface LeftRightSwipe {
-        void swipeLeft();
-
-        void swipeRight();
-    }
-
     private final class GestureListener extends GestureDetector.SimpleOnGestureListener {
 
         private static final int SWIPE_THRESHOLD = 100;
@@ -99,14 +94,7 @@ public class MainActivity extends Activity {
                         }
                         result = true;
                     }
-                } /*else if (Math.abs(diffY) > SWIPE_THRESHOLD && Math.abs(velocityY) > SWIPE_VELOCITY_THRESHOLD) {
-                    if (diffY > 0) {
-                        onSwipeBottom();
-                    } else {
-                        onSwipeTop();
-                    }
-                    result = true;
-                }*/
+                }
 
             } catch (Exception exception) {
                 exception.printStackTrace();
