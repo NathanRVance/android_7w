@@ -1,6 +1,6 @@
 package net.dumtoad.srednow7.backend.implementation;
 
-import net.dumtoad.srednow7.backend.Backend;
+import net.dumtoad.srednow7.backend.Game;
 import net.dumtoad.srednow7.backend.Card;
 import net.dumtoad.srednow7.backend.Player;
 import net.dumtoad.srednow7.backend.ResQuant;
@@ -17,7 +17,7 @@ class TradeBackendImpl implements TradeBackend {
 
     private Player player;
     private int gold;
-    private Map<Backend.Direction, ResQuant> trades;
+    private Map<Game.Direction, ResQuant> trades;
 
     TradeBackendImpl(Player player) {
         this.player = player;
@@ -25,7 +25,7 @@ class TradeBackendImpl implements TradeBackend {
     }
 
     @Override
-    public void makeTrade(Card.Resource resource, int amount, Backend.Direction direction) {
+    public void makeTrade(Card.Resource resource, int amount, Game.Direction direction) {
         gold -= amount * getPrice(resource, direction);
         if (gold < 0) throw new RuntimeException("Gold less than 0");
         int currentTrade = trades.get(direction).get(resource);
@@ -33,8 +33,8 @@ class TradeBackendImpl implements TradeBackend {
     }
 
     @Override
-    public void refresh(TradeUI tradeUI, Backend.Direction direction) {
-        ResQuant numAvailable = numAvailable(Bus.bus.getBackend().getPlayerDirection(player, direction), trades.get(direction), false);
+    public void refresh(TradeUI tradeUI, Game.Direction direction) {
+        ResQuant numAvailable = numAvailable(Bus.bus.getGame().getPlayerDirection(player, direction), trades.get(direction), false);
         ResQuant prices = new ResQuantImpl();
         for (Card.Resource resource : tradeable) {
             prices.put(resource, getPrice(resource, direction));
@@ -79,7 +79,7 @@ class TradeBackendImpl implements TradeBackend {
     }
 
     @Override
-    public int getGoldSpent(Backend.Direction direction) {
+    public int getGoldSpent(Game.Direction direction) {
         int amount = 0;
         for(Card.Resource res : tradeable) {
             amount += trades.get(direction).get(res) * getPrice(res, direction);
@@ -91,11 +91,11 @@ class TradeBackendImpl implements TradeBackend {
     public void clear() {
         gold = player.getGold();
         trades = new HashMap<>();
-        trades.put(Backend.Direction.WEST, new ResQuantImpl());
-        trades.put(Backend.Direction.EAST, new ResQuantImpl());
+        trades.put(Game.Direction.WEST, new ResQuantImpl());
+        trades.put(Game.Direction.EAST, new ResQuantImpl());
     }
 
-    private int getPrice(Card.Resource resource, Backend.Direction direction) {
+    private int getPrice(Card.Resource resource, Game.Direction direction) {
         Card.TradeType type =
                 (resource == Card.Resource.CLOTH || resource == Card.Resource.GLASS || resource == Card.Resource.PAPER) ?
                         Card.TradeType.industry : Card.TradeType.resource;
@@ -170,22 +170,22 @@ class TradeBackendImpl implements TradeBackend {
     @Override
     public Serializable getContents() {
         Serializable[] contents = new Serializable[2];
-        contents[0] = trades.get(Backend.Direction.EAST).getContents();
-        contents[1] = trades.get(Backend.Direction.WEST).getContents();
+        contents[0] = trades.get(Game.Direction.EAST).getContents();
+        contents[1] = trades.get(Game.Direction.WEST).getContents();
         return contents;
     }
 
     @Override
     public void restoreContents(Serializable contents) throws Exception {
         Serializable[] s = (Serializable[]) contents;
-        trades.put(Backend.Direction.EAST, new ResQuantImpl());
-        trades.get(Backend.Direction.EAST).restoreContents(s[0]);
+        trades.put(Game.Direction.EAST, new ResQuantImpl());
+        trades.get(Game.Direction.EAST).restoreContents(s[0]);
 
-        trades.put(Backend.Direction.WEST, new ResQuantImpl());
-        trades.get(Backend.Direction.WEST).restoreContents(s[1]);
+        trades.put(Game.Direction.WEST, new ResQuantImpl());
+        trades.get(Game.Direction.WEST).restoreContents(s[1]);
 
         gold = player.getGold();
-        for (Backend.Direction direction : trades.keySet()) {
+        for (Game.Direction direction : trades.keySet()) {
             for (Card.Resource resource : tradeable) {
                 gold -= getPrice(resource, direction) * trades.get(direction).get(resource);
             }

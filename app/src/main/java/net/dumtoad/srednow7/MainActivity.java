@@ -31,10 +31,11 @@ public class MainActivity extends Activity {
         mainActivity = this;
         setContentView(R.layout.activity_main);
         gestureDetector = new GestureDetector(this, new GestureListener());
+        Bus.bus.reset();
 
         if (savedInstanceState != null) {
             try {
-                Bus.bus.getBackend().restoreContents(savedInstanceState.getSerializable("backend"));
+                Bus.bus.getGame().restoreContents(savedInstanceState.getSerializable("game"));
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -50,7 +51,7 @@ public class MainActivity extends Activity {
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putSerializable("backend", Bus.bus.getBackend().getContents());
+        outState.putSerializable("game", Bus.bus.getGame().getContents());
     }
 
     @Override

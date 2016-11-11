@@ -1,48 +1,51 @@
 package net.dumtoad.srednow7.backend;
 
+import java.util.List;
+
 public interface Game extends Savable {
 
-    /**
-     * Plays a card
-     *
-     * @param action action to be performed using the card
-     * @param card   card to be played
-     * @throws BadActionException if card can't be played. Details in exception message
-     */
-    void requestCardAction(CardAction action, Card card) throws BadActionException;
+    void initialize(CharSequence[] playerNames, boolean[] ais);
 
-    boolean canAffordBuild(Card card);
+    void finishedTurn();
+
+    Setup getSetup(int playerID);
 
     /**
-     * Gets the hand of the player currently in turn
+     * Returns a list of all players in the game
      *
-     * @return list of cards in player's hand, sorted by type, or discards, if applicable
+     * @return list of players, sorted by position, west to east
      */
-    CardList getHandInTurn();
+    List<? extends Player> getPlayers();
 
-    boolean isPlayDiscard();
+    Player getPlayerDirection(Player player, Direction direction);
+
+    Direction getPassingDirection();
 
     /**
-     * Get the player currently playing
-     *
-     * @return player who's turn it is
+     * @return era number, between 0 and 2 inclusive
      */
-    Player getPlayer();
+    int getEra();
 
-    TradeBackend getTradeBackend();
+    void discard(Card card);
 
-    boolean hasFinishedTurn();
+    void startNewGame();
 
-    enum CardAction {
-        BUILD,
-        DISCARD,
-        WONDER
+    void saveGame();
+
+    /**
+     * If it fails to do so (corrupted save) then
+     * runs startNewGame()
+     */
+    void restoreSave();
+
+    void deleteSave();
+
+    void reset();
+
+    CardCreator getCardCreator();
+
+    enum Direction {
+        WEST,
+        EAST
     }
-
-    class BadActionException extends Exception {
-        public BadActionException(String s) {
-            super(s);
-        }
-    }
-
 }

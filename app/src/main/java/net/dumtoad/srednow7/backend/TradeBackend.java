@@ -4,9 +4,9 @@ import net.dumtoad.srednow7.ui.TradeUI;
 
 public interface TradeBackend extends Savable {
 
-    void makeTrade(Card.Resource resource, int amount, Backend.Direction direction);
+    void makeTrade(Card.Resource resource, int amount, Game.Direction direction);
 
-    void refresh(TradeUI tradeUI, Backend.Direction direction);
+    void refresh(TradeUI tradeUI, Game.Direction direction);
 
     /**
      * Gets the number of each resource leftover after building card, factoring in current trades
@@ -26,7 +26,7 @@ public interface TradeBackend extends Savable {
      */
     boolean canAfford(Card card);
 
-    int getGoldSpent(Backend.Direction direction);
+    int getGoldSpent(Game.Direction direction);
 
     void clear();
 

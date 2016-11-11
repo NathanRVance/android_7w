@@ -44,8 +44,8 @@ public class WonderSelectFragment extends Fragment implements LeftRightSwipe {
 
         int playerID = getArguments().getInt(PLAYER_ID);
 
-        final Player player = Bus.bus.getBackend().getPlayers().get(playerID);
-        final Setup setup = Bus.bus.getBackend().getSetup(playerID);
+        final Player player = Bus.bus.getGame().getPlayers().get(playerID);
+        final Setup setup = Bus.bus.getGame().getSetup(playerID);
 
         ((TextView) view.findViewById(R.id.player_name)).setText(player.getName());
 

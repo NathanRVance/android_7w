@@ -15,7 +15,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import net.dumtoad.srednow7.R;
-import net.dumtoad.srednow7.backend.Backend;
+import net.dumtoad.srednow7.backend.Game;
 import net.dumtoad.srednow7.backend.Card;
 import net.dumtoad.srednow7.backend.Player;
 import net.dumtoad.srednow7.backend.ResQuant;
@@ -56,8 +56,8 @@ public class TradeView extends GameView implements TradeUI {
             helpDialog.show(activity.getFragmentManager(), "helpDialog");
         });
 
-        Backend.Direction directionViewing = (playerViewing == Bus.bus.getBackend().getPlayerDirection(playerTurn, Backend.Direction.EAST)) ?
-                Backend.Direction.EAST : Backend.Direction.WEST;
+        Game.Direction directionViewing = (playerViewing == Bus.bus.getGame().getPlayerDirection(playerTurn, Game.Direction.EAST)) ?
+                Game.Direction.EAST : Game.Direction.WEST;
 
         views = new HashMap<>();
         goldStatus = new TextView(activity);
@@ -68,19 +68,19 @@ public class TradeView extends GameView implements TradeUI {
             LinearLayout ll = (LinearLayout) inflater.inflate(R.layout.trade_item, content, false);
             Button add = (Button) ll.findViewById(R.id.add);
             add.setOnClickListener(v -> {
-                Bus.bus.getGame(playerTurn).getTradeBackend().makeTrade(res, 1, directionViewing);
-                Bus.bus.getGame(playerTurn).getTradeBackend().refresh(TradeView.this, directionViewing);
+                playerTurn.getTradeBackend().makeTrade(res, 1, directionViewing);
+                playerTurn.getTradeBackend().refresh(TradeView.this, directionViewing);
             });
             Button subtract = (Button) ll.findViewById(R.id.subtract);
             subtract.setOnClickListener(v -> {
-                Bus.bus.getGame(playerTurn).getTradeBackend().makeTrade(res, -1, directionViewing);
-                Bus.bus.getGame(playerTurn).getTradeBackend().refresh(TradeView.this, directionViewing);
+                playerTurn.getTradeBackend().makeTrade(res, -1, directionViewing);
+                playerTurn.getTradeBackend().refresh(TradeView.this, directionViewing);
             });
             views.put(res, ll);
             content.addView(ll);
         }
 
-        Bus.bus.getGame(playerTurn).getTradeBackend().refresh(this, directionViewing);
+        playerTurn.getTradeBackend().refresh(this, directionViewing);
     }
 
     @Override

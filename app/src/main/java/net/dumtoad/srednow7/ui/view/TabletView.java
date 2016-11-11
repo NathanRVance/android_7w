@@ -10,7 +10,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import net.dumtoad.srednow7.R;
-import net.dumtoad.srednow7.backend.Backend;
+import net.dumtoad.srednow7.backend.Game;
 import net.dumtoad.srednow7.backend.Card;
 import net.dumtoad.srednow7.backend.Player;
 import net.dumtoad.srednow7.bus.Bus;
@@ -62,8 +62,8 @@ public class TabletView extends GameView {
             if (playerViewing == playerTurn) {
                 sb.append(activity.getString(R.string.help_hand_title)).append("\n");
                 sb.append(activity.getString(R.string.help_hand));
-            } else if (playerViewing == Bus.bus.getBackend().getPlayerDirection(playerTurn, Backend.Direction.WEST)
-                    || playerViewing == Bus.bus.getBackend().getPlayerDirection(playerTurn, Backend.Direction.EAST)) {
+            } else if (playerViewing == Bus.bus.getGame().getPlayerDirection(playerTurn, Game.Direction.WEST)
+                    || playerViewing == Bus.bus.getGame().getPlayerDirection(playerTurn, Game.Direction.EAST)) {
                 sb.append(activity.getString(R.string.help_trade_title)).append("\n");
                 sb.append(activity.getString(R.string.help_trade));
             }

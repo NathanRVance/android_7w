@@ -1,12 +1,13 @@
 package net.dumtoad.srednow7.backend.implementation;
 
 import net.dumtoad.srednow7.backend.AI;
-import net.dumtoad.srednow7.backend.Backend;
+import net.dumtoad.srednow7.backend.Game;
 import net.dumtoad.srednow7.backend.Card;
 import net.dumtoad.srednow7.backend.CardList;
 import net.dumtoad.srednow7.backend.Player;
 import net.dumtoad.srednow7.backend.Savable;
 import net.dumtoad.srednow7.backend.Score;
+import net.dumtoad.srednow7.backend.TradeBackend;
 import net.dumtoad.srednow7.backend.Wonder;
 import net.dumtoad.srednow7.bus.Bus;
 
@@ -24,11 +25,15 @@ class PlayerImpl implements Player {
     private PlayBuffer playBuffer = new PlayBuffer();
     private boolean justDiscarded = false;
     private boolean playedFree = false;
+    private boolean hasFinishedTurn = false;
+    private TradeBackend tradeBackend;
+    private CardList hand;
 
     PlayerImpl(CharSequence name, boolean isAI) {
         this.name = name;
         this.isAI = isAI;
         if (isAI) ai = new AIImpl(this);
+        tradeBackend = new TradeBackendImpl(this);
     }
 
     PlayerImpl() {
@@ -39,8 +44,7 @@ class PlayerImpl implements Player {
         return wonder;
     }
 
-    @Override
-    public void setWonder(Wonder wonder) {
+    void setWonder(Wonder wonder) {
         this.wonder = wonder;
     }
 
@@ -67,6 +71,84 @@ class PlayerImpl implements Player {
     @Override
     public Score getScore() {
         return score;
+    }
+
+    @Override
+    public void requestCardAction(CardAction action, Card card) throws BadActionException {
+        switch (action) {
+            case BUILD:
+                checkCanAffordBuild(card);
+                boolean hasCoupon = hasCouponFor(card) || isPlayDiscard();
+                if (hasCoupon) {
+                    setToBeBuilt(card, 0, 0);
+                } else if (tradeBackend.canAfford(card)) {
+                    setToBeBuilt(card, tradeBackend.getGoldSpent(Game.Direction.EAST),
+                            tradeBackend.getGoldSpent(Game.Direction.WEST));
+                } else if ((canPlay1Free() && !playedFreeThisEra())) {
+                    setPlayedFree(true);
+                    setToBeBuilt(card, 0, 0);
+                } else {
+                    //We shouldn't get here
+                    throw new BadActionException("Yell at the programmer");
+                }
+                break;
+            case DISCARD:
+                if (tradeBackend.hasTrade()) {
+                    throw new BadActionException("Don't trade when discarding");
+                }
+                Bus.bus.getGame().discard(card);
+                addGoldBuffer(3);
+                break;
+            case WONDER:
+                Card stage = nextWonderStage();
+                if (stage == null) {
+                    throw new BadActionException("Already built all stages");
+                } else if (tradeBackend.canAfford(stage)) {
+                    setToBeBuilt(stage, tradeBackend.getGoldSpent(Game.Direction.EAST),
+                            tradeBackend.getGoldSpent(Game.Direction.WEST));
+                } else {
+                    throw new BadActionException("Insufficient resources");
+                }
+                break;
+            default:
+                throw new BadActionException("Yell at the programmer");
+        }
+        //If we haven't thrown an exception by now, the card has been played and we can remove it from the hand
+        hand.remove(card);
+        hasFinishedTurn = true;
+        Bus.bus.getGame().finishedTurn();
+    }
+
+    @Override
+    public boolean canAffordBuild(Card card) {
+        try {
+            checkCanAffordBuild(card);
+        } catch (BadActionException e) {
+            return false;
+        }
+        return true;
+    }
+
+    @Override
+    public CardList getHand() {
+        return hand;
+    }
+
+    void setHand(CardList hand) {
+        this.hand = hand;
+    }
+
+    private void checkCanAffordBuild(Card card) throws BadActionException {
+        boolean hasCoupon = hasCouponFor(card) || isPlayDiscard();
+        if (getPlayedCards().contains(card)) {
+            throw new BadActionException("Already built " + card.getEnum());
+        } else if (hasCoupon && getTradeBackend().hasTrade()) {
+            throw new BadActionException("Don't trade, you can build for free");
+        } else if (tradeBackend.overpaid(card)) {
+            throw new BadActionException("Overpaid, undo some trades");
+        } else if (!(hasCoupon || tradeBackend.canAfford(card) || (canPlay1Free() && !playedFreeThisEra()))) {
+            throw new BadActionException("Insufficient resources");
+        }
     }
 
     @Override
@@ -100,23 +182,25 @@ class PlayerImpl implements Player {
         return playedFree;
     }
 
-    @Override
-    public void setPlayedFree(boolean playedFree) {
+    void setPlayedFree(boolean playedFree) {
         this.playedFree = playedFree;
     }
 
     @Override
-    public boolean mostRecentPlayedCardGivesFreeBuild() {
+    public boolean isPlayDiscard() {
         return !played.isEmpty() && played.get(played.size() - 1).providesAttribute(Card.Attribute.FreeBuild);
     }
 
     @Override
-    public boolean isAI() {
+    public TradeBackend getTradeBackend() {
+        return tradeBackend;
+    }
+
+    boolean isAI() {
         return isAI;
     }
 
-    @Override
-    public AI getAI() {
+    AI getAI() {
         return ai;
     }
 
@@ -125,31 +209,27 @@ class PlayerImpl implements Player {
         return gold;
     }
 
-    @Override
-    public void addGold(int amount) {
+    private void addGold(int amount) {
         gold += amount;
     }
 
-    @Override
-    public void addGoldBuffer(int amount) {
+    private void addGoldBuffer(int amount) {
         playBuffer.goldSelf += amount;
     }
 
-    @Override
-    public void setToBeBuilt(Card card, int goldEast, int goldWest) {
+    private void setToBeBuilt(Card card, int goldEast, int goldWest) {
         playBuffer.card = card;
         addGoldBuffer(card.getSpecialGold(this));
         playBuffer.goldEast = goldEast;
         playBuffer.goldWest = goldWest;
     }
 
-    @Override
-    public void resolveBuild() {
+    void resolveBuild() {
         if (playBuffer.card != null) {
-            Bus.bus.getBackend().getPlayerDirection(this, Backend.Direction.EAST).addGold(playBuffer.goldEast);
+            ((PlayerImpl) Bus.bus.getGame().getPlayerDirection(this, Game.Direction.EAST)).addGold(playBuffer.goldEast);
             addGold(playBuffer.goldEast * -1);
 
-            Bus.bus.getBackend().getPlayerDirection(this, Backend.Direction.WEST).addGold(playBuffer.goldWest);
+            ((PlayerImpl) Bus.bus.getGame().getPlayerDirection(this, Game.Direction.WEST)).addGold(playBuffer.goldWest);
             addGold(playBuffer.goldWest * -1);
 
             played.add(playBuffer.card);
@@ -158,11 +238,20 @@ class PlayerImpl implements Player {
         }
         addGold(playBuffer.goldSelf);
         playBuffer.clear();
+        tradeBackend = new TradeBackendImpl(this);
+    }
+
+    void startTurn() {
+        hasFinishedTurn = false;
+    }
+
+    boolean hasFinishedTurn() {
+        return hasFinishedTurn;
     }
 
     @Override
     public Serializable getContents() {
-        Serializable[] contents = new Serializable[9];
+        Serializable[] contents = new Serializable[11];
         contents[0] = played.getContents();
         contents[1] = score.getContents();
         contents[2] = gold;
@@ -172,6 +261,8 @@ class PlayerImpl implements Player {
         contents[6] = playBuffer.getContents();
         contents[7] = justDiscarded;
         contents[8] = playedFree;
+        contents[9] = hasFinishedTurn;
+        contents[10] = tradeBackend.getContents();
         return contents;
     }
 
@@ -190,6 +281,9 @@ class PlayerImpl implements Player {
         playBuffer.restoreContents(in[6]);
         justDiscarded = (boolean) in[7];
         playedFree = (boolean) in[8];
+        hasFinishedTurn = (boolean) in[9];
+        tradeBackend = new TradeBackendImpl(this);
+        tradeBackend.restoreContents(in[10]);
     }
 
     private class PlayBuffer implements Savable {
@@ -224,7 +318,7 @@ class PlayerImpl implements Player {
         public void restoreContents(Serializable contents) throws Exception {
             Serializable[] in = (Serializable[]) contents;
             if((boolean) in[0]) {
-                card = Bus.bus.getBackend().getCardCreator().getAllCards().get((Enum) in[1]);
+                card = Bus.bus.getGame().getCardCreator().getAllCards().get((Enum) in[1]);
             }
             goldEast = (int) in[2];
             goldWest = (int) in[3];

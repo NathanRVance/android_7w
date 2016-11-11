@@ -8,7 +8,6 @@ import android.widget.Toast;
 
 import net.dumtoad.srednow7.R;
 import net.dumtoad.srednow7.backend.Card;
-import net.dumtoad.srednow7.backend.Game;
 import net.dumtoad.srednow7.backend.Player;
 import net.dumtoad.srednow7.bus.Bus;
 import net.dumtoad.srednow7.ui.UIUtil;
@@ -27,11 +26,11 @@ public class CardView extends Button {
         else view(card, player);
     }
 
-    private void requestAction(Player player, Game.CardAction action, Card card) {
+    private void requestAction(Player player, Player.CardAction action, Card card) {
         boolean succeeded = true;
         try {
-            Bus.bus.getGame(player).requestCardAction(action, card);
-        } catch (Game.BadActionException e) {
+            player.requestCardAction(action, card);
+        } catch (Player.BadActionException e) {
             Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
             succeeded = false;
         }
@@ -57,7 +56,7 @@ public class CardView extends Button {
                                             //Do nothing
                                             break;
                                         case 1:
-                                            requestAction(player, Game.CardAction.BUILD, card);
+                                            requestAction(player, Player.CardAction.BUILD, card);
                                             break;
                                     }
                                 });
@@ -70,13 +69,13 @@ public class CardView extends Button {
                                             //Do nothing
                                             break;
                                         case 1:
-                                            requestAction(player, Game.CardAction.DISCARD, card);
+                                            requestAction(player, Player.CardAction.DISCARD, card);
                                             break;
                                         case 2:
-                                            requestAction(player, Game.CardAction.WONDER, card);
+                                            requestAction(player, Player.CardAction.WONDER, card);
                                             break;
                                         case 3:
-                                            requestAction(player, Game.CardAction.BUILD, card);
+                                            requestAction(player, Player.CardAction.BUILD, card);
                                             break;
                                     }
                                 });

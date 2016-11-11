@@ -1,6 +1,6 @@
 package net.dumtoad.srednow7.backend.implementation;
 
-import net.dumtoad.srednow7.backend.Backend;
+import net.dumtoad.srednow7.backend.Game;
 import net.dumtoad.srednow7.backend.Card;
 import net.dumtoad.srednow7.backend.CardList;
 import net.dumtoad.srednow7.backend.Player;
@@ -25,7 +25,7 @@ class CardImpl implements Card {
     private SpecialValue specialGold;
     private SpecialValue specialVps;
     private TradeType tradeType;
-    private List<Backend.Direction> tradeDirections;
+    private List<Game.Direction> tradeDirections;
     private List<Attribute> attributes;
 
     private CardImpl(Builder builder) {
@@ -106,7 +106,7 @@ class CardImpl implements Card {
     }
 
     @Override
-    public boolean providesTrade(Backend.Direction direction, TradeType type) {
+    public boolean providesTrade(Game.Direction direction, TradeType type) {
         return type == tradeType && tradeDirections.contains(direction);
     }
 
@@ -131,7 +131,7 @@ class CardImpl implements Card {
         private SpecialValue specialGold = new NotSoSpecial();
         private SpecialValue specialVps = new NotSoSpecial();
         private TradeType tradeType;
-        private List<Backend.Direction> tradeDirections = new ArrayList<>();
+        private List<Game.Direction> tradeDirections = new ArrayList<>();
         private List<Enum> makesFreeEnum = new ArrayList<>();
         private List<Enum> makesThisFreeEnum = new ArrayList<>();
         private List<Attribute> attributes = new ArrayList<>();
@@ -178,7 +178,7 @@ class CardImpl implements Card {
         }
 
         @Override
-        public Builder addTradeDirection(Backend.Direction direction) {
+        public Builder addTradeDirection(Game.Direction direction) {
             this.tradeDirections.add(direction);
             return this;
         }

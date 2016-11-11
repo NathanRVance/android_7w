@@ -46,7 +46,7 @@ public class CardListImpl extends ArrayList<Card> implements CardList {
 
     @Override
     public void restoreContents(Serializable contents) {
-        List<Card> cards = Bus.bus.getBackend().getCardCreator().getAllCards();
+        List<Card> cards = Bus.bus.getGame().getCardCreator().getAllCards();
         String[] names = ((String) contents).split("\n");
         for(String name : names) {
             for(Card card : cards) {

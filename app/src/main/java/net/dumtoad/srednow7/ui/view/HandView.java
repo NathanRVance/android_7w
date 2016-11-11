@@ -11,7 +11,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import net.dumtoad.srednow7.R;
-import net.dumtoad.srednow7.backend.Backend;
+import net.dumtoad.srednow7.backend.Game;
 import net.dumtoad.srednow7.backend.Card;
 import net.dumtoad.srednow7.backend.Player;
 import net.dumtoad.srednow7.bus.Bus;
@@ -44,17 +44,17 @@ public class HandView extends GameView {
 
         TextView tv = new TextView(activity);
         tv.setTextSize(TypedValue.COMPLEX_UNIT_PX, activity.getResources().getDimension(R.dimen.textsize));
-        String direction = (Bus.bus.getBackend().getPassingDirection() == Backend.Direction.WEST) ?
+        String direction = (Bus.bus.getGame().getPassingDirection() == Game.Direction.WEST) ?
                 activity.getResources().getString(R.string.west)
                 : activity.getResources().getString(R.string.east);
         tv.setText(activity.getResources().getString(R.string.passing_direction, direction));
         content.addView(tv);
 
         Player player = playerViewing;
-        for (Card card : Bus.bus.getGame(player).getHandInTurn()) {
-            boolean isPlayDiscard = Bus.bus.getGame(player).isPlayDiscard();
+        for (Card card : player.getHand()) {
+            boolean isPlayDiscard = player.isPlayDiscard();
             CardView cv = new CardView(card, activity, player, true, isPlayDiscard);
-            if (!(isPlayDiscard || player.hasCouponFor(card) || Bus.bus.getGame(player).canAffordBuild(card))) {
+            if (!(isPlayDiscard || player.hasCouponFor(card) || player.canAffordBuild(card))) {
                 //Darken it slightly
                 cv.getBackground().setColorFilter(ContextCompat.getColor(activity, R.color.gray), PorterDuff.Mode.MULTIPLY);
             }

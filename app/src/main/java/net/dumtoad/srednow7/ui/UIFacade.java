@@ -15,65 +15,67 @@ import java.util.Queue;
 
 public class UIFacade implements UI {
 
-    /**
-     * Useful info for later:
-     * Because Bus doesn't get recreated, neither does this class. Which means we may be able to
-     * cheat a little on screen rotations, but we'll also have to be careful on how we handle
-     * saving and loading games.
-     */
-
     public static final String FRAGMENT_TAG = "fragment";
     public static final String PLAYER_ID = "playerID";
 
     private Queue<Fragment> fragmentQueue = new LinkedList<>();
-    private boolean viewIsInvalid = true;
+    private boolean needsNewView = true;
 
     @Override
     public void displaySetup() {
+        System.out.println("###### DISPLAYING SETUP ######");
         fragmentQueue.add(new SetupFragment());
-        if(viewIsInvalid)
+        if (needsNewView)
             invalidateView();
     }
 
     @Override
     public void displayWonderSideSelect(int playerID) {
+        System.out.println("###### DISPLAYING WONDER SIDE SELECT ######");
         Bundle bundle = new Bundle();
         bundle.putInt(PLAYER_ID, playerID);
         WonderSelectFragment frag = new WonderSelectFragment();
         frag.setArguments(bundle);
         fragmentQueue.add(frag);
-        if(viewIsInvalid)
+        if (needsNewView)
             invalidateView();
     }
 
     @Override
     public void displayTurn(int playerID) {
+        System.out.println("###### DISPLAYING TURN ######");
         Bundle bundle = new Bundle();
         bundle.putInt(PLAYER_ID, playerID);
         GameFragment frag = new GameFragment();
         frag.setArguments(bundle);
         fragmentQueue.add(frag);
-        if(viewIsInvalid)
+        if (needsNewView)
             invalidateView();
     }
 
     @Override
     public void displayEndOfGame() {
+        System.out.println("###### DISPLAYING END GAME ######");
         fragmentQueue.add(new EndFragment());
-        if(viewIsInvalid)
+        if (needsNewView)
             invalidateView();
     }
 
     @Override
     public void invalidateView() {
-        Fragment frag = fragmentQueue.poll();
-        if(frag == null) {
-            viewIsInvalid = true;
+        if(fragmentQueue.isEmpty()) {
+            needsNewView = true;
         } else {
             MainActivity.getMainActivity().getFragmentManager().beginTransaction()
-                    .replace(R.id.main_layout, frag, FRAGMENT_TAG)
+                    .replace(R.id.main_layout, fragmentQueue.remove(), FRAGMENT_TAG)
                     .commit();
-            viewIsInvalid = false;
+            needsNewView = false;
         }
+    }
+
+    @Override
+    public void reset() {
+        fragmentQueue.clear();
+        needsNewView = true;
     }
 }

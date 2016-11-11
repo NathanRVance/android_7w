@@ -1,6 +1,6 @@
 package net.dumtoad.srednow7.backend.implementation;
 
-import net.dumtoad.srednow7.backend.Backend;
+import net.dumtoad.srednow7.backend.Game;
 import net.dumtoad.srednow7.backend.Card;
 import net.dumtoad.srednow7.backend.CardList;
 import net.dumtoad.srednow7.backend.Wonder;
@@ -178,20 +178,20 @@ class Generate {
         cards.add(new CardImpl.Builder(Card.Type.COMMERCIAL, Era0.East_Trading_Post)
                 .setMessage("Can trade 1 coin for resources with player to the east.")
                 .setTradeType(Card.TradeType.resource)
-                .addTradeDirection(Backend.Direction.EAST)
+                .addTradeDirection(Game.Direction.EAST)
                 .setMakesFree(Era1.Forum).build());
 
         cards.add(new CardImpl.Builder(Card.Type.COMMERCIAL, Era0.West_Trading_Post)
                 .setMessage("Can trade 1 coin for resources with player to the west.")
                 .setTradeType(Card.TradeType.resource)
-                .addTradeDirection(Backend.Direction.WEST)
+                .addTradeDirection(Game.Direction.WEST)
                 .setMakesFree(Era1.Forum).build());
 
         cards.add(new CardImpl.Builder(Card.Type.COMMERCIAL, Era0.Marketplace)
                 .setMessage("Can trade 1 coin for industry products with adjacent players.")
                 .setTradeType(Card.TradeType.industry)
-                .addTradeDirection(Backend.Direction.EAST)
-                .addTradeDirection(Backend.Direction.WEST)
+                .addTradeDirection(Game.Direction.EAST)
+                .addTradeDirection(Game.Direction.WEST)
                 .setMakesFree(Era1.Caravansery).build());
 
         cards.add(new CardImpl.Builder(Card.Type.MILITARY, Era0.Stockade)
@@ -754,8 +754,8 @@ class Generate {
                         .setCost(Card.Resource.WOOD, 2)
                         .setMessage("Can trade 1 coin for resources with adjacent players.")
                         .setTradeType(Card.TradeType.resource)
-                        .addTradeDirection(Backend.Direction.EAST)
-                        .addTradeDirection(Backend.Direction.WEST).build())
+                        .addTradeDirection(Game.Direction.EAST)
+                        .addTradeDirection(Game.Direction.WEST).build())
                 .addStage(new CardImpl.Builder(Card.Type.STAGE, WonderStages.Stage_2)
                         .setCost(Card.Resource.STONE, 2)
                         .setProduct(Card.Resource.VP, 5).build())

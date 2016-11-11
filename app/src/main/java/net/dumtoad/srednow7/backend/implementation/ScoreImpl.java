@@ -1,6 +1,6 @@
 package net.dumtoad.srednow7.backend.implementation;
 
-import net.dumtoad.srednow7.backend.Backend;
+import net.dumtoad.srednow7.backend.Game;
 import net.dumtoad.srednow7.backend.Card;
 import net.dumtoad.srednow7.backend.Player;
 import net.dumtoad.srednow7.backend.Score;
@@ -24,9 +24,9 @@ public class ScoreImpl implements Score {
         for (Card card : player.getPlayedCards()) {
             playerMilitary += card.getProducts().get(Card.Resource.SHIELD);
         }
-        for (Backend.Direction direction : Backend.Direction.values()) {
+        for (Game.Direction direction : Game.Direction.values()) {
             int otherMilitary = 0;
-            for (Card card : Bus.bus.getBackend().getPlayerDirection(player, direction).getPlayedCards()) {
+            for (Card card : Bus.bus.getGame().getPlayerDirection(player, direction).getPlayedCards()) {
                 otherMilitary += card.getProducts().get(Card.Resource.SHIELD);
             }
             if (otherMilitary > playerMilitary) {

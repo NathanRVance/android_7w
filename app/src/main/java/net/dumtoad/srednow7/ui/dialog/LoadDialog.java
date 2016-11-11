@@ -15,9 +15,9 @@ public class LoadDialog extends AbstractDialog {
         builder.setTitle(getResources().getString(R.string.load_title));
         builder.setMessage(getResources().getString(R.string.load_message));
         builder.setPositiveButton(getResources().getString(R.string.yes), (dialogInterface, i)
-                -> Bus.bus.getBackend().restoreSave());
+                -> Bus.bus.getGame().restoreSave());
         builder.setNegativeButton(getResources().getString(R.string.no), (dialogInterface, i)
-                -> Bus.bus.getBackend().deleteSave());
+                -> Bus.bus.getGame().deleteSave());
 
         return builder.create();
     }

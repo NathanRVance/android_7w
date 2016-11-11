@@ -10,7 +10,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import net.dumtoad.srednow7.R;
-import net.dumtoad.srednow7.backend.Backend;
+import net.dumtoad.srednow7.backend.Game;
 import net.dumtoad.srednow7.backend.Card;
 import net.dumtoad.srednow7.backend.Player;
 import net.dumtoad.srednow7.bus.Bus;
@@ -41,8 +41,8 @@ public abstract class GameView extends RelativeLayout {
         if (playerTurn == playerViewing) {
             activity.findViewById(R.id.hand).setVisibility(View.VISIBLE);
             ((Button) activity.findViewById(R.id.hand)).setText(activity.getString(R.string.hand));
-        } else if (playerViewing == Bus.bus.getBackend().getPlayerDirection(playerTurn, Backend.Direction.EAST)
-                || playerViewing == Bus.bus.getBackend().getPlayerDirection(playerTurn, Backend.Direction.WEST)) {
+        } else if (playerViewing == Bus.bus.getGame().getPlayerDirection(playerTurn, Game.Direction.EAST)
+                || playerViewing == Bus.bus.getGame().getPlayerDirection(playerTurn, Game.Direction.WEST)) {
             activity.findViewById(R.id.hand).setVisibility(View.VISIBLE);
             ((Button) activity.findViewById(R.id.hand)).setText(activity.getString(R.string.trade));
         } else {

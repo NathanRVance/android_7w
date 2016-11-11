@@ -76,7 +76,7 @@ public class SetupFragment extends Fragment {
             System.arraycopy(names, 0, playerNames, 0, numPlayers);
             boolean[] isAi = new boolean[numPlayers];
             System.arraycopy(ais, 0, isAi, 0, numPlayers);
-            Bus.bus.getBackend().initialize(playerNames, isAi);
+            Bus.bus.getGame().initialize(playerNames, isAi);
             Bus.bus.getUI().invalidateView();
         });
 

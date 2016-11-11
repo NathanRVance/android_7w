@@ -4,8 +4,6 @@ public interface Player extends Savable {
 
     Wonder getWonder();
 
-    void setWonder(Wonder wonder);
-
     Card nextWonderStage();
 
     CharSequence getName();
@@ -13,6 +11,24 @@ public interface Player extends Savable {
     CardList getPlayedCards();
 
     Score getScore();
+
+    /**
+     * Plays a card
+     *
+     * @param action action to be performed using the card
+     * @param card   card to be played
+     * @throws BadActionException if card can't be played. Details in exception message
+     */
+    void requestCardAction(CardAction action, Card card) throws BadActionException;
+
+    boolean canAffordBuild(Card card);
+
+    /**
+     * Gets the hand of the player currently in turn
+     *
+     * @return list of cards in player's hand, sorted by type, or discards, if applicable
+     */
+    CardList getHand();
 
     boolean hasCouponFor(Card card);
 
@@ -22,40 +38,22 @@ public interface Player extends Savable {
 
     boolean playedFreeThisEra();
 
-    void setPlayedFree(boolean playedFree);
+    boolean isPlayDiscard();
 
-    boolean mostRecentPlayedCardGivesFreeBuild();
-
-    boolean isAI();
-
-    AI getAI();
+    TradeBackend getTradeBackend();
 
     int getGold();
 
-    /**
-     * Adds gold directly
-     * @param amount of gold to add
-     */
-    void addGold(int amount);
+    enum CardAction {
+        BUILD,
+        DISCARD,
+        WONDER
+    }
 
-    /**
-     * Adds gold at end of turn
-     * @param amount of gold to add
-     */
-    void addGoldBuffer(int amount);
-
-    /**
-     * Adds card to buffer to be played. Also handles adding special gold to the buffer
-     * @param card card to be played
-     * @param goldEast amount of gold to be transferred to the east
-     * @param goldWest amount of gold to be transferred to the west
-     */
-    void setToBeBuilt(Card card, int goldEast, int goldWest);
-
-    /**
-     * Resolves building the card, giving gold to trade partners (and removing it from self),
-     * adding gold from card's static production, and adding gold from the buffer
-     */
-    void resolveBuild();
+    class BadActionException extends Exception {
+        public BadActionException(String s) {
+            super(s);
+        }
+    }
 
 }

@@ -52,10 +52,10 @@ public class EndView extends GameView {
 
         LayoutInflater inflater = activity.getLayoutInflater();
         inflater.inflate(R.layout.new_game_button, content, true);
-        content.findViewById(R.id.new_game).setOnClickListener(v -> Bus.bus.getBackend().startNewGame());
+        content.findViewById(R.id.new_game).setOnClickListener(v -> Bus.bus.getGame().startNewGame());
 
         List<PlayerScore> scores = new ArrayList<>();
-        for (Player player : Bus.bus.getBackend().getPlayers()) {
+        for (Player player : Bus.bus.getGame().getPlayers()) {
             PlayerScore ps = new PlayerScore();
             ps.player = player;
             ps.score = player.getScore().getTotalVPs();

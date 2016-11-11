@@ -8,4 +8,6 @@ public interface Setup extends Savable {
 
     void finish();
 
+    boolean isFinished();
+
 }

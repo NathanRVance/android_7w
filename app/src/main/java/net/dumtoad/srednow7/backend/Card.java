@@ -10,7 +10,7 @@ public interface Card {
 
     Type getType();
 
-    boolean providesTrade(Backend.Direction direction, TradeType type);
+    boolean providesTrade(Game.Direction direction, TradeType type);
 
     ResQuant getProducts();
 
@@ -81,7 +81,7 @@ public interface Card {
 
         Builder setTradeType(TradeType tradeType);
 
-        Builder addTradeDirection(Backend.Direction direction);
+        Builder addTradeDirection(Game.Direction direction);
 
         Builder setMakesFree(Enum card);
 

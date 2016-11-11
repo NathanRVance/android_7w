@@ -10,7 +10,7 @@ import android.widget.RelativeLayout;
 
 import net.dumtoad.srednow7.MainActivity;
 import net.dumtoad.srednow7.R;
-import net.dumtoad.srednow7.backend.Backend;
+import net.dumtoad.srednow7.backend.Game;
 import net.dumtoad.srednow7.backend.Player;
 import net.dumtoad.srednow7.bus.Bus;
 import net.dumtoad.srednow7.ui.LeftRightSwipe;
@@ -25,7 +25,7 @@ import static net.dumtoad.srednow7.ui.UIFacade.PLAYER_ID;
 
 public class GameFragment extends Fragment implements LeftRightSwipe {
 
-    private Player playerViewing;
+    protected Player playerViewing;
     private Player playerTurn;
     private Button west;
     private Button east;
@@ -35,17 +35,17 @@ public class GameFragment extends Fragment implements LeftRightSwipe {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         if (savedInstanceState == null) savedInstanceState = new Bundle(); //Avoid null pointers
         int pt = getArguments().getInt(PLAYER_ID);
-        playerTurn = Bus.bus.getBackend().getPlayers().get(pt);
-        playerViewing = Bus.bus.getBackend().getPlayers().get(savedInstanceState.getInt("playerViewing", pt));
+        playerTurn = Bus.bus.getGame().getPlayers().get(pt);
+        playerViewing = Bus.bus.getGame().getPlayers().get(savedInstanceState.getInt("playerViewing", pt));
         mode = Mode.valueOf(savedInstanceState.getString("mode", "handtrade"));
 
         final View view = inflater.inflate(R.layout.game_view, container, false);
 
         west = (Button) view.findViewById(R.id.west);
-        west.setOnClickListener(v -> go(Backend.Direction.WEST));
+        west.setOnClickListener(v -> go(Game.Direction.WEST));
 
         east = (Button) view.findViewById(R.id.east);
-        east.setOnClickListener(v -> go(Backend.Direction.EAST));
+        east.setOnClickListener(v -> go(Game.Direction.EAST));
 
         view.findViewById(R.id.wonder).setOnClickListener(v -> switchToView(Mode.wonder));
 
@@ -61,7 +61,7 @@ public class GameFragment extends Fragment implements LeftRightSwipe {
     @Override
     public void onSaveInstanceState(Bundle outstate) {
         super.onSaveInstanceState(outstate);
-        outstate.putInt("playerViewing", Bus.bus.getBackend().getPlayers().indexOf(playerViewing));
+        outstate.putInt("playerViewing", Bus.bus.getGame().getPlayers().indexOf(playerViewing));
         outstate.putString("mode", mode.toString());
     }
 
@@ -93,8 +93,8 @@ public class GameFragment extends Fragment implements LeftRightSwipe {
     }
 
     public ViewGroup getHandTradeView() {
-        if (playerViewing != Bus.bus.getBackend().getPlayerDirection(playerTurn, Backend.Direction.WEST)
-                && playerViewing != Bus.bus.getBackend().getPlayerDirection(playerTurn, Backend.Direction.EAST)
+        if (playerViewing != Bus.bus.getGame().getPlayerDirection(playerTurn, Game.Direction.WEST)
+                && playerViewing != Bus.bus.getGame().getPlayerDirection(playerTurn, Game.Direction.EAST)
                 && playerViewing != playerTurn) {
             return new SummaryView(getActivity(), playerTurn, playerViewing);
         }
@@ -106,17 +106,17 @@ public class GameFragment extends Fragment implements LeftRightSwipe {
         }
     }
 
-    private void go(Backend.Direction direction) {
-        goTo(Bus.bus.getBackend().getPlayerDirection(playerViewing, direction));
+    private void go(Game.Direction direction) {
+        goTo(Bus.bus.getGame().getPlayerDirection(playerViewing, direction));
     }
 
     public void goTo(Player player) {
         int distanceWest;
         int distanceEast;
         //Player indices are sorted west to east
-        int playerNum = Bus.bus.getBackend().getPlayers().indexOf(player);
-        int viewingNum = Bus.bus.getBackend().getPlayers().indexOf(playerViewing);
-        int numPlayers = Bus.bus.getBackend().getPlayers().size();
+        int playerNum = Bus.bus.getGame().getPlayers().indexOf(player);
+        int viewingNum = Bus.bus.getGame().getPlayers().indexOf(playerViewing);
+        int numPlayers = Bus.bus.getGame().getPlayers().size();
         if (playerNum > viewingNum) {
             distanceEast = playerNum - viewingNum;
             distanceWest = numPlayers - distanceEast;

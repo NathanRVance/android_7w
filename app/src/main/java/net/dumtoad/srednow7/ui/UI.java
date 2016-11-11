@@ -12,4 +12,6 @@ public interface UI {
 
     void invalidateView();
 
+    void reset();
+
 }
