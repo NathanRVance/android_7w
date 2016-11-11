@@ -56,7 +56,11 @@ public class UIFacade implements UI {
     @Override
     public void displayEndOfGame() {
         System.out.println("###### DISPLAYING END GAME ######");
-        fragmentQueue.add(new EndFragment());
+        Bundle bundle = new Bundle();
+        bundle.putInt(PLAYER_ID, 0);
+        EndFragment frag = new EndFragment();
+        frag.setArguments(bundle);
+        fragmentQueue.add(frag);
         if (needsNewView)
             invalidateView();
     }

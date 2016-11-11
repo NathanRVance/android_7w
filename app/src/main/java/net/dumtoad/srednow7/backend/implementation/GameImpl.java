@@ -73,7 +73,6 @@ public enum GameImpl implements Game {
     }
 
     private void startRound() {
-        saveGame();
         for (PlayerImpl player : players) {
             if (player.isPlayDiscard() && !discards.isEmpty()) {
                 doTurn(player, discards);
@@ -130,6 +129,7 @@ public enum GameImpl implements Game {
 
     @Override
     public synchronized void finishedTurn() {
+        saveGame();
         boolean done = true;
         for (PlayerImpl player : players) {
             done &= player.hasFinishedTurn();
@@ -220,16 +220,7 @@ public enum GameImpl implements Game {
             Bus.bus.getUI().invalidateView();
             Bus.bus.getUI().displaySetup();
         }
-        else if (allWondersSelected()) {
-            System.out.println("#################### All wonders are selected");
-            for(PlayerImpl player : players) {
-                if(!player.hasFinishedTurn()) {
-                    System.out.println("#################### Doing turn");
-                    CardList hand = (player.isPlayDiscard())? discards : player.getHand();
-                    doTurn(player, hand);
-                }
-            }
-        } else {
+        else if (! allWondersSelected()) {
             for (int playerID = 0; playerID < players.size(); playerID++) {
                 if(players.get(playerID).getWonder() == null) {
                     System.out.println("#################### Selecting wonder for player " + playerID);
@@ -238,6 +229,15 @@ public enum GameImpl implements Game {
                     } else {
                         Bus.bus.getUI().displayWonderSideSelect(playerID);
                     }
+                }
+            }
+        } else {
+            System.out.println("#################### Starting turns");
+            for(PlayerImpl player : players) {
+                if(!player.hasFinishedTurn()) {
+                    System.out.println("#################### Doing turn");
+                    CardList hand = (player.isPlayDiscard())? discards : player.getHand();
+                    doTurn(player, hand);
                 }
             }
         }
