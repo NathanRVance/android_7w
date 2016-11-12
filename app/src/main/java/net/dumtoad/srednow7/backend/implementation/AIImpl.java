@@ -3,21 +3,22 @@ package net.dumtoad.srednow7.backend.implementation;
 import android.support.annotation.NonNull;
 
 import net.dumtoad.srednow7.backend.AI;
-import net.dumtoad.srednow7.backend.Game;
 import net.dumtoad.srednow7.backend.Card;
 import net.dumtoad.srednow7.backend.CardList;
+import net.dumtoad.srednow7.backend.Game;
 import net.dumtoad.srednow7.backend.Player;
 import net.dumtoad.srednow7.backend.ResQuant;
 import net.dumtoad.srednow7.backend.TradeBackend;
 import net.dumtoad.srednow7.bus.Bus;
-import net.dumtoad.srednow7.ui.TradeUI;
 
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Random;
 
-class AIImpl implements AI, TradeUI {
+class AIImpl implements AI {
 
     private Player player;
     private boolean scientist = false;
@@ -58,7 +59,15 @@ class AIImpl implements AI, TradeUI {
     }
 
     private void doAction(CardAction cardAction) {
-        setTrades(cardAction, player.getTradeBackend());
+        //Set the trades
+        //System.out.printf("Setting trades for player %d, action %s, weight %d\n", Bus.bus.getGame().getPlayers().indexOf(player), cardAction.action, cardAction.weight);
+        player.getTradeBackend().clear();
+        for (Game.Direction direction : Game.Direction.values()) {
+            for (Card.Resource res : TradeBackend.tradeable) {
+                player.getTradeBackend().makeTrade(res, cardAction.trades.get(direction).get(res), direction);
+            }
+        }
+        //Do the action
         try {
             player.requestCardAction(cardAction.action, cardAction.card);
         } catch (Player.BadActionException e) {
@@ -67,19 +76,8 @@ class AIImpl implements AI, TradeUI {
         }
     }
 
-    private void setTrades(CardAction cardAction, TradeBackend tb) {
-        tb.clear();
-        for (Card.Resource res : cardAction.tradeEast.keySet()) {
-            tb.makeTrade(res, cardAction.tradeEast.get(res), Game.Direction.EAST);
-        }
-        for (Card.Resource res : cardAction.tradeWest.keySet()) {
-            tb.makeTrade(res, cardAction.tradeWest.get(res), Game.Direction.WEST);
-        }
-    }
-
     private CardAction calcCardAction(Card card, Player.CardAction action, boolean playDiscard) {
-        CardAction cardAction = new CardAction(card);
-        cardAction.action = action;
+        CardAction cardAction = new CardAction(card, action);
         switch (action) {
             case BUILD:
                 calcBuild(cardAction, player, playDiscard);
@@ -177,7 +175,7 @@ class AIImpl implements AI, TradeUI {
             }
         }
 
-        //Speshul card does speshul shtuffs...
+        //Speshul card does speshul shtuffsh...
         for (Card.Attribute attribute : Card.Attribute.values()) {
             if (cardAction.card.providesAttribute(attribute)) {
                 cardAction.weight += 5;
@@ -192,18 +190,18 @@ class AIImpl implements AI, TradeUI {
             cardAction.weight = -1;
         } else {
             cardAction.weight += Bus.bus.getGame().getEra() * -1 + 3;
-            CardAction ca = new CardAction(nextStage);
+            CardAction ca = new CardAction(nextStage, Player.CardAction.BUILD);
             calcBuild(ca, player, false);
             cardAction.weight += ca.weight;
 
             //Trade cost
             int cost = getTradeGoldCost(ca, player);
-            cardAction.tradeEast = ca.tradeEast;
-            cardAction.tradeWest = ca.tradeWest;
-            if (cost == -1 || cost + nextStage.getCosts().get(Card.Resource.GOLD) > player.getGold()) {
+            cardAction.trades = ca.trades;
+            if (cost == -1) {
                 cardAction.weight = -1;
-            } else
+            } else {
                 cardAction.weight -= cost / 2; //Not quite divided by 3; there's an opportunity cost to spending.
+            }
         }
     }
 
@@ -212,23 +210,93 @@ class AIImpl implements AI, TradeUI {
     }
 
     private void addNextEffect(CardAction cardAction, Player player) {
-        CardAction ca = new CardAction(cardAction.card);
+        CardAction ca = new CardAction(cardAction.card, Player.CardAction.BUILD);
         Player p = Bus.bus.getGame().getPlayerDirection(player, Bus.bus.getGame().getPassingDirection());
         calcBuild(ca, p, false);
         //Perhaps we'll play a card just to spite our opponents!
         cardAction.weight += ca.weight / 2;
     }
 
+    //Simultaneously sets cardAction's trades field to the optimal solution
     private int getTradeGoldCost(CardAction cardAction, Player player) {
+        //Make a new one because we don't want to mess up another player's trades
         TradeBackend tb = new TradeBackendImpl(player);
         if (tb.canAfford(cardAction.card)) return 0;
-        //TODO: Finish this
-        return -1;
+
+        //Expensive, so cache this
+        Map<Game.Direction, ResQuant> prices = new HashMap<>();
+        for (Game.Direction direction : Game.Direction.values()) {
+            prices.put(direction, tb.prices(direction));
+        }
+
+        //Favor the player who's currently losing...
+        Game.Direction favor = (Bus.bus.getGame().getPlayerDirection(player, Game.Direction.EAST).getScore().getTotalVPs()
+                < Bus.bus.getGame().getPlayerDirection(player, Game.Direction.WEST).getScore().getTotalVPs()) ?
+                Game.Direction.EAST : Game.Direction.WEST;
+        //...and set up a direction array so that we can quickly go through them in the right order
+        Game.Direction[] directions = new Game.Direction[]{favor, favor == Game.Direction.EAST ? Game.Direction.WEST : Game.Direction.EAST};
+
+        Map<Game.Direction, ResQuant> bestTrade = new HashMap<>();
+        bestTrade.put(Game.Direction.EAST, new ResQuantImpl());
+        bestTrade.put(Game.Direction.WEST, new ResQuantImpl());
+
+        for(Game.Direction direction : Game.Direction.values()) {
+            for(Card.Resource res : Card.Resource.values()) {
+                cardAction.trades.get(direction).put(res, 0);
+            }
+        }
+
+        int cost = optimizeCostsRecurse(cardAction, tb, directions, prices, bestTrade, 1000);
+
+        if (cost > player.getGold()) return -1;
+
+        cardAction.trades = bestTrade;
+        return cost;
     }
 
-    @Override
-    public void update(int goldAvailable, ResQuant resourcesForSale, ResQuant resourcesBought, ResQuant prices) {
+    private int optimizeCostsRecurse(CardAction cardAction, TradeBackend tb, Game.Direction[] directions,
+                                     Map<Game.Direction, ResQuant> prices, Map<Game.Direction, ResQuant> bestTrade, int bestCost) {
+        if (tb.canAfford(cardAction.card)) {
+            if (tb.overpaid(cardAction.card)) return bestCost;
+            int currentCost = tb.getGoldSpent(Game.Direction.EAST) + tb.getGoldSpent(Game.Direction.WEST);
+            if(currentCost < bestCost) {
+                bestCost = currentCost;
+                for (Game.Direction d : cardAction.trades.keySet()) {
+                    for (Card.Resource r : TradeBackend.tradeable) {
+                        bestTrade.get(d).put(r, cardAction.trades.get(d).get(r));
+                    }
+                }
+            }
+            return bestCost;
+        }
+        for (Card.Resource res : TradeBackend.tradeable) {
+            int resBought = tb.resourcesBought(Game.Direction.EAST).get(res) + tb.resourcesBought(Game.Direction.WEST).get(res);
+            if (cardAction.card.getCosts().get(res) > resBought) { //Only go on if we haven't purchased card's cost of this already
+                //The order we'll check to buy in based on price then on who's winning
+                Game.Direction[] buyOrder;
+                if (prices.get(Game.Direction.EAST).get(res).equals(prices.get(Game.Direction.WEST).get(res)))
+                    buyOrder = directions;
+                else if (prices.get(Game.Direction.EAST).get(res) < prices.get(Game.Direction.WEST).get(res))
+                    buyOrder = new Game.Direction[]{Game.Direction.EAST, Game.Direction.WEST};
+                else
+                    buyOrder = new Game.Direction[]{Game.Direction.WEST, Game.Direction.EAST};
 
+                for (Game.Direction direction : buyOrder) {
+                    if (tb.resourcesForSale(direction).get(res) > 0 && tb.goldAvailable() >= prices.get(direction).get(res)) {
+                        cardAction.trades.get(direction).put(res, cardAction.trades.get(direction).get(res) + 1);
+                        tb.makeTrade(res, 1, direction);
+                        int cost = optimizeCostsRecurse(cardAction, tb, directions, prices, bestTrade, bestCost);
+                        if (cost < bestCost) {
+                            bestCost = cost;
+                        }
+                        //Undo what we just did so we can try something else
+                        cardAction.trades.get(direction).put(res, cardAction.trades.get(direction).get(res) - 1);
+                        tb.makeTrade(res, -1, direction);
+                    }
+                }
+            }
+        }
+        return bestCost;
     }
 
     @Override
@@ -243,14 +311,20 @@ class AIImpl implements AI, TradeUI {
 
     private class CardAction implements Comparable<CardAction> {
 
-        public Card card;
+        Card card;
         int weight;
         Player.CardAction action;
-        ResQuant tradeEast = new ResQuantImpl();
-        ResQuant tradeWest = new ResQuantImpl();
 
-        CardAction(Card card) {
+        private Map<Game.Direction, ResQuant> trades = new HashMap<>();
+
+        {
+            trades.put(Game.Direction.EAST, new ResQuantImpl());
+            trades.put(Game.Direction.WEST, new ResQuantImpl());
+        }
+
+        CardAction(Card card, Player.CardAction action) {
             this.card = card;
+            this.action = action;
         }
 
         @Override

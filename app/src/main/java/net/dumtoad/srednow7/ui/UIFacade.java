@@ -23,7 +23,7 @@ public class UIFacade implements UI {
 
     @Override
     public void displaySetup() {
-        System.out.println("###### DISPLAYING SETUP ######");
+        //System.out.println("###### DISPLAYING SETUP ######");
         fragmentQueue.add(new SetupFragment());
         if (needsNewView)
             invalidateView();
@@ -31,7 +31,7 @@ public class UIFacade implements UI {
 
     @Override
     public void displayWonderSideSelect(int playerID) {
-        System.out.println("###### DISPLAYING WONDER SIDE SELECT ######");
+        //System.out.println("###### DISPLAYING WONDER SIDE SELECT ######");
         Bundle bundle = new Bundle();
         bundle.putInt(PLAYER_ID, playerID);
         WonderSelectFragment frag = new WonderSelectFragment();
@@ -43,7 +43,7 @@ public class UIFacade implements UI {
 
     @Override
     public void displayTurn(int playerID) {
-        System.out.println("###### DISPLAYING TURN ######");
+        //System.out.println("###### DISPLAYING TURN ######");
         Bundle bundle = new Bundle();
         bundle.putInt(PLAYER_ID, playerID);
         GameFragment frag = new GameFragment();
@@ -55,7 +55,7 @@ public class UIFacade implements UI {
 
     @Override
     public void displayEndOfGame() {
-        System.out.println("###### DISPLAYING END GAME ######");
+        //System.out.println("###### DISPLAYING END GAME ######");
         Bundle bundle = new Bundle();
         bundle.putInt(PLAYER_ID, 0);
         EndFragment frag = new EndFragment();

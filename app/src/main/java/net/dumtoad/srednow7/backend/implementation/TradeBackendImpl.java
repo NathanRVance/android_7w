@@ -1,12 +1,11 @@
 package net.dumtoad.srednow7.backend.implementation;
 
-import net.dumtoad.srednow7.backend.Game;
 import net.dumtoad.srednow7.backend.Card;
+import net.dumtoad.srednow7.backend.Game;
 import net.dumtoad.srednow7.backend.Player;
 import net.dumtoad.srednow7.backend.ResQuant;
 import net.dumtoad.srednow7.backend.TradeBackend;
 import net.dumtoad.srednow7.bus.Bus;
-import net.dumtoad.srednow7.ui.TradeUI;
 
 import java.io.Serializable;
 import java.util.HashMap;
@@ -33,20 +32,45 @@ class TradeBackendImpl implements TradeBackend {
     }
 
     @Override
-    public void refresh(TradeUI tradeUI, Game.Direction direction) {
-        ResQuant numAvailable = numAvailable(Bus.bus.getGame().getPlayerDirection(player, direction), trades.get(direction), false);
+    public int goldAvailable() {
+        return gold;
+    }
+
+    @Override
+    public ResQuant resourcesForSale(Game.Direction direction) {
+        return numAvailable(Bus.bus.getGame().getPlayerDirection(player, direction), trades.get(direction), false);
+    }
+
+    @Override
+    public ResQuant resourcesBought(Game.Direction direction) {
+        return trades.get(direction);
+    }
+
+    @Override
+    public ResQuant prices(Game.Direction direction) {
         ResQuant prices = new ResQuantImpl();
         for (Card.Resource resource : tradeable) {
             prices.put(resource, getPrice(resource, direction));
         }
-        tradeUI.update(gold, numAvailable, trades.get(direction), prices);
+        return prices;
+    }
+
+    private int getPrice(Card.Resource resource, Game.Direction direction) {
+        Card.TradeType type =
+                (resource == Card.Resource.CLOTH || resource == Card.Resource.GLASS || resource == Card.Resource.PAPER) ?
+                        Card.TradeType.industry : Card.TradeType.resource;
+
+        for (Card card : player.getPlayedCards()) {
+            if (card.providesTrade(direction, type)) return 1;
+        }
+        return 2;
     }
 
     @Override
     public ResQuant getLeftoverResources(Card card) {
         ResQuant cost = card.getCosts();
         cost.put(Card.Resource.GOLD, 0); //Deal with gold elsewhere
-        for(ResQuant trade : trades.values()) {
+        for (ResQuant trade : trades.values()) {
             cost.subtractResources(trade);
         }
         return numAvailable(player, cost, true);
@@ -55,8 +79,8 @@ class TradeBackendImpl implements TradeBackend {
     @Override
     public boolean hasTrade() {
         boolean hasTrade = false;
-        for(ResQuant trade : trades.values()) {
-            hasTrade |= ! (trade.allZeroOrBelow() && trade.allZeroOrAbove());
+        for (ResQuant trade : trades.values()) {
+            hasTrade |= !(trade.allZeroOrBelow() && trade.allZeroOrAbove());
         }
         return hasTrade;
     }
@@ -64,9 +88,9 @@ class TradeBackendImpl implements TradeBackend {
     @Override
     public boolean overpaid(Card card) {
         ResQuant leftovers = getLeftoverResources(card);
-        for(ResQuant trade : trades.values()) {
-            for(Card.Resource resource : tradeable) {
-                if(leftovers.get(resource) > 0 && trade.get(resource) > 0)
+        for (ResQuant trade : trades.values()) {
+            for (Card.Resource resource : tradeable) {
+                if (leftovers.get(resource) > 0 && trade.get(resource) > 0)
                     return true;
             }
         }
@@ -81,7 +105,7 @@ class TradeBackendImpl implements TradeBackend {
     @Override
     public int getGoldSpent(Game.Direction direction) {
         int amount = 0;
-        for(Card.Resource res : tradeable) {
+        for (Card.Resource res : tradeable) {
             amount += trades.get(direction).get(res) * getPrice(res, direction);
         }
         return amount;
@@ -93,17 +117,6 @@ class TradeBackendImpl implements TradeBackend {
         trades = new HashMap<>();
         trades.put(Game.Direction.WEST, new ResQuantImpl());
         trades.put(Game.Direction.EAST, new ResQuantImpl());
-    }
-
-    private int getPrice(Card.Resource resource, Game.Direction direction) {
-        Card.TradeType type =
-                (resource == Card.Resource.CLOTH || resource == Card.Resource.GLASS || resource == Card.Resource.PAPER) ?
-                        Card.TradeType.industry : Card.TradeType.resource;
-
-        for (Card card : player.getPlayedCards()) {
-            if (card.providesTrade(direction, type)) return 1;
-        }
-        return 2;
     }
 
     //Status is current trade status, and is negative towards player.

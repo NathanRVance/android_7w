@@ -1,9 +1,9 @@
 package net.dumtoad.srednow7.backend.implementation;
 
-import net.dumtoad.srednow7.backend.Game;
 import net.dumtoad.srednow7.backend.Card;
 import net.dumtoad.srednow7.backend.CardCreator;
 import net.dumtoad.srednow7.backend.CardList;
+import net.dumtoad.srednow7.backend.Game;
 import net.dumtoad.srednow7.backend.Player;
 import net.dumtoad.srednow7.backend.Savable;
 import net.dumtoad.srednow7.backend.Setup;
@@ -122,6 +122,10 @@ public enum GameImpl implements Game {
             CardList tmp = hands.remove(hands.size() - 1);
             hands.add(0, tmp);
         }
+        //System.out.printf("Doing turns for era %d, round %d\n", era, round);
+        for (PlayerImpl player : players) {
+            player.startTurn();
+        }
         for (PlayerImpl player : players) {
             doTurn(player, hands.get(players.indexOf(player)));
         }
@@ -151,6 +155,7 @@ public enum GameImpl implements Game {
                 player.getAI().doTurn();
             });
             thread.start();
+            //player.getAI().doTurn();
         } else {
             Bus.bus.getUI().displayTurn(playerID);
         }
@@ -194,6 +199,7 @@ public enum GameImpl implements Game {
     @Override
     public void startNewGame() {
         SaveUtil.deleteSave();
+        Bus.bus.getUI().invalidateView();
         Bus.bus.getUI().displaySetup();
     }
 
@@ -214,16 +220,15 @@ public enum GameImpl implements Game {
     }
 
     private void continueGame() {
-        System.out.println("#################### Continuing game");
+        //System.out.println("#################### Continuing game");
         if (players.isEmpty()) {
-            System.out.println("#################### Setting up");
+            //System.out.println("#################### Setting up");
             Bus.bus.getUI().invalidateView();
             Bus.bus.getUI().displaySetup();
-        }
-        else if (! allWondersSelected()) {
+        } else if (!allWondersSelected()) {
             for (int playerID = 0; playerID < players.size(); playerID++) {
-                if(players.get(playerID).getWonder() == null) {
-                    System.out.println("#################### Selecting wonder for player " + playerID);
+                if (players.get(playerID).getWonder() == null) {
+                    //System.out.println("#################### Selecting wonder for player " + playerID);
                     if (players.get(playerID).isAI()) {
                         players.get(playerID).getAI().selectWonderSide(playerID);
                     } else {
@@ -232,11 +237,11 @@ public enum GameImpl implements Game {
                 }
             }
         } else {
-            System.out.println("#################### Starting turns");
-            for(PlayerImpl player : players) {
-                if(!player.hasFinishedTurn()) {
-                    System.out.println("#################### Doing turn");
-                    CardList hand = (player.isPlayDiscard())? discards : player.getHand();
+            //System.out.println("#################### Starting turns");
+            for (PlayerImpl player : players) {
+                if (!player.hasFinishedTurn()) {
+                    //System.out.println("#################### Doing turn");
+                    CardList hand = (player.isPlayDiscard()) ? discards : player.getHand();
                     doTurn(player, hand);
                 }
             }
@@ -294,14 +299,14 @@ public enum GameImpl implements Game {
         players = (List<PlayerImpl>) restoreArray((Serializable[]) in[1], PlayerImpl.class);
         //noinspection unchecked
         setups = (List<Setup>) restoreArray((Serializable[]) in[2], SetupImpl.class);
-        for(int i = 0; i < players.size(); i++) {
-            if(setups.get(i).isFinished()) {
+        for (int i = 0; i < players.size(); i++) {
+            if (setups.get(i).isFinished()) {
                 players.get(i).setWonder(setups.get(i).getWonder());
             }
         }
         //noinspection unchecked
         hands = (List<CardList>) restoreArray((Serializable[]) in[3], CardListImpl.class);
-        for(int i = 0; i < hands.size(); i++) {
+        for (int i = 0; i < hands.size(); i++) {
             players.get(i).setHand(hands.get(i));
         }
         era = (int) in[4];

@@ -15,12 +15,11 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import net.dumtoad.srednow7.R;
-import net.dumtoad.srednow7.backend.Game;
 import net.dumtoad.srednow7.backend.Card;
+import net.dumtoad.srednow7.backend.Game;
 import net.dumtoad.srednow7.backend.Player;
 import net.dumtoad.srednow7.backend.ResQuant;
 import net.dumtoad.srednow7.bus.Bus;
-import net.dumtoad.srednow7.ui.TradeUI;
 import net.dumtoad.srednow7.ui.UIUtil;
 import net.dumtoad.srednow7.ui.dialog.HelpDialog;
 
@@ -28,7 +27,7 @@ import java.util.HashMap;
 
 import static net.dumtoad.srednow7.backend.TradeBackend.tradeable;
 
-public class TradeView extends GameView implements TradeUI {
+public class TradeView extends GameView {
 
     private HashMap<Card.Resource, LinearLayout> views;
     private TextView goldStatus;
@@ -69,22 +68,25 @@ public class TradeView extends GameView implements TradeUI {
             Button add = (Button) ll.findViewById(R.id.add);
             add.setOnClickListener(v -> {
                 playerTurn.getTradeBackend().makeTrade(res, 1, directionViewing);
-                playerTurn.getTradeBackend().refresh(TradeView.this, directionViewing);
+                update(directionViewing);
             });
             Button subtract = (Button) ll.findViewById(R.id.subtract);
             subtract.setOnClickListener(v -> {
                 playerTurn.getTradeBackend().makeTrade(res, -1, directionViewing);
-                playerTurn.getTradeBackend().refresh(TradeView.this, directionViewing);
+                update(directionViewing);
             });
             views.put(res, ll);
             content.addView(ll);
         }
 
-        playerTurn.getTradeBackend().refresh(this, directionViewing);
+        update(directionViewing);
     }
 
-    @Override
-    public void update(int goldAvailable, ResQuant resourcesForSale, ResQuant resourcesBought, ResQuant prices) {
+    private void update(Game.Direction direction) {
+        int goldAvailable = playerTurn.getTradeBackend().goldAvailable();
+        ResQuant resourcesForSale = playerTurn.getTradeBackend().resourcesForSale(direction);
+        ResQuant resourcesBought = playerTurn.getTradeBackend().resourcesBought(direction);
+        ResQuant prices = playerTurn.getTradeBackend().prices(direction);
         SpannableStringBuilder sb = new SpannableStringBuilder();
         UIUtil.appendSb(sb, "Gold", new ForegroundColorSpan(UIUtil.getColorId(Card.Resource.GOLD.toString())));
         sb.append(" available: ").append(String.valueOf(goldAvailable));
