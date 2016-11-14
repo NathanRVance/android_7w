@@ -5,22 +5,30 @@ import net.dumtoad.srednow7.backend.Game;
 import net.dumtoad.srednow7.backend.Player;
 import net.dumtoad.srednow7.backend.ResQuant;
 import net.dumtoad.srednow7.backend.TradeBackend;
-import net.dumtoad.srednow7.bus.Bus;
 
-import java.io.Serializable;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Stack;
 
 class TradeBackendImpl implements TradeBackend {
 
-    private Player player;
+    private static final long serialVersionUID = 8687384948278605407L;
+    private int playerNum;
     private int gold;
     private Map<Game.Direction, ResQuant> trades;
+    //Cache prices so that they only have to be calculated once
+    private Map<Game.Direction, ResQuant> prices;
 
     TradeBackendImpl(Player player) {
-        this.player = player;
+        this.playerNum = GameImpl.INSTANCE.getPlayers().indexOf(player);
         clear();
+    }
+
+    private Player getPlayer() {
+        return GameImpl.INSTANCE.getPlayers().get(playerNum);
     }
 
     @Override
@@ -38,7 +46,7 @@ class TradeBackendImpl implements TradeBackend {
 
     @Override
     public ResQuant resourcesForSale(Game.Direction direction) {
-        return numAvailable(Bus.bus.getGame().getPlayerDirection(player, direction), trades.get(direction), false);
+        return numAvailable(GameImpl.INSTANCE.getPlayerDirection(getPlayer(), direction), trades.get(direction), false);
     }
 
     @Override
@@ -48,11 +56,7 @@ class TradeBackendImpl implements TradeBackend {
 
     @Override
     public ResQuant prices(Game.Direction direction) {
-        ResQuant prices = new ResQuantImpl();
-        for (Card.Resource resource : tradeable) {
-            prices.put(resource, getPrice(resource, direction));
-        }
-        return prices;
+        return prices.get(direction);
     }
 
     private int getPrice(Card.Resource resource, Game.Direction direction) {
@@ -60,7 +64,7 @@ class TradeBackendImpl implements TradeBackend {
                 (resource == Card.Resource.CLOTH || resource == Card.Resource.GLASS || resource == Card.Resource.PAPER) ?
                         Card.TradeType.industry : Card.TradeType.resource;
 
-        for (Card card : player.getPlayedCards()) {
+        for (Card card : getPlayer().getPlayedCards()) {
             if (card.providesTrade(direction, type)) return 1;
         }
         return 2;
@@ -73,7 +77,7 @@ class TradeBackendImpl implements TradeBackend {
         for (ResQuant trade : trades.values()) {
             cost.subtractResources(trade);
         }
-        return numAvailable(player, cost, true);
+        return numAvailable(getPlayer(), cost, true);
     }
 
     @Override
@@ -113,10 +117,18 @@ class TradeBackendImpl implements TradeBackend {
 
     @Override
     public void clear() {
-        gold = player.getGold();
+        gold = getPlayer().getGold();
         trades = new HashMap<>();
         trades.put(Game.Direction.WEST, new ResQuantImpl());
         trades.put(Game.Direction.EAST, new ResQuantImpl());
+
+        prices = new HashMap<>();
+        for (Game.Direction direction : Game.Direction.values()) {
+            prices.put(direction, new ResQuantImpl());
+            for (Card.Resource resource : tradeable) {
+                prices.get(direction).put(resource, getPrice(resource, direction));
+            }
+        }
     }
 
     //Status is current trade status, and is negative towards player.
@@ -180,28 +192,11 @@ class TradeBackendImpl implements TradeBackend {
         }
     }
 
-    @Override
-    public Serializable getContents() {
-        Serializable[] contents = new Serializable[2];
-        contents[0] = trades.get(Game.Direction.EAST).getContents();
-        contents[1] = trades.get(Game.Direction.WEST).getContents();
-        return contents;
+    private void writeObject(ObjectOutputStream s) throws IOException {
+        s.defaultWriteObject();
     }
 
-    @Override
-    public void restoreContents(Serializable contents) throws Exception {
-        Serializable[] s = (Serializable[]) contents;
-        trades.put(Game.Direction.EAST, new ResQuantImpl());
-        trades.get(Game.Direction.EAST).restoreContents(s[0]);
-
-        trades.put(Game.Direction.WEST, new ResQuantImpl());
-        trades.get(Game.Direction.WEST).restoreContents(s[1]);
-
-        gold = player.getGold();
-        for (Game.Direction direction : trades.keySet()) {
-            for (Card.Resource resource : tradeable) {
-                gold -= getPrice(resource, direction) * trades.get(direction).get(resource);
-            }
-        }
+    private void readObject(ObjectInputStream s) throws IOException, ClassNotFoundException {
+        s.defaultReadObject();
     }
 }

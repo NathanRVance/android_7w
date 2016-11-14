@@ -5,7 +5,6 @@ import net.dumtoad.srednow7.backend.CardCreator;
 import net.dumtoad.srednow7.backend.CardList;
 import net.dumtoad.srednow7.backend.Game;
 import net.dumtoad.srednow7.backend.Player;
-import net.dumtoad.srednow7.backend.Savable;
 import net.dumtoad.srednow7.backend.Setup;
 import net.dumtoad.srednow7.backend.Wonder;
 import net.dumtoad.srednow7.backend.util.SaveUtil;
@@ -13,6 +12,7 @@ import net.dumtoad.srednow7.bus.Bus;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 
@@ -172,7 +172,7 @@ public enum GameImpl implements Game {
     }
 
     @Override
-    public Player getPlayerDirection(Player player, Direction direction) {
+    public PlayerImpl getPlayerDirection(Player player, Direction direction) {
         //This is perfectly valid since there's only one type of player bouncing around
         @SuppressWarnings("SuspiciousMethodCalls") int index = players.indexOf(player);
         index = (direction == Direction.WEST) ? index - 1 : index + 1;
@@ -269,59 +269,35 @@ public enum GameImpl implements Game {
         return cardCreator;
     }
 
-    @Override
     public Serializable getContents() {
         Serializable[] contents = new Serializable[8];
-        if (cardCreator != null) contents[0] = cardCreator.getContents();
-        contents[1] = saveList(players);
-        contents[2] = saveList(setups);
-        contents[3] = saveList(hands);
+        contents[0] = cardCreator;
+        contents[1] = players.toArray(new PlayerImpl[players.size()]);
+        contents[2] = setups.toArray(new Setup[players.size()]);
+        contents[3] = hands.toArray(new CardList[hands.size()]);
         contents[4] = era;
         contents[5] = round;
-        contents[6] = discards.getContents();
+        contents[6] = discards;
         return contents;
     }
 
-    private Serializable[] saveList(List<? extends Savable> savables) {
-        Serializable[] ret = new Serializable[savables.size()];
-        for (int i = 0; i < ret.length; i++) {
-            ret[i] = savables.get(i).getContents();
-        }
-        return ret;
-    }
-
-    @Override
     public void restoreContents(Serializable contents) throws Exception {
         Serializable[] in = (Serializable[]) contents;
-        cardCreator = new CardCreatorImpl(players.size());
-        cardCreator.restoreContents(in[0]);
-        //noinspection unchecked
-        players = (List<PlayerImpl>) restoreArray((Serializable[]) in[1], PlayerImpl.class);
-        //noinspection unchecked
-        setups = (List<Setup>) restoreArray((Serializable[]) in[2], SetupImpl.class);
+        cardCreator = (CardCreator) in[0];
+        players = new ArrayList<>(Arrays.asList((PlayerImpl[]) in[1]));
+        setups = new ArrayList<>(Arrays.asList((Setup[]) in[2]));
         for (int i = 0; i < players.size(); i++) {
             if (setups.get(i).isFinished()) {
                 players.get(i).setWonder(setups.get(i).getWonder());
             }
         }
-        //noinspection unchecked
-        hands = (List<CardList>) restoreArray((Serializable[]) in[3], CardListImpl.class);
+        hands = new ArrayList<>(Arrays.asList((CardList[]) in[3]));
         for (int i = 0; i < hands.size(); i++) {
             players.get(i).setHand(hands.get(i));
         }
         era = (int) in[4];
         round = (int) in[5];
-        discards.restoreContents(in[6]);
+        discards = (CardList) in[6];
         continueGame();
-    }
-
-    private List<? extends Savable> restoreArray(Serializable[] contents, Class<? extends Savable> type) throws Exception {
-        List<Savable> ret = new ArrayList<>();
-        for (Serializable content : contents) {
-            Savable s = type.newInstance();
-            s.restoreContents(content);
-            ret.add(s);
-        }
-        return ret;
     }
 }

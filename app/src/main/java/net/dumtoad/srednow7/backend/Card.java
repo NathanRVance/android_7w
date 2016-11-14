@@ -69,7 +69,7 @@ public interface Card {
     }
 
     interface Builder {
-        Builder setMessage(CharSequence message);
+        Builder setMessage(String message);
 
         Builder setCost(Resource res, int num);
 

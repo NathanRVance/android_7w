@@ -1,42 +1,39 @@
 package net.dumtoad.srednow7.backend.implementation;
 
 import net.dumtoad.srednow7.backend.AI;
-import net.dumtoad.srednow7.backend.Game;
 import net.dumtoad.srednow7.backend.Card;
 import net.dumtoad.srednow7.backend.CardList;
+import net.dumtoad.srednow7.backend.Game;
 import net.dumtoad.srednow7.backend.Player;
-import net.dumtoad.srednow7.backend.Savable;
 import net.dumtoad.srednow7.backend.Score;
 import net.dumtoad.srednow7.backend.TradeBackend;
 import net.dumtoad.srednow7.backend.Wonder;
-import net.dumtoad.srednow7.bus.Bus;
 
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.io.Serializable;
 
 class PlayerImpl implements Player {
 
-    private CharSequence name;
+    private static final long serialVersionUID = 7686145239817565666L;
+    private String name;
     private boolean isAI;
-    private AI ai;
-    private Wonder wonder;
+    private transient AI ai;
+    private transient Wonder wonder;
     private CardList played = new CardListImpl();
-    private Score score = new ScoreImpl(this);
+    private transient ScoreImpl score = new ScoreImpl(this);
     private int gold = 3;
     private PlayBuffer playBuffer = new PlayBuffer();
-    private boolean justDiscarded = false;
     private boolean playedFree = false;
     private boolean hasFinishedTurn = false;
     private TradeBackend tradeBackend;
     private CardList hand;
 
     PlayerImpl(CharSequence name, boolean isAI) {
-        this.name = name;
+        this.name = name.toString();
         this.isAI = isAI;
         if (isAI) ai = new AIImpl(this);
-        tradeBackend = new TradeBackendImpl(this);
-    }
-
-    PlayerImpl() {
     }
 
     @Override
@@ -84,7 +81,7 @@ class PlayerImpl implements Player {
                 } else if (tradeBackend.canAfford(card)) {
                     setToBeBuilt(card, tradeBackend.getGoldSpent(Game.Direction.EAST),
                             tradeBackend.getGoldSpent(Game.Direction.WEST));
-                } else if ((canPlay1Free() && !playedFreeThisEra())) {
+                } else if ((canPlay1Free() && !playedFree)) {
                     setPlayedFree(true);
                     setToBeBuilt(card, 0, 0);
                 } else {
@@ -96,7 +93,7 @@ class PlayerImpl implements Player {
                 if (tradeBackend.hasTrade()) {
                     throw new BadActionException("Don't trade when discarding");
                 }
-                Bus.bus.getGame().discard(card);
+                GameImpl.INSTANCE.discard(card);
                 addGoldBuffer(3);
                 break;
             case WONDER:
@@ -116,7 +113,7 @@ class PlayerImpl implements Player {
         //If we haven't thrown an exception by now, the card has been played and we can remove it from the hand
         hand.remove(card);
         hasFinishedTurn = true;
-        Bus.bus.getGame().finishedTurn();
+        GameImpl.INSTANCE.finishedTurn();
     }
 
     @Override
@@ -146,7 +143,7 @@ class PlayerImpl implements Player {
             throw new BadActionException("Don't trade, you can build for free");
         } else if (tradeBackend.overpaid(card)) {
             throw new BadActionException("Overpaid, undo some trades");
-        } else if (!(hasCoupon || tradeBackend.canAfford(card) || (canPlay1Free() && !playedFreeThisEra()))) {
+        } else if (!(hasCoupon || tradeBackend.canAfford(card) || (canPlay1Free() && !playedFree))) {
             throw new BadActionException("Insufficient resources");
         }
     }
@@ -175,11 +172,6 @@ class PlayerImpl implements Player {
                 return true;
         }
         return false;
-    }
-
-    @Override
-    public boolean playedFreeThisEra() {
-        return playedFree;
     }
 
     void setPlayedFree(boolean playedFree) {
@@ -226,10 +218,10 @@ class PlayerImpl implements Player {
 
     void resolveBuild() {
         if (playBuffer.card != null) {
-            ((PlayerImpl) Bus.bus.getGame().getPlayerDirection(this, Game.Direction.EAST)).addGold(playBuffer.goldEast);
+            GameImpl.INSTANCE.getPlayerDirection(this, Game.Direction.EAST).addGold(playBuffer.goldEast);
             addGold(playBuffer.goldEast * -1);
 
-            ((PlayerImpl) Bus.bus.getGame().getPlayerDirection(this, Game.Direction.WEST)).addGold(playBuffer.goldWest);
+            GameImpl.INSTANCE.getPlayerDirection(this, Game.Direction.WEST).addGold(playBuffer.goldWest);
             addGold(playBuffer.goldWest * -1);
 
             played.add(playBuffer.card);
@@ -238,57 +230,33 @@ class PlayerImpl implements Player {
         }
         addGold(playBuffer.goldSelf);
         playBuffer.clear();
-        tradeBackend = new TradeBackendImpl(this);
     }
 
     void startTurn() {
         hasFinishedTurn = false;
+        tradeBackend = new TradeBackendImpl(this);
     }
 
     boolean hasFinishedTurn() {
         return hasFinishedTurn;
     }
 
-    @Override
-    public Serializable getContents() {
-        Serializable[] contents = new Serializable[11];
-        contents[0] = played.getContents();
-        contents[1] = score.getContents();
-        contents[2] = gold;
-        contents[3] = isAI();
-        if (isAI()) contents[4] = getAI().getContents();
-        contents[5] = name.toString();
-        contents[6] = playBuffer.getContents();
-        contents[7] = justDiscarded;
-        contents[8] = playedFree;
-        contents[9] = hasFinishedTurn;
-        contents[10] = tradeBackend.getContents();
-        return contents;
+    private void writeObject(ObjectOutputStream s) throws IOException {
+        s.defaultWriteObject();
+        s.writeInt(score.getMilitaryLosses());
+        s.writeObject(score.getMilitaryVictories());
     }
 
-    @Override
-    public void restoreContents(Serializable contents) throws Exception {
-        Serializable[] in = (Serializable[]) contents;
-        played.restoreContents(in[0]);
-        score.restoreContents(in[1]);
-        gold = (int) in[2];
-        isAI = (boolean) in[3];
-        if (isAI) {
-            ai = new AIImpl(this);
-            ai.restoreContents(in[4]);
-        }
-        name = (String) in[5];
-        playBuffer.restoreContents(in[6]);
-        justDiscarded = (boolean) in[7];
-        playedFree = (boolean) in[8];
-        hasFinishedTurn = (boolean) in[9];
-        tradeBackend = new TradeBackendImpl(this);
-        tradeBackend.restoreContents(in[10]);
+    private void readObject(ObjectInputStream s) throws IOException, ClassNotFoundException {
+        s.defaultReadObject();
+        ai = new AIImpl(this);
+        score = new ScoreImpl(this, s.readInt(), (int[]) s.readObject());
     }
 
-    private class PlayBuffer implements Savable {
+    private static class PlayBuffer implements Serializable {
 
-        Card card;
+        private static final long serialVersionUID = 3309052048986578694L;
+        transient Card card;
         int goldEast;
         int goldWest;
         int goldSelf;
@@ -300,29 +268,15 @@ class PlayerImpl implements Player {
             goldSelf = 0;
         }
 
-        @Override
-        public Serializable getContents() {
-            Serializable[] contents = new Serializable[5];
-            boolean hasBuffer = card != null;
-            contents[0] = hasBuffer;
-            if(hasBuffer) {
-                contents[1] = card.getEnum();
-            }
-            contents[2] = goldEast;
-            contents[3] = goldWest;
-            contents[4] = goldSelf;
-            return contents;
+        private void writeObject(ObjectOutputStream s) throws IOException {
+            s.defaultWriteObject();
+            Enum name = (card == null) ? null : card.getEnum();
+            s.writeObject(name);
         }
 
-        @Override
-        public void restoreContents(Serializable contents) throws Exception {
-            Serializable[] in = (Serializable[]) contents;
-            if((boolean) in[0]) {
-                card = Bus.bus.getGame().getCardCreator().getAllCards().get((Enum) in[1]);
-            }
-            goldEast = (int) in[2];
-            goldWest = (int) in[3];
-            goldSelf = (int) in[4];
+        private void readObject(ObjectInputStream s) throws IOException, ClassNotFoundException {
+            s.defaultReadObject();
+            card = GameImpl.INSTANCE.getCardCreator().getAllCards().get((Enum) s.readObject());
         }
     }
 }

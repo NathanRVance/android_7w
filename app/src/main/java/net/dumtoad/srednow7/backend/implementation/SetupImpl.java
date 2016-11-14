@@ -3,12 +3,15 @@ package net.dumtoad.srednow7.backend.implementation;
 import net.dumtoad.srednow7.backend.Setup;
 import net.dumtoad.srednow7.backend.Wonder;
 
-import java.io.Serializable;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 
 class SetupImpl implements Setup {
 
+    private static final long serialVersionUID = -7585646360586715796L;
     private int playerID;
-    private Wonder[] wonderSides;
+    private transient Wonder[] wonderSides;
     private int side = 0;
     private boolean finished = false;
 
@@ -16,8 +19,6 @@ class SetupImpl implements Setup {
         this.playerID = playerID;
         this.wonderSides = wonderSides;
     }
-
-    SetupImpl() {}
 
     @Override
     public Wonder getWonder() {
@@ -40,7 +41,23 @@ class SetupImpl implements Setup {
         return finished;
     }
 
-    @Override
+    private void writeObject(ObjectOutputStream s) throws IOException {
+        s.defaultWriteObject();
+        s.writeObject(wonderSides[side].getEnum());
+    }
+
+    private void readObject(ObjectInputStream s) throws IOException, ClassNotFoundException {
+        s.defaultReadObject();
+        Enum name = (Enum) s.readObject();
+        for (Wonder[] wonder : GameImpl.INSTANCE.getCardCreator().getWonders()) {
+            if (wonder[0].getEnum() == name) {
+                wonderSides = wonder;
+                break;
+            }
+        }
+    }
+
+    /*@Override
     public Serializable getContents() {
         Serializable[] contents = new Serializable[4];
         contents[0] = wonderSides[side].getEnum();
@@ -62,5 +79,5 @@ class SetupImpl implements Setup {
         side = (int) in[1];
         playerID = (int) in[2];
         finished = (boolean) in[3];
-    }
+    }*/
 }

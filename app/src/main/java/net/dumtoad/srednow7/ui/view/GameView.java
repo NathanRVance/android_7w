@@ -11,7 +11,6 @@ import android.widget.TextView;
 
 import net.dumtoad.srednow7.R;
 import net.dumtoad.srednow7.backend.Game;
-import net.dumtoad.srednow7.backend.Card;
 import net.dumtoad.srednow7.backend.Player;
 import net.dumtoad.srednow7.bus.Bus;
 import net.dumtoad.srednow7.ui.UIUtil;
@@ -31,7 +30,7 @@ public abstract class GameView extends RelativeLayout {
         this.playerTurn = playerTurn;
         this.playerViewing = playerViewing;
 
-        String wonderName = UIUtil.formatEnum(playerViewing.getWonder().getEnum(), Card.Type.STAGE).toString();
+        String wonderName = playerViewing.getWonder().getEnum().toString().replace("_", " ");
         if (!UIUtil.isTablet()) {
             String[] parts = wonderName.split(" ");
             wonderName = parts[parts.length - 1];

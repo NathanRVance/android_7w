@@ -5,26 +5,37 @@ import net.dumtoad.srednow7.backend.CardCreator;
 import net.dumtoad.srednow7.backend.CardList;
 import net.dumtoad.srednow7.backend.Wonder;
 
-import java.io.Serializable;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
 class CardCreatorImpl implements CardCreator {
 
-    private List<Wonder[]> wonders;
+    private static final long serialVersionUID = 881644334039888008L;
+    private transient List<Wonder[]> wonders;
     private List<CardList> decks;
+    private int numPlayers;
 
     CardCreatorImpl(int numPlayers) {
+        this.numPlayers = numPlayers;
         Generate.generateBuilders();
+        initializeWonders();
+        initializeDecks();
+    }
 
+    private void initializeWonders() {
         wonders = new ArrayList<>();
         List<Wonder> wondersA = Generate.getWonders(true);
         List<Wonder> wondersB = Generate.getWonders(false);
         for (int i = 0; i < wondersA.size(); i++) {
             wonders.add(new Wonder[]{wondersA.get(i), wondersB.get(i)});
         }
+    }
 
+    private void initializeDecks() {
         decks = new ArrayList<>();
         decks.add(Generate.getEra0Deck(numPlayers));
         decks.add(Generate.getEra1Deck(numPlayers));
@@ -71,25 +82,13 @@ class CardCreatorImpl implements CardCreator {
         return cards;
     }
 
-    @Override
-    public Serializable getContents() {
-        Serializable[] order = new Serializable[decks.size()];
-        for (int i = 0; i < decks.size(); i++) {
-            order[i] = decks.get(i).getContents();
-        }
-        return order;
+    private void writeObject(ObjectOutputStream s) throws IOException {
+        s.defaultWriteObject();
     }
 
-    @Override
-    public void restoreContents(Serializable contents) throws Exception {
-        if(contents == null) return;
-        Serializable[] order = (Serializable[]) contents;
-        decks = new ArrayList<>();
-        for (Serializable anOrder : order) {
-            //noinspection MismatchedQueryAndUpdateOfCollection
-            CardList list = new CardListImpl();
-            list.restoreContents(anOrder);
-            decks.add(list);
-        }
+    private void readObject(ObjectInputStream s) throws IOException, ClassNotFoundException {
+        s.defaultReadObject();
+        Generate.generateBuilders();
+        initializeWonders();
     }
 }

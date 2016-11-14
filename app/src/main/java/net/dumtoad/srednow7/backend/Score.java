@@ -1,6 +1,6 @@
 package net.dumtoad.srednow7.backend;
 
-public interface Score extends Savable {
+public interface Score {
     void resolveMilitary(int era);
 
     int getMilitaryVps();

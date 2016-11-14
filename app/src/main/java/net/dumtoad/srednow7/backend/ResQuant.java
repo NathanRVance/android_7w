@@ -1,8 +1,9 @@
 package net.dumtoad.srednow7.backend;
 
+import java.io.Serializable;
 import java.util.Map;
 
-public interface ResQuant extends Map<Card.Resource, Integer>, Savable {
+public interface ResQuant extends Map<Card.Resource, Integer>, Serializable {
 
     ResQuant addResources(ResQuant add);
 

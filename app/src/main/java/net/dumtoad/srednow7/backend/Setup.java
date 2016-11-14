@@ -1,6 +1,8 @@
 package net.dumtoad.srednow7.backend;
 
-public interface Setup extends Savable {
+import java.io.Serializable;
+
+public interface Setup extends Serializable {
 
     Wonder getWonder();
 

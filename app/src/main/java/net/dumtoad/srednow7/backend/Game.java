@@ -1,8 +1,11 @@
 package net.dumtoad.srednow7.backend;
 
+import android.support.annotation.Nullable;
+
+import java.io.Serializable;
 import java.util.List;
 
-public interface Game extends Savable {
+public interface Game {
 
     void initialize(CharSequence[] playerNames, boolean[] ais);
 
@@ -39,6 +42,10 @@ public interface Game extends Savable {
     void restoreSave();
 
     void deleteSave();
+
+    Serializable getContents();
+
+    void restoreContents(@Nullable Serializable contents) throws Exception;
 
     void reset();
 

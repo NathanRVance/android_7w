@@ -1,6 +1,6 @@
 package net.dumtoad.srednow7.backend;
 
-public interface AI extends Savable {
+public interface AI {
 
     void selectWonderSide(int playerID);
 

@@ -1,8 +1,8 @@
 package net.dumtoad.srednow7.backend.implementation;
 
-import net.dumtoad.srednow7.backend.Game;
 import net.dumtoad.srednow7.backend.Card;
 import net.dumtoad.srednow7.backend.CardList;
+import net.dumtoad.srednow7.backend.Game;
 import net.dumtoad.srednow7.backend.Player;
 import net.dumtoad.srednow7.backend.ResQuant;
 import net.dumtoad.srednow7.backend.implementation.Special.NotSoSpecial;
@@ -19,7 +19,7 @@ class CardImpl implements Card {
     private CardList makesFree = new CardListImpl();
     private List<Enum> makesThisFreeEnum;
     private CardList makesThisFree = new CardListImpl();
-    private CharSequence message;
+    private String message;
     private ResQuant cost;
     private ResQuant products;
     private SpecialValue specialGold;
@@ -125,7 +125,7 @@ class CardImpl implements Card {
 
         private Type type;
         private Enum name;
-        private CharSequence message = "";
+        private String message = "";
         private ResQuant cost = new ResQuantImpl();
         private ResQuant products = new ResQuantImpl();
         private SpecialValue specialGold = new NotSoSpecial();
@@ -142,7 +142,7 @@ class CardImpl implements Card {
         }
 
         @Override
-        public Builder setMessage(CharSequence message) {
+        public Builder setMessage(String message) {
             this.message = message;
             return this;
         }

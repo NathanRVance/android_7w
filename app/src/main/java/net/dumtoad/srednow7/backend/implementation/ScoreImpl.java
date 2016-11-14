@@ -1,21 +1,29 @@
 package net.dumtoad.srednow7.backend.implementation;
 
-import net.dumtoad.srednow7.backend.Game;
 import net.dumtoad.srednow7.backend.Card;
+import net.dumtoad.srednow7.backend.Game;
 import net.dumtoad.srednow7.backend.Player;
 import net.dumtoad.srednow7.backend.Score;
 import net.dumtoad.srednow7.bus.Bus;
 
-import java.io.Serializable;
-
-public class ScoreImpl implements Score {
+class ScoreImpl implements Score {
 
     private Player player;
     private int militaryLosses = 0;
     private int[] militaryVictories = new int[3];
 
     ScoreImpl(Player player) {
+        this(player, 0, new int[3]);
+    }
+
+    ScoreImpl(Player player, int militaryLosses, int[] militaryVictories) {
         this.player = player;
+        this.militaryLosses = militaryLosses;
+        this.militaryVictories = militaryVictories;
+    }
+
+    int[] getMilitaryVictories() {
+        return militaryVictories;
     }
 
     @Override
@@ -155,20 +163,5 @@ public class ScoreImpl implements Score {
         vps += getGuildVps();
         vps += getScienceVps();
         return vps;
-    }
-
-    @Override
-    public Serializable getContents() {
-        Serializable[] contents = new Serializable[2];
-        contents[0] = militaryLosses;
-        contents[1] = militaryVictories;
-        return contents;
-    }
-
-    @Override
-    public void restoreContents(Serializable contents) {
-        Serializable[] in = (Serializable[]) contents;
-        militaryLosses = (int) in[0];
-        militaryVictories = (int[]) in[1];
     }
 }

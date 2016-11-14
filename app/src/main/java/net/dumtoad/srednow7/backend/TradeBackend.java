@@ -1,6 +1,8 @@
 package net.dumtoad.srednow7.backend;
 
-public interface TradeBackend extends Savable {
+import java.io.Serializable;
+
+public interface TradeBackend extends Serializable {
 
     Card.Resource[] tradeable = new Card.Resource[]{Card.Resource.WOOD, Card.Resource.STONE, Card.Resource.CLAY,
             Card.Resource.ORE, Card.Resource.CLOTH, Card.Resource.GLASS, Card.Resource.PAPER};

@@ -1,6 +1,8 @@
 package net.dumtoad.srednow7.backend;
 
-public interface Player extends Savable {
+import java.io.Serializable;
+
+public interface Player extends Serializable {
 
     Wonder getWonder();
 
@@ -35,8 +37,6 @@ public interface Player extends Savable {
     boolean canPlay7thCard();
 
     boolean canPlay1Free();
-
-    boolean playedFreeThisEra();
 
     boolean isPlayDiscard();
 

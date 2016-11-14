@@ -11,11 +11,9 @@ import android.widget.TextView;
 
 import net.dumtoad.srednow7.R;
 import net.dumtoad.srednow7.backend.Game;
-import net.dumtoad.srednow7.backend.Card;
 import net.dumtoad.srednow7.backend.Player;
 import net.dumtoad.srednow7.bus.Bus;
 import net.dumtoad.srednow7.ui.UIFacade;
-import net.dumtoad.srednow7.ui.UIUtil;
 import net.dumtoad.srednow7.ui.dialog.HelpDialog;
 import net.dumtoad.srednow7.ui.fragment.GameFragment;
 
@@ -40,7 +38,7 @@ public class TabletView extends GameView {
         GameFragment gameFragment = (GameFragment) activity.getFragmentManager().findFragmentByTag(UIFacade.FRAGMENT_TAG);
         View handView = gameFragment.getHandTradeView();
         if (handView instanceof SummaryView) {
-            //We already have one of those...
+            //We already have one of those
             findViewById(R.id.hand_view).setVisibility(GONE);
         } else {
             ((ViewGroup) findViewById(R.id.hand_view)).addView(handView);
@@ -81,7 +79,7 @@ public class TabletView extends GameView {
         activity.findViewById(R.id.hand).setEnabled(false);
 
         Player player = playerViewing;
-        ((TextView) activity.findViewById(R.id.title)).setText(UIUtil.formatEnum(player.getWonder().getEnum(), Card.Type.STAGE));
+        ((TextView) activity.findViewById(R.id.title)).setText(player.getWonder().getEnum().toString().replace("_", " "));
     }
 
 }
