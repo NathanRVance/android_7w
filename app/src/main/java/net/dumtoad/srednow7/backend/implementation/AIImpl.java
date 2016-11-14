@@ -219,7 +219,7 @@ class AIImpl implements AI {
     //Simultaneously sets cardAction's trades field to the optimal solution
     private int getTradeGoldCost(CardAction cardAction, Player player) {
         //Make a new one because we don't want to mess up another player's trades
-        TradeBackend tb = new TradeBackendImpl(player);
+        TradeBackend tb = new TradeBackendImpl(GameImpl.INSTANCE.getPlayers().indexOf(player));
         if (tb.canAfford(cardAction.card)) return 0;
 
         //Favor the player who's currently losing...

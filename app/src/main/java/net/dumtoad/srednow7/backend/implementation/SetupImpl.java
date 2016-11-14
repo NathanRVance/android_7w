@@ -49,7 +49,7 @@ class SetupImpl implements Setup {
     private void readObject(ObjectInputStream s) throws IOException, ClassNotFoundException {
         s.defaultReadObject();
         Enum name = (Enum) s.readObject();
-        for (Wonder[] wonder : GameImpl.INSTANCE.getCardCreator().getWonders()) {
+        for (Wonder[] wonder : Generate.getWonders()) {
             if (wonder[0].getEnum() == name) {
                 wonderSides = wonder;
                 break;

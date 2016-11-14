@@ -10,6 +10,7 @@ import net.dumtoad.srednow7.backend.implementation.Special.MultiSpecial;
 import net.dumtoad.srednow7.backend.implementation.Special.SpecialDependsPlayed;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 class Generate {
@@ -39,7 +40,7 @@ class Generate {
     private static List<Wonder> wondersA;
     private static List<Wonder> wondersB;
 
-    static void generateBuilders() {
+    static  {
         era0 = getEra0Cards();
         era1 = getEra1Cards();
         era2 = getEra2Cards();
@@ -49,19 +50,76 @@ class Generate {
         wondersB = getWondersB();
     }
 
-    static CardList getEra0Deck(int numPlayers) {
+    static List<Wonder[]> getWonders() {
+        List<Wonder[]> wonders = new ArrayList<>();
+        for (int i = 0; i < wondersA.size(); i++) {
+            wonders.add(new Wonder[]{wondersA.get(i), wondersB.get(i)});
+        }
+
+        return wonders;
+    }
+
+    static List<CardList> dealHands(int era, int numPlayers) {
+        CardList deck;
+        switch(era) {
+            case 0:
+                deck = getEra0Deck(numPlayers);
+                break;
+            case 1:
+                deck = getEra1Deck(numPlayers);
+                break;
+            case 2:
+                deck = getEra2Cards(numPlayers);
+                CardList guilds = Generate.getGuildCards();
+                Collections.shuffle(guilds);
+                //Add numPlayers + 2 guild cards to the deck
+                for (int i = 0; i < numPlayers + 2; i++) {
+                    deck.add(guilds.get(i));
+                }
+                break;
+            default:
+                throw new IllegalArgumentException("Cannot get deck for era " + era);
+        }
+        Collections.shuffle(deck);
+
+
+        List<CardList> hands = new ArrayList<>();
+        int index = 0;
+        for (int i = 0; i < numPlayers; i++) {
+            CardList hand = new CardListImpl();
+            for (int j = 0; j < 7; j++) {
+                hand.add(deck.get(index++));
+            }
+            hand.sort();
+            hands.add(hand);
+        }
+        return hands;
+    }
+
+    private static CardList allCards;
+    static CardList getAllCards() {
+        if(allCards == null) {
+            allCards = getEra0Deck(7);
+            allCards.addAll(getEra1Deck(7));
+            allCards.addAll(getEra2Cards(7));
+            allCards.addAll(getGuildCards());
+        }
+        return allCards;
+    }
+
+    private static CardList getEra0Deck(int numPlayers) {
         return getDeck(era0deck, numPlayers * 7);
     }
 
-    static CardList getEra1Deck(int numPlayers) {
+    private static CardList getEra1Deck(int numPlayers) {
         return getDeck(era1deck, numPlayers * 7);
     }
 
-    static CardList getEra2Cards(int numPlayers) {
+    private static CardList getEra2Cards(int numPlayers) {
         return getDeck(era2deck, numPlayers * 6 - 2);
     }
 
-    static CardList getGuildCards() {
+    private static CardList getGuildCards() {
         return getDeck(guilds, 10);
     }
 
@@ -71,10 +129,6 @@ class Generate {
             deck.add(findCardByName(cardNames[i]));
         }
         return deck;
-    }
-
-    static List<Wonder> getWonders(boolean side) {
-        return (side) ? wondersA : wondersB;
     }
 
     private static void resolveCoupons() {

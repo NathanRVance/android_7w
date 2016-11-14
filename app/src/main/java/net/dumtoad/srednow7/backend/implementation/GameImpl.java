@@ -1,7 +1,6 @@
 package net.dumtoad.srednow7.backend.implementation;
 
 import net.dumtoad.srednow7.backend.Card;
-import net.dumtoad.srednow7.backend.CardCreator;
 import net.dumtoad.srednow7.backend.CardList;
 import net.dumtoad.srednow7.backend.Game;
 import net.dumtoad.srednow7.backend.Player;
@@ -24,19 +23,17 @@ public enum GameImpl implements Game {
     private List<CardList> hands = new ArrayList<>();
     private int era;
     private int round;
-    private CardCreator cardCreator;
     private CardList discards = new CardListImpl();
 
     @Override
     public void initialize(CharSequence[] playerNames, boolean[] ais) {
         players = new ArrayList<>();
         for (int playerID = 0; playerID < playerNames.length; playerID++) {
-            players.add(new PlayerImpl(playerNames[playerID], ais[playerID]));
+            players.add(new PlayerImpl(playerNames[playerID], ais[playerID], playerID));
         }
 
-        cardCreator = new CardCreatorImpl(playerNames.length);
         setups = new ArrayList<>();
-        List<Wonder[]> wonders = cardCreator.getWonders();
+        List<Wonder[]> wonders = Generate.getWonders();
         Random r = new Random();
         for (int i = 0; i < playerNames.length; i++) {
             Wonder[] wonder = wonders.remove(r.nextInt(wonders.size()));
@@ -44,7 +41,7 @@ public enum GameImpl implements Game {
         }
 
         era = 0;
-        hands = cardCreator.dealHands(era, playerNames.length);
+        hands = Generate.dealHands(era, playerNames.length);
 
         for (int playerID = 0; playerID < playerNames.length; playerID++) {
             if (players.get(playerID).isAI()) {
@@ -106,7 +103,7 @@ public enum GameImpl implements Game {
                 for (CardList cardList : hands) {
                     discards.addAll(cardList);
                 }
-                hands = cardCreator.dealHands(era, players.size());
+                hands = Generate.dealHands(era, players.size());
                 startRound();
             }
             return;
@@ -260,44 +257,36 @@ public enum GameImpl implements Game {
         hands = new ArrayList<>();
         era = 0;
         round = 0;
-        cardCreator = null;
         discards = new CardListImpl();
     }
 
-    @Override
-    public CardCreator getCardCreator() {
-        return cardCreator;
-    }
-
     public Serializable getContents() {
-        Serializable[] contents = new Serializable[8];
-        contents[0] = cardCreator;
-        contents[1] = players.toArray(new PlayerImpl[players.size()]);
-        contents[2] = setups.toArray(new Setup[players.size()]);
-        contents[3] = hands.toArray(new CardList[hands.size()]);
-        contents[4] = era;
-        contents[5] = round;
-        contents[6] = discards;
+        Serializable[] contents = new Serializable[6];
+        contents[0] = players.toArray(new PlayerImpl[players.size()]);
+        contents[1] = setups.toArray(new Setup[players.size()]);
+        contents[2] = hands.toArray(new CardList[hands.size()]);
+        contents[3] = era;
+        contents[4] = round;
+        contents[5] = discards;
         return contents;
     }
 
     public void restoreContents(Serializable contents) throws Exception {
         Serializable[] in = (Serializable[]) contents;
-        cardCreator = (CardCreator) in[0];
-        players = new ArrayList<>(Arrays.asList((PlayerImpl[]) in[1]));
-        setups = new ArrayList<>(Arrays.asList((Setup[]) in[2]));
+        players = new ArrayList<>(Arrays.asList((PlayerImpl[]) in[0]));
+        setups = new ArrayList<>(Arrays.asList((Setup[]) in[1]));
         for (int i = 0; i < players.size(); i++) {
             if (setups.get(i).isFinished()) {
                 players.get(i).setWonder(setups.get(i).getWonder());
             }
         }
-        hands = new ArrayList<>(Arrays.asList((CardList[]) in[3]));
+        hands = new ArrayList<>(Arrays.asList((CardList[]) in[2]));
         for (int i = 0; i < hands.size(); i++) {
             players.get(i).setHand(hands.get(i));
         }
-        era = (int) in[4];
-        round = (int) in[5];
-        discards = (CardList) in[6];
+        era = (int) in[3];
+        round = (int) in[4];
+        discards = (CardList) in[5];
         continueGame();
     }
 }

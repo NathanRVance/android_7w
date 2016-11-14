@@ -30,10 +30,11 @@ class PlayerImpl implements Player {
     private TradeBackend tradeBackend;
     private CardList hand;
 
-    PlayerImpl(CharSequence name, boolean isAI) {
+    PlayerImpl(CharSequence name, boolean isAI, int ID) {
         this.name = name.toString();
         this.isAI = isAI;
         if (isAI) ai = new AIImpl(this);
+        tradeBackend = new TradeBackendImpl(ID);
     }
 
     @Override
@@ -139,7 +140,7 @@ class PlayerImpl implements Player {
         boolean hasCoupon = hasCouponFor(card) || isPlayDiscard();
         if (getPlayedCards().contains(card)) {
             throw new BadActionException("Already built " + card.getEnum());
-        } else if (hasCoupon && getTradeBackend().hasTrade()) {
+        } else if (hasCoupon && tradeBackend.hasTrade()) {
             throw new BadActionException("Don't trade, you can build for free");
         } else if (tradeBackend.overpaid(card)) {
             throw new BadActionException("Overpaid, undo some trades");
@@ -230,11 +231,11 @@ class PlayerImpl implements Player {
         }
         addGold(playBuffer.goldSelf);
         playBuffer.clear();
+        tradeBackend.clear();
     }
 
     void startTurn() {
         hasFinishedTurn = false;
-        tradeBackend = new TradeBackendImpl(this);
     }
 
     boolean hasFinishedTurn() {
@@ -276,7 +277,7 @@ class PlayerImpl implements Player {
 
         private void readObject(ObjectInputStream s) throws IOException, ClassNotFoundException {
             s.defaultReadObject();
-            card = GameImpl.INSTANCE.getCardCreator().getAllCards().get((Enum) s.readObject());
+            card = Generate.getAllCards().get((Enum) s.readObject());
         }
     }
 }

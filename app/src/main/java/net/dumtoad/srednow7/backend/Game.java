@@ -49,8 +49,6 @@ public interface Game {
 
     void reset();
 
-    CardCreator getCardCreator();
-
     enum Direction {
         WEST,
         EAST

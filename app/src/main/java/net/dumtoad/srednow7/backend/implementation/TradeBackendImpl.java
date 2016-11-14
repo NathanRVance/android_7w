@@ -22,9 +22,10 @@ class TradeBackendImpl implements TradeBackend {
     //Cache prices so that they only have to be calculated once
     private Map<Game.Direction, ResQuant> prices;
 
-    TradeBackendImpl(Player player) {
-        this.playerNum = GameImpl.INSTANCE.getPlayers().indexOf(player);
-        clear();
+    TradeBackendImpl(int playerNum) {
+        this.playerNum = playerNum;
+        gold = 3;
+        clearAllButGold();
     }
 
     private Player getPlayer() {
@@ -56,6 +57,15 @@ class TradeBackendImpl implements TradeBackend {
 
     @Override
     public ResQuant prices(Game.Direction direction) {
+        if(prices == null) {
+            prices = new HashMap<>();
+            for (Game.Direction d : Game.Direction.values()) {
+                prices.put(d, new ResQuantImpl());
+                for (Card.Resource resource : tradeable) {
+                    prices.get(d).put(resource, getPrice(resource, d));
+                }
+            }
+        }
         return prices.get(direction);
     }
 
@@ -118,17 +128,15 @@ class TradeBackendImpl implements TradeBackend {
     @Override
     public void clear() {
         gold = getPlayer().getGold();
+        clearAllButGold();
+    }
+
+    private void clearAllButGold() {
         trades = new HashMap<>();
         trades.put(Game.Direction.WEST, new ResQuantImpl());
         trades.put(Game.Direction.EAST, new ResQuantImpl());
 
-        prices = new HashMap<>();
-        for (Game.Direction direction : Game.Direction.values()) {
-            prices.put(direction, new ResQuantImpl());
-            for (Card.Resource resource : tradeable) {
-                prices.get(direction).put(resource, getPrice(resource, direction));
-            }
-        }
+        prices = null;
     }
 
     //Status is current trade status, and is negative towards player.

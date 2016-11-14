@@ -55,7 +55,7 @@ public class CardListImpl implements CardList {
     private void readObject(ObjectInputStream s) throws IOException, ClassNotFoundException {
         cards = new ArrayList<>();
         Enum[] names = (Enum[]) s.readObject();
-        List<Card> cards = GameImpl.INSTANCE.getCardCreator().getAllCards();
+        List<Card> cards = Generate.getAllCards();
         for (Enum name : names) {
             for (Card card : cards) {
                 if (card.getEnum() == name) {
