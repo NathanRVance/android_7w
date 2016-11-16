@@ -33,16 +33,6 @@ public interface Game {
 
     void startNewGame();
 
-    void saveGame();
-
-    /**
-     * If it fails to do so (corrupted save) then
-     * runs startNewGame()
-     */
-    void restoreSave();
-
-    void deleteSave();
-
     Serializable getContents();
 
     void restoreContents(@Nullable Serializable contents) throws Exception;

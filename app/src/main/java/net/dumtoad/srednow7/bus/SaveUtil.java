@@ -1,4 +1,4 @@
-package net.dumtoad.srednow7.backend.util;
+package net.dumtoad.srednow7.bus;
 
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
@@ -13,11 +13,12 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
 
-public class SaveUtil {
+class SaveUtil {
 
     private static final String HAS_SAVE = "HAS_SAVE";
+    private static final String SAVE = "SAVE";
 
-    public static void saveGame(Serializable gameState) {
+    static void saveGame(Serializable gameState) {
         String encoded = null;
         try {
             ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
@@ -31,26 +32,26 @@ public class SaveUtil {
 
         SharedPreferences.Editor editor = getSharedPreferences().edit();
         editor.clear();
-        editor.putString("Save", encoded);
+        editor.putString(SAVE, encoded);
         editor.putBoolean(HAS_SAVE, true);
-        editor.commit();
+        editor.apply();
     }
 
-    public static void deleteSave() {
+    static void deleteSave() {
         SharedPreferences.Editor editor = getSharedPreferences().edit();
         editor.clear();
         editor.putBoolean(HAS_SAVE, false);
-        editor.commit();
+        editor.apply();
     }
 
-    public static boolean hasSave() {
+    static boolean hasSave() {
         SharedPreferences sharedPreferences = getSharedPreferences();
         return sharedPreferences.getBoolean(HAS_SAVE, false);
     }
 
-    public static Serializable loadGame() {
+    static Serializable loadGame() {
         SharedPreferences sharedPreferences = getSharedPreferences();
-        String s = sharedPreferences.getString("Save", null);
+        String s = sharedPreferences.getString(SAVE, null);
         byte[] bytes = Base64.decode(s, 0);
         Serializable object = null;
         try {

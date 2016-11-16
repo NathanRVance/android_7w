@@ -7,12 +7,12 @@ import android.view.GestureDetector;
 import android.view.MotionEvent;
 
 import com.crashlytics.android.Crashlytics;
-import io.fabric.sdk.android.Fabric;
 
-import net.dumtoad.srednow7.backend.util.SaveUtil;
 import net.dumtoad.srednow7.bus.Bus;
-import net.dumtoad.srednow7.ui.dialog.LoadDialog;
 import net.dumtoad.srednow7.ui.LeftRightSwipe;
+import net.dumtoad.srednow7.ui.dialog.LoadDialog;
+
+import io.fabric.sdk.android.Fabric;
 
 public class MainActivity extends Activity {
 
@@ -31,27 +31,26 @@ public class MainActivity extends Activity {
         mainActivity = this;
         setContentView(R.layout.activity_main);
         gestureDetector = new GestureDetector(this, new GestureListener());
-        Bus.bus.reset();
 
         if (savedInstanceState != null) {
             try {
-                Bus.bus.getGame().restoreContents(savedInstanceState.getSerializable("game"));
+                Bus.bus.loadGame(savedInstanceState.getSerializable("game"));
             } catch (Exception e) {
                 e.printStackTrace();
             }
         } else {
-            if (SaveUtil.hasSave()) {
+            if (Bus.bus.hasSave()) {
                 DialogFragment loadDialog = new LoadDialog();
                 loadDialog.show(getFragmentManager(), "loadDialog");
             }
-            Bus.bus.getUI().displaySetup(); //So that there's something meaningful in the background if the user exits the dialog
+            Bus.bus.startNewGame(); //So that there's something meaningful in the background if the user exits the dialog
         }
     }
 
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putSerializable("game", Bus.bus.getGame().getContents());
+        outState.putSerializable("game", Bus.bus.saveGame());
     }
 
     @Override

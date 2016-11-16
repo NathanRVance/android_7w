@@ -6,8 +6,8 @@ import net.dumtoad.srednow7.backend.Game;
 import net.dumtoad.srednow7.backend.Player;
 import net.dumtoad.srednow7.backend.Setup;
 import net.dumtoad.srednow7.backend.Wonder;
-import net.dumtoad.srednow7.backend.util.SaveUtil;
 import net.dumtoad.srednow7.bus.Bus;
+import net.dumtoad.srednow7.ui.UI;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -47,7 +47,7 @@ public enum GameImpl implements Game {
             if (players.get(playerID).isAI()) {
                 players.get(playerID).getAI().selectWonderSide(playerID);
             } else {
-                Bus.bus.getUI().displayWonderSideSelect(playerID);
+                Bus.bus.getUI().display(UI.DisplayType.WonderSideSelect, playerID);
             }
         }
     }
@@ -98,7 +98,7 @@ public enum GameImpl implements Game {
             }
             era++;
             if (era == 3) {
-                Bus.bus.getUI().displayEndOfGame();
+                Bus.bus.getUI().display(UI.DisplayType.EndOfGame, 0);
             } else {
                 for (CardList cardList : hands) {
                     discards.addAll(cardList);
@@ -119,7 +119,6 @@ public enum GameImpl implements Game {
             CardList tmp = hands.remove(hands.size() - 1);
             hands.add(0, tmp);
         }
-        //System.out.printf("Doing turns for era %d, round %d\n", era, round);
         for (PlayerImpl player : players) {
             player.startTurn();
         }
@@ -130,7 +129,7 @@ public enum GameImpl implements Game {
 
     @Override
     public synchronized void finishedTurn() {
-        saveGame();
+        Bus.bus.saveToMemory();
         boolean done = true;
         for (PlayerImpl player : players) {
             done &= player.hasFinishedTurn();
@@ -152,9 +151,8 @@ public enum GameImpl implements Game {
                 player.getAI().doTurn();
             });
             thread.start();
-            //player.getAI().doTurn();
         } else {
-            Bus.bus.getUI().displayTurn(playerID);
+            Bus.bus.getUI().display(UI.DisplayType.Turn, playerID);
         }
     }
 
@@ -195,59 +193,8 @@ public enum GameImpl implements Game {
 
     @Override
     public void startNewGame() {
-        SaveUtil.deleteSave();
         Bus.bus.getUI().invalidateView();
-        Bus.bus.getUI().displaySetup();
-    }
-
-    @Override
-    public void saveGame() {
-        SaveUtil.saveGame(getContents());
-    }
-
-    @Override
-    public void restoreSave() {
-        try {
-            restoreContents(SaveUtil.loadGame());
-        } catch (Exception e) {
-            e.printStackTrace();
-            startNewGame();
-        }
-        Bus.bus.getUI().invalidateView();
-    }
-
-    private void continueGame() {
-        //System.out.println("#################### Continuing game");
-        if (players.isEmpty()) {
-            //System.out.println("#################### Setting up");
-            Bus.bus.getUI().invalidateView();
-            Bus.bus.getUI().displaySetup();
-        } else if (!allWondersSelected()) {
-            for (int playerID = 0; playerID < players.size(); playerID++) {
-                if (players.get(playerID).getWonder() == null) {
-                    //System.out.println("#################### Selecting wonder for player " + playerID);
-                    if (players.get(playerID).isAI()) {
-                        players.get(playerID).getAI().selectWonderSide(playerID);
-                    } else {
-                        Bus.bus.getUI().displayWonderSideSelect(playerID);
-                    }
-                }
-            }
-        } else {
-            //System.out.println("#################### Starting turns");
-            for (PlayerImpl player : players) {
-                if (!player.hasFinishedTurn()) {
-                    //System.out.println("#################### Doing turn");
-                    CardList hand = (player.isPlayDiscard()) ? discards : player.getHand();
-                    doTurn(player, hand);
-                }
-            }
-        }
-    }
-
-    @Override
-    public void deleteSave() {
-        SaveUtil.deleteSave();
+        Bus.bus.getUI().display(UI.DisplayType.Setup, 0);
     }
 
     @Override
@@ -287,6 +234,5 @@ public enum GameImpl implements Game {
         era = (int) in[3];
         round = (int) in[4];
         discards = (CardList) in[5];
-        continueGame();
     }
 }

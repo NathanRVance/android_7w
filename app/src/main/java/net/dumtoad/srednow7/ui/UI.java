@@ -1,17 +1,20 @@
 package net.dumtoad.srednow7.ui;
 
-public interface UI {
+import java.io.Serializable;
 
-    void displaySetup();
+public interface UI extends Serializable {
 
-    void displayWonderSideSelect(int playerID);
-
-    void displayTurn(int playerID);
-
-    void displayEndOfGame();
+    void display(DisplayType type, int playerID);
 
     void invalidateView();
 
     void reset();
+
+    enum DisplayType {
+        Setup,
+        WonderSideSelect,
+        Turn,
+        EndOfGame
+    }
 
 }
