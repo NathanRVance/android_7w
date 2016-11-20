@@ -1,4 +1,4 @@
-package net.dumtoad.srednow7.backend.implementation.Special;
+package net.dumtoad.srednow7.backend.implementation.specialValue;
 
 import net.dumtoad.srednow7.backend.Game;
 import net.dumtoad.srednow7.backend.Player;

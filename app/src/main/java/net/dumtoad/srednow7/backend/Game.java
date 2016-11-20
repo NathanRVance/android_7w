@@ -1,11 +1,9 @@
 package net.dumtoad.srednow7.backend;
 
-import android.support.annotation.Nullable;
-
 import java.io.Serializable;
 import java.util.List;
 
-public interface Game {
+public interface Game extends Serializable {
 
     void initialize(CharSequence[] playerNames, boolean[] ais);
 
@@ -32,10 +30,6 @@ public interface Game {
     void discard(Card card);
 
     void startNewGame();
-
-    Serializable getContents();
-
-    void restoreContents(@Nullable Serializable contents) throws Exception;
 
     void reset();
 

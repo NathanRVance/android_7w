@@ -9,7 +9,7 @@ import java.io.Serializable;
 
 class AndroidBus implements Bus {
 
-    private Game game = GameImpl.INSTANCE;
+    private Game game = new GameImpl();
     private UI ui = new UIFacade();
 
     @Override
@@ -32,7 +32,7 @@ class AndroidBus implements Bus {
     @Override
     public Serializable saveGame() {
         Serializable[] contents = new Serializable[2];
-        contents[0] = game.getContents();
+        contents[0] = game;
         contents[1] = ui;
         return contents;
     }
@@ -50,11 +50,12 @@ class AndroidBus implements Bus {
     @Override
     public void loadGame(Serializable contents) {
         Serializable[] in = (Serializable[]) contents;
-        ui = (UI) in[1];
         try {
-            game.restoreContents(in[0]);
+            ui = (UI) in[1];
+            game = (Game) in[0];
         } catch (Exception e) {
-            ui.reset();
+            ui = new UIFacade();
+            game = new GameImpl();
             game.startNewGame();
         }
     }

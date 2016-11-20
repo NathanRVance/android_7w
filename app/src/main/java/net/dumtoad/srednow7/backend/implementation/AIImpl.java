@@ -52,14 +52,13 @@ class AIImpl implements AI {
         if (player.getWonder().getResource() == Card.Resource.CLOTH
                 || player.getWonder().getResource() == Card.Resource.PAPER
                 || player.getWonder().getResource() == Card.Resource.GLASS
-                || player.getWonder().getEnum() == Generate.Wonders.The_Hanging_Gardens_of_Babylon) {
+                || player.getWonder().getEnum().toString().contains("Babylon")) {
             scientist = true;
         }
     }
 
     private void doAction(CardAction cardAction) {
         //Set the trades
-        //System.out.printf("Setting trades for player %d, action %s, weight %d\n", Bus.bus.getGame().getPlayers().indexOf(player), cardAction.action, cardAction.weight);
         player.getTradeBackend().clear();
         for (Game.Direction direction : Game.Direction.values()) {
             for (Card.Resource res : TradeBackend.tradeable) {

@@ -5,8 +5,10 @@ import net.dumtoad.srednow7.backend.CardList;
 import net.dumtoad.srednow7.backend.Game;
 import net.dumtoad.srednow7.backend.Player;
 import net.dumtoad.srednow7.backend.ResQuant;
-import net.dumtoad.srednow7.backend.implementation.Special.NotSoSpecial;
-import net.dumtoad.srednow7.backend.implementation.Special.SpecialValue;
+import net.dumtoad.srednow7.backend.implementation.specialValue.NotSoSpecial;
+import net.dumtoad.srednow7.backend.implementation.specialValue.SpecialValue;
+import net.dumtoad.srednow7.backend.implementation.variableResource.StaticResource;
+import net.dumtoad.srednow7.backend.implementation.variableResource.VariableResource;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,8 +22,8 @@ class CardImpl implements Card {
     private List<Enum> makesThisFreeEnum;
     private CardList makesThisFree = new CardListImpl();
     private String message;
-    private ResQuant cost;
-    private ResQuant products;
+    private VariableResource costs;
+    private VariableResource products;
     private SpecialValue specialGold;
     private SpecialValue specialVps;
     private TradeType tradeType;
@@ -34,7 +36,7 @@ class CardImpl implements Card {
         makesFreeEnum = builder.makesFreeEnum;
         makesThisFreeEnum = builder.makesThisFreeEnum;
         message = builder.message;
-        cost = builder.cost;
+        costs = builder.costs;
         products = builder.products;
         specialGold = builder.specialGold;
         specialVps = builder.specialVps;
@@ -111,13 +113,13 @@ class CardImpl implements Card {
     }
 
     @Override
-    public ResQuant getProducts() {
-        return new ResQuantImpl().addResources(products);
+    public ResQuant getProducts(Player player) {
+        return products.getResources(player);
     }
 
     @Override
-    public ResQuant getCosts() {
-        return new ResQuantImpl().addResources(cost);
+    public ResQuant getCosts(Player player) {
+        return costs.getResources(player);
     }
 
 
@@ -126,8 +128,8 @@ class CardImpl implements Card {
         private Type type;
         private Enum name;
         private String message = "";
-        private ResQuant cost = new ResQuantImpl();
-        private ResQuant products = new ResQuantImpl();
+        private VariableResource costs = new StaticResource();
+        private VariableResource products = new StaticResource();
         private SpecialValue specialGold = new NotSoSpecial();
         private SpecialValue specialVps = new NotSoSpecial();
         private TradeType tradeType;
@@ -148,14 +150,14 @@ class CardImpl implements Card {
         }
 
         @Override
-        public Builder setCost(Resource res, int num) {
-            this.cost.put(res, num);
+        public Builder setCosts(VariableResource costs) {
+            this.costs = costs;
             return this;
         }
 
         @Override
-        public Builder setProduct(Resource res, int num) {
-            this.products.put(res, num);
+        public Builder setProducts(VariableResource products) {
+            this.products = products;
             return this;
         }
 
@@ -196,7 +198,7 @@ class CardImpl implements Card {
         }
 
         @Override
-        public Card.Builder addAttribute(Attribute attribute) {
+        public Builder addAttribute(Attribute attribute) {
             this.attributes.add(attribute);
             return this;
         }

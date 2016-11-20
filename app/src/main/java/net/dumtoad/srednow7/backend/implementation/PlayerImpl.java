@@ -20,6 +20,7 @@ class PlayerImpl implements Player {
     private String name;
     private boolean isAI;
     private transient AI ai;
+    @SuppressWarnings("InstanceVariableMayNotBeInitializedByReadObject")
     private transient Wonder wonder;
     private CardList played = new CardListImpl();
     private transient ScoreImpl score = new ScoreImpl(this);

@@ -9,14 +9,16 @@ import net.dumtoad.srednow7.backend.Wonder;
 import net.dumtoad.srednow7.bus.Bus;
 import net.dumtoad.srednow7.ui.UI;
 
-import java.io.Serializable;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 
-public enum GameImpl implements Game {
-    INSTANCE;
+public class GameImpl implements Game {
+    private static final long serialVersionUID = -1169145061029792425L;
+    static GameImpl INSTANCE;
 
     private List<PlayerImpl> players = new ArrayList<>();
     private List<Setup> setups = new ArrayList<>();
@@ -24,6 +26,10 @@ public enum GameImpl implements Game {
     private int era;
     private int round;
     private CardList discards = new CardListImpl();
+
+    public GameImpl() {
+        INSTANCE = this;
+    }
 
     @Override
     public void initialize(CharSequence[] playerNames, boolean[] ais) {
@@ -207,32 +213,20 @@ public enum GameImpl implements Game {
         discards = new CardListImpl();
     }
 
-    public Serializable getContents() {
-        Serializable[] contents = new Serializable[6];
-        contents[0] = players.toArray(new PlayerImpl[players.size()]);
-        contents[1] = setups.toArray(new Setup[players.size()]);
-        contents[2] = hands.toArray(new CardList[hands.size()]);
-        contents[3] = era;
-        contents[4] = round;
-        contents[5] = discards;
-        return contents;
+    private void writeObject(ObjectOutputStream s) throws IOException {
+        s.defaultWriteObject();
     }
 
-    public void restoreContents(Serializable contents) throws Exception {
-        Serializable[] in = (Serializable[]) contents;
-        players = new ArrayList<>(Arrays.asList((PlayerImpl[]) in[0]));
-        setups = new ArrayList<>(Arrays.asList((Setup[]) in[1]));
+    private void readObject(ObjectInputStream s) throws IOException, ClassNotFoundException {
+        s.defaultReadObject();
+        INSTANCE = this;
         for (int i = 0; i < players.size(); i++) {
             if (setups.get(i).isFinished()) {
                 players.get(i).setWonder(setups.get(i).getWonder());
             }
         }
-        hands = new ArrayList<>(Arrays.asList((CardList[]) in[2]));
         for (int i = 0; i < hands.size(); i++) {
             players.get(i).setHand(hands.get(i));
         }
-        era = (int) in[3];
-        round = (int) in[4];
-        discards = (CardList) in[5];
     }
 }

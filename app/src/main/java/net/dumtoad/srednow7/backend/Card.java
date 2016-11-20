@@ -1,6 +1,7 @@
 package net.dumtoad.srednow7.backend;
 
-import net.dumtoad.srednow7.backend.implementation.Special.SpecialValue;
+import net.dumtoad.srednow7.backend.implementation.specialValue.SpecialValue;
+import net.dumtoad.srednow7.backend.implementation.variableResource.VariableResource;
 
 public interface Card {
 
@@ -12,9 +13,9 @@ public interface Card {
 
     boolean providesTrade(Game.Direction direction, TradeType type);
 
-    ResQuant getProducts();
+    ResQuant getProducts(Player player);
 
-    ResQuant getCosts();
+    ResQuant getCosts(Player player);
 
     int getSpecialVps(Player player);
 
@@ -71,9 +72,9 @@ public interface Card {
     interface Builder {
         Builder setMessage(String message);
 
-        Builder setCost(Resource res, int num);
+        Builder setCosts(VariableResource costs);
 
-        Builder setProduct(Resource res, int num);
+        Builder setProducts(VariableResource products);
 
         Builder setSpecialGold(SpecialValue specialGold);
 
