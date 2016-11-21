@@ -104,7 +104,7 @@ class AIImpl implements AI {
         if (!playDiscard && !player.hasCouponFor(cardAction.card)) {
             //Trade cost
             int cost = getTradeGoldCost(cardAction, player);
-            if (cost == -1 || cost + cardAction.card.getCosts().get(Card.Resource.GOLD) > player.getGold()) {
+            if (cost == -1 || cost + cardAction.card.getCosts(player).get(Card.Resource.GOLD) > player.getGold()) {
                 cardAction.weight = -1;
                 return;
             } else
@@ -113,32 +113,32 @@ class AIImpl implements AI {
 
         ResQuant prod = new ResQuantImpl();
         for (Card card : player.getPlayedCards()) {
-            prod.addResources(card.getProducts());
+            prod.addResources(card.getProducts(player));
         }
 
         //Tradeable resources get 5 for what we don't have, 1 for what we do.
         for (Card.Resource res : TradeBackend.tradeable) {
             int mult = (prod.get(res) > 0) ? 1 : 5;
-            cardAction.weight += cardAction.card.getProducts().get(res) * mult;
+            cardAction.weight += cardAction.card.getProducts(player).get(res) * mult;
         }
 
         //Gold gets 1 for every 3 gold
-        int gold = cardAction.card.getProducts().get(Card.Resource.GOLD);
+        int gold = cardAction.card.getProducts(player).get(Card.Resource.GOLD);
         gold += cardAction.card.getSpecialGold(player);
         cardAction.weight += gold / 3;
 
         //VPs get 1 weight each
-        cardAction.weight += cardAction.card.getProducts().get(Card.Resource.VP);
+        cardAction.weight += cardAction.card.getProducts(player).get(Card.Resource.VP);
         cardAction.weight += cardAction.card.getSpecialVps(player);
 
         //Military is worth 2 for each shield for each battle it will turn the tide in, 1(ish) otherwise
-        int shields = cardAction.card.getProducts().get(Card.Resource.SHIELD);
+        int shields = cardAction.card.getProducts(player).get(Card.Resource.SHIELD);
         if (shields > 0) {
             int myShields = prod.get(Card.Resource.SHIELD);
             for (Game.Direction direction : Game.Direction.values()) {
                 int sh = 0;
                 for (Card card : Bus.bus.getGame().getPlayerDirection(player, direction).getPlayedCards())
-                    sh += card.getProducts().get(Card.Resource.SHIELD);
+                    sh += card.getProducts(player).get(Card.Resource.SHIELD);
                 if ((myShields < sh && myShields + shields >= sh) || (myShields == sh)) {
                     cardAction.weight += shields * 2;
                 } else {
@@ -155,8 +155,8 @@ class AIImpl implements AI {
         least = (prod.get(Card.Resource.COMPASS) < least) ? prod.get(Card.Resource.COMPASS) : least;
         least = (prod.get(Card.Resource.TABLET) < least) ? prod.get(Card.Resource.TABLET) : least;
         for (Card.Resource res : new Card.Resource[]{Card.Resource.GEAR, Card.Resource.COMPASS, Card.Resource.TABLET}) {
-            if (cardAction.card.getProducts().get(res) == 0) continue;
-            if (cardAction.card.getProducts().get(res) == least) cardAction.weight += 2 * mult;
+            if (cardAction.card.getProducts(player).get(res) == 0) continue;
+            if (cardAction.card.getProducts(player).get(res) == least) cardAction.weight += 2 * mult;
             else cardAction.weight += mult;
         }
 
@@ -263,7 +263,7 @@ class AIImpl implements AI {
         }
         for (Card.Resource res : TradeBackend.tradeable) {
             int resBought = tb.resourcesBought(Game.Direction.EAST).get(res) + tb.resourcesBought(Game.Direction.WEST).get(res);
-            if (cardAction.card.getCosts().get(res) > resBought) { //Only go on if we haven't purchased card's cost of this already
+            if (cardAction.card.getCosts(player).get(res) > resBought) { //Only go on if we haven't purchased card's cost of this already
                 //The order we'll check to buy in based on price then on who's winning
                 Game.Direction[] buyOrder;
                 if (tb.prices(Game.Direction.EAST).get(res).equals(tb.prices(Game.Direction.WEST).get(res)))

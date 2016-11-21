@@ -227,8 +227,8 @@ class PlayerImpl implements Player {
             addGold(playBuffer.goldWest * -1);
 
             played.add(playBuffer.card);
-            addGold(playBuffer.card.getProducts().get(Card.Resource.GOLD));
-            addGold(playBuffer.card.getCosts().get(Card.Resource.GOLD) * -1);
+            addGold(playBuffer.card.getProducts(this).get(Card.Resource.GOLD));
+            addGold(playBuffer.card.getCosts(this).get(Card.Resource.GOLD) * -1);
         }
         addGold(playBuffer.goldSelf);
         playBuffer.clear();

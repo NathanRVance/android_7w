@@ -82,7 +82,7 @@ class TradeBackendImpl implements TradeBackend {
 
     @Override
     public ResQuant getLeftoverResources(Card card) {
-        ResQuant cost = card.getCosts();
+        ResQuant cost = card.getCosts(getPlayer());
         cost.put(Card.Resource.GOLD, 0); //Deal with gold elsewhere
         for (ResQuant trade : trades.values()) {
             cost.subtractResources(trade);
@@ -113,7 +113,7 @@ class TradeBackendImpl implements TradeBackend {
 
     @Override
     public boolean canAfford(Card card) {
-        return getLeftoverResources(card).allZeroOrAbove() && gold >= card.getCosts().get(Card.Resource.GOLD);
+        return getLeftoverResources(card).allZeroOrAbove() && gold >= card.getCosts(getPlayer()).get(Card.Resource.GOLD);
     }
 
     @Override
@@ -153,7 +153,7 @@ class TradeBackendImpl implements TradeBackend {
             if (!includeNonTradeable && card.getType() != Card.Type.RESOURCE && card.getType() != Card.Type.INDUSTRY)
                 continue;
 
-            ResQuant prod = card.getProducts();
+            ResQuant prod = card.getProducts(getPlayer());
 
             //Count number of products card produces
             int numProducts = 0;
@@ -190,7 +190,7 @@ class TradeBackendImpl implements TradeBackend {
         } else {
             Card card = cards.pop();
             for (Card.Resource res : tradeable) {
-                if (card.getProducts().get(res) > 0) {
+                if (card.getProducts(getPlayer()).get(res) > 0) {
                     available.put(res, available.get(res) + 1);
                     availableRecurse(cards, available, answer);
                     available.put(res, available.get(res) - 1);

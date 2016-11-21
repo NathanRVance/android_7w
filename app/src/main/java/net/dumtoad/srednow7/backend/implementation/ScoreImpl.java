@@ -30,12 +30,12 @@ class ScoreImpl implements Score {
     public void resolveMilitary(int era) {
         int playerMilitary = 0;
         for (Card card : player.getPlayedCards()) {
-            playerMilitary += card.getProducts().get(Card.Resource.SHIELD);
+            playerMilitary += card.getProducts(player).get(Card.Resource.SHIELD);
         }
         for (Game.Direction direction : Game.Direction.values()) {
             int otherMilitary = 0;
             for (Card card : Bus.bus.getGame().getPlayerDirection(player, direction).getPlayedCards()) {
-                otherMilitary += card.getProducts().get(Card.Resource.SHIELD);
+                otherMilitary += card.getProducts(player).get(Card.Resource.SHIELD);
             }
             if (otherMilitary > playerMilitary) {
                 militaryLosses++;
@@ -70,7 +70,7 @@ class ScoreImpl implements Score {
         int vps = 0;
         for (Card card : player.getPlayedCards()) {
             if (card.getType() == Card.Type.STAGE) {
-                vps += card.getProducts().get(Card.Resource.VP);
+                vps += card.getProducts(player).get(Card.Resource.VP);
                 vps += card.getSpecialVps(player);
             }
         }
@@ -82,7 +82,7 @@ class ScoreImpl implements Score {
         int vps = 0;
         for (Card card : player.getPlayedCards()) {
             if (card.getType() == Card.Type.STRUCTURE) {
-                vps += card.getProducts().get(Card.Resource.VP);
+                vps += card.getProducts(player).get(Card.Resource.VP);
             }
         }
         return vps;
@@ -93,7 +93,7 @@ class ScoreImpl implements Score {
         int vps = 0;
         for (Card card : player.getPlayedCards()) {
             if (card.getType() == Card.Type.COMMERCIAL) {
-                vps += card.getProducts().get(Card.Resource.VP);
+                vps += card.getProducts(player).get(Card.Resource.VP);
                 vps += card.getSpecialVps(player);
             }
         }
@@ -105,7 +105,7 @@ class ScoreImpl implements Score {
         int vps = 0;
         for (Card card : player.getPlayedCards()) {
             if (card.getType() == Card.Type.GUILD) {
-                vps += card.getProducts().get(Card.Resource.VP);
+                vps += card.getProducts(player).get(Card.Resource.VP);
                 vps += card.getSpecialVps(player);
             }
         }
@@ -117,14 +117,14 @@ class ScoreImpl implements Score {
         int sciences[] = new int[3];
         int wilds = 0;
         for (Card card : player.getPlayedCards()) {
-            if (card.getProducts().get(Card.Resource.COMPASS) == 1 && card.getProducts().get(Card.Resource.GEAR) == 1
-                    && card.getProducts().get(Card.Resource.TABLET) == 1) {
+            if (card.getProducts(player).get(Card.Resource.COMPASS) == 1 && card.getProducts(player).get(Card.Resource.GEAR) == 1
+                    && card.getProducts(player).get(Card.Resource.TABLET) == 1) {
                 wilds++;
-            } else if (card.getProducts().get(Card.Resource.COMPASS) == 1) {
+            } else if (card.getProducts(player).get(Card.Resource.COMPASS) == 1) {
                 sciences[0]++;
-            } else if (card.getProducts().get(Card.Resource.GEAR) == 1) {
+            } else if (card.getProducts(player).get(Card.Resource.GEAR) == 1) {
                 sciences[1]++;
-            } else if (card.getProducts().get(Card.Resource.TABLET) == 1) {
+            } else if (card.getProducts(player).get(Card.Resource.TABLET) == 1) {
                 sciences[2]++;
             }
         }

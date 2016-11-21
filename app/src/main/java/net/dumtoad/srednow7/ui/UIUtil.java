@@ -44,12 +44,12 @@ public class UIUtil {
         for(Card card : player.getPlayedCards()) {
             int numRes = 0;
             for(Card.Resource res : ored) {
-                if(card.getProducts().get(res) > 0) numRes++;
+                if(card.getProducts(player).get(res) > 0) numRes++;
             }
             if(numRes > 1) {
                 complicated.add(card);
             } else {
-                production.addResources(card.getProducts());
+                production.addResources(card.getProducts(player));
             }
         }
 
@@ -62,7 +62,7 @@ public class UIUtil {
             for(Card card : complicated) {
                 sb.append("\n ");
                 for(Card.Resource product : ored) {
-                    if(card.getProducts().get(product) == 1) {
+                    if(card.getProducts(player).get(product) == 1) {
                         fcs = new ForegroundColorSpan(getColorId(product.toString()));
                         appendSb(sb, product.toString().toLowerCase(), fcs);
                         sb.append(" or ");
@@ -116,40 +116,40 @@ public class UIUtil {
         int numNonZero;
 
         numNonZero = 0;
-        for (Integer i : card.getCosts().values()) {
+        for (Integer i : card.getCosts(player).values()) {
             if (!i.equals(0))
                 numNonZero++;
         }
         if (numNonZero != 0) {
             sb.append("Costs:\n");
-            for (Card.Resource resource : card.getCosts().keySet()) {
-                if (card.getCosts().get(resource).equals(0))
+            for (Card.Resource resource : card.getCosts(player).keySet()) {
+                if (card.getCosts(player).get(resource).equals(0))
                     continue;
                 sb.append(" ");
                 fcs = new ForegroundColorSpan(getColorId(resource.toString()));
                 appendSb(sb, resource.toString().toLowerCase(), fcs);
                 sb.append(": ");
-                sb.append(card.getCosts().get(resource).toString());
+                sb.append(card.getCosts(player).get(resource).toString());
                 sb.append("\n");
             }
         }
 
         numNonZero = 0;
-        for (Integer i : card.getProducts().values()) {
+        for (Integer i : card.getProducts(player).values()) {
             if (!i.equals(0))
                 numNonZero++;
         }
         if (numNonZero != 0) {
             sb.append("Produces:\n");
             int i = 1;
-            for (Card.Resource product : card.getProducts().keySet()) {
-                if (card.getProducts().get(product).equals(0))
+            for (Card.Resource product : card.getProducts(player).keySet()) {
+                if (card.getProducts(player).get(product).equals(0))
                     continue;
                 sb.append(" ");
                 fcs = new ForegroundColorSpan(getColorId(product.toString()));
                 appendSb(sb, product.toString().toLowerCase(), fcs);
                 sb.append(": ");
-                sb.append(card.getProducts().get(product).toString());
+                sb.append(card.getProducts(player).get(product).toString());
                 if (i < numNonZero && isBaseResource(product.toString())) {
                     sb.append("\tor");
                 }
