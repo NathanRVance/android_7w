@@ -18,7 +18,7 @@ public interface TradeBackend extends Serializable {
     ResQuant prices(Game.Direction direction);
 
     /**
-     * Gets the number of each resource leftover after building card, factoring in current trades
+     * Gets the number of each RESOURCE leftover after building card, factoring in current trades
      *
      * @param card card to be built
      * @return the resources left over

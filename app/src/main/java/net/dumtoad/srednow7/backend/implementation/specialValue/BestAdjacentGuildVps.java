@@ -1,17 +1,16 @@
 package net.dumtoad.srednow7.backend.implementation.specialValue;
 
-import net.dumtoad.srednow7.backend.Game;
 import net.dumtoad.srednow7.backend.Card;
+import net.dumtoad.srednow7.backend.Game;
 import net.dumtoad.srednow7.backend.Player;
-import net.dumtoad.srednow7.bus.Bus;
 
 public class BestAdjacentGuildVps implements SpecialValue {
 
     @Override
-    public int getSpecialValue(Player player) {
+    public int getSpecialValue(Game game, Player player) {
         int max = 0;
         for (Game.Direction direction : Game.Direction.values()) {
-            for (Card c : Bus.bus.getGame().getPlayerDirection(player, direction).getPlayedCards()) {
+            for (Card c : game.getPlayerDirection(player, direction).getPlayedCards()) {
                 if (c.getType() == Card.Type.GUILD) {
                     int vps = c.getProducts(player).get(Card.Resource.VP) + c.getSpecialVps(player);
                     max = (vps > max) ? vps : max;

@@ -16,20 +16,20 @@ import java.util.Stack;
 class TradeBackendImpl implements TradeBackend {
 
     private static final long serialVersionUID = 8687384948278605407L;
-    private int playerNum;
+    private transient Player player;
     private int gold;
     private Map<Game.Direction, ResQuant> trades;
     //Cache prices so that they only have to be calculated once
     private Map<Game.Direction, ResQuant> prices;
 
-    TradeBackendImpl(int playerNum) {
-        this.playerNum = playerNum;
+    TradeBackendImpl(Player player) {
+        this.player = player;
         gold = 3;
         clearAllButGold();
     }
 
-    private Player getPlayer() {
-        return GameImpl.INSTANCE.getPlayers().get(playerNum);
+    void setPlayer(Player player) {
+        this.player = player;
     }
 
     @Override
@@ -47,7 +47,7 @@ class TradeBackendImpl implements TradeBackend {
 
     @Override
     public ResQuant resourcesForSale(Game.Direction direction) {
-        return numAvailable(GameImpl.INSTANCE.getPlayerDirection(getPlayer(), direction), trades.get(direction), false);
+        return numAvailable(GameImpl.INSTANCE.getPlayerDirection(player, direction), trades.get(direction), false);
     }
 
     @Override
@@ -57,7 +57,7 @@ class TradeBackendImpl implements TradeBackend {
 
     @Override
     public ResQuant prices(Game.Direction direction) {
-        if(prices == null) {
+        if (prices == null) {
             prices = new HashMap<>();
             for (Game.Direction d : Game.Direction.values()) {
                 prices.put(d, new ResQuantImpl());
@@ -72,9 +72,9 @@ class TradeBackendImpl implements TradeBackend {
     private int getPrice(Card.Resource resource, Game.Direction direction) {
         Card.TradeType type =
                 (resource == Card.Resource.CLOTH || resource == Card.Resource.GLASS || resource == Card.Resource.PAPER) ?
-                        Card.TradeType.industry : Card.TradeType.resource;
+                        Card.TradeType.INDUSTRY : Card.TradeType.RESOURCE;
 
-        for (Card card : getPlayer().getPlayedCards()) {
+        for (Card card : player.getPlayedCards()) {
             if (card.providesTrade(direction, type)) return 1;
         }
         return 2;
@@ -82,12 +82,12 @@ class TradeBackendImpl implements TradeBackend {
 
     @Override
     public ResQuant getLeftoverResources(Card card) {
-        ResQuant cost = card.getCosts(getPlayer());
+        ResQuant cost = card.getCosts(player);
         cost.put(Card.Resource.GOLD, 0); //Deal with gold elsewhere
         for (ResQuant trade : trades.values()) {
             cost.subtractResources(trade);
         }
-        return numAvailable(getPlayer(), cost, true);
+        return numAvailable(player, cost, true);
     }
 
     @Override
@@ -113,7 +113,7 @@ class TradeBackendImpl implements TradeBackend {
 
     @Override
     public boolean canAfford(Card card) {
-        return getLeftoverResources(card).allZeroOrAbove() && gold >= card.getCosts(getPlayer()).get(Card.Resource.GOLD);
+        return getLeftoverResources(card).allZeroOrAbove() && gold >= card.getCosts(player).get(Card.Resource.GOLD);
     }
 
     @Override
@@ -127,7 +127,7 @@ class TradeBackendImpl implements TradeBackend {
 
     @Override
     public void clear() {
-        gold = getPlayer().getGold();
+        gold = player.getGold();
         clearAllButGold();
     }
 
@@ -142,18 +142,18 @@ class TradeBackendImpl implements TradeBackend {
     //Status is current trade status, and is negative towards player.
     private ResQuant numAvailable(Player player, ResQuant status, boolean includeNonTradeable) {
         ResQuant available = new ResQuantImpl();
-        //Add the wonder resource
+        //Add the wonder RESOURCE
         available.put(player.getWonder().getResource(), 1);
         //Subtract the status resources
         available.subtractResources(status);
-        //complicated are cards where you must choose which resource they produce
+        //complicated are cards where you must choose which RESOURCE they produce
         Stack<Card> complicated = new Stack<>();
         for (Card card : player.getPlayedCards()) {
-            //If we aren't including non-tradeables (everything but resource and industry) skip them now
+            //If we aren't including non-tradeables (everything but RESOURCE and INDUSTRY) skip them now
             if (!includeNonTradeable && card.getType() != Card.Type.RESOURCE && card.getType() != Card.Type.INDUSTRY)
                 continue;
 
-            ResQuant prod = card.getProducts(getPlayer());
+            ResQuant prod = card.getProducts(player);
 
             //Count number of products card produces
             int numProducts = 0;
@@ -162,7 +162,7 @@ class TradeBackendImpl implements TradeBackend {
             }
             if (numProducts == 1) { //Great, a reasonable card. Deal with it now
                 for (Card.Resource res : tradeable) {
-                    available.put(res, available.get(res) + prod.get(res));
+                    available.add(res, prod.get(res));
                 }
             } else if (numProducts > 1) { //Ugh, it's complicated. Deal with it later
                 complicated.push(card);
@@ -171,7 +171,7 @@ class TradeBackendImpl implements TradeBackend {
 
         //We're left with some cards that could produce one of several resources. I think (not sure)
         //that this is an NP-complete problem, so brute force! Find all legal combinations, and take
-        //the maximum available for each resource.
+        //the maximum available for each RESOURCE.
         ResQuant answer = new ResQuantImpl().addResources(available); //Makes a copy of available
         availableRecurse(complicated, available, answer);
 
@@ -190,10 +190,10 @@ class TradeBackendImpl implements TradeBackend {
         } else {
             Card card = cards.pop();
             for (Card.Resource res : tradeable) {
-                if (card.getProducts(getPlayer()).get(res) > 0) {
-                    available.put(res, available.get(res) + 1);
+                if (card.getProducts(player).get(res) > 0) {
+                    available.add(res, 1);
                     availableRecurse(cards, available, answer);
-                    available.put(res, available.get(res) - 1);
+                    available.add(res, -1);
                 }
             }
             cards.push(card);

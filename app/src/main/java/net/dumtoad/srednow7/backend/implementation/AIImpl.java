@@ -9,11 +9,11 @@ import net.dumtoad.srednow7.backend.Game;
 import net.dumtoad.srednow7.backend.Player;
 import net.dumtoad.srednow7.backend.ResQuant;
 import net.dumtoad.srednow7.backend.TradeBackend;
-import net.dumtoad.srednow7.bus.Bus;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Random;
 
@@ -29,8 +29,8 @@ class AIImpl implements AI {
     @Override
     public void selectWonderSide(int playerID) {
         Random random = new Random();
-        Bus.bus.getGame().getSetup(playerID).setWonderSide(random.nextInt(2));
-        Bus.bus.getGame().getSetup(playerID).finish();
+        GameImpl.INSTANCE.getSetup(playerID).setWonderSide(random.nextInt(2));
+        GameImpl.INSTANCE.getSetup(playerID).finish();
     }
 
     @Override
@@ -38,14 +38,14 @@ class AIImpl implements AI {
         updateScientist();
         CardList hand = player.getHand();
         boolean playDiscard = player.isPlayDiscard();
-        ArrayList<CardAction> actions = new ArrayList<>();
+        List<CardAction> actions = new ArrayList<>();
         for (Player.CardAction action : (playDiscard) ? new Player.CardAction[]{Player.CardAction.BUILD} : Player.CardAction.values()) {
             for (Card card : hand) {
                 actions.add(calcCardAction(card, action, playDiscard));
             }
         }
         Collections.sort(actions);
-        doAction(actions.get(0));
+        doAction(actions.get(0), actions.size());
     }
 
     private void updateScientist() {
@@ -57,20 +57,22 @@ class AIImpl implements AI {
         }
     }
 
-    private void doAction(CardAction cardAction) {
-        //Set the trades
-        player.getTradeBackend().clear();
-        for (Game.Direction direction : Game.Direction.values()) {
-            for (Card.Resource res : TradeBackend.tradeable) {
-                player.getTradeBackend().makeTrade(res, cardAction.trades.get(direction).get(res), direction);
-            }
-        }
-        //Do the action
+    private void doAction(CardAction cardAction, int actionsSize) {
         try {
+            //Set the trades
+            player.getTradeBackend().clear();
+            for (Game.Direction direction : Game.Direction.values()) {
+                for (Card.Resource res : TradeBackend.tradeable) {
+                    player.getTradeBackend().makeTrade(res, cardAction.trades.get(direction).get(res), direction);
+                }
+            }
+            System.out.printf("Actions size: %d wonder: %s\n\taction: %s weight: %d\n"
+                    ,actionsSize, player.getWonder().getEnum().toString(), cardAction.action.toString(), cardAction.weight);
+            //Do the action
             player.requestCardAction(cardAction.action, cardAction.card);
-        } catch (Player.BadActionException e) {
+        } catch (Exception e) {
             e.printStackTrace();
-            throw new RuntimeException("Error doing action weight = " + cardAction.weight);
+            throw new RuntimeException("Error doing action = " + cardAction.action + ", weight = " + cardAction.weight);
         }
     }
 
@@ -137,37 +139,36 @@ class AIImpl implements AI {
             int myShields = prod.get(Card.Resource.SHIELD);
             for (Game.Direction direction : Game.Direction.values()) {
                 int sh = 0;
-                for (Card card : Bus.bus.getGame().getPlayerDirection(player, direction).getPlayedCards())
+                for (Card card : GameImpl.INSTANCE.getPlayerDirection(player, direction).getPlayedCards())
                     sh += card.getProducts(player).get(Card.Resource.SHIELD);
                 if ((myShields < sh && myShields + shields >= sh) || (myShields == sh)) {
                     cardAction.weight += shields * 2;
-                } else {
-                    cardAction.weight += shields / 2;
                 }
             }
         }
 
         //Science
         int mult = (scientist) ? 2 : 1;
-        if (Bus.bus.getGame().getEra() < 2 && scientist) mult = 4;
+        if (GameImpl.INSTANCE.getEra() < 2 && scientist) mult = 4;
         //If it is the one(s) we have the least of it's worth 2 * mult, otherwise it's worth mult
         int least = prod.get(Card.Resource.GEAR);
         least = (prod.get(Card.Resource.COMPASS) < least) ? prod.get(Card.Resource.COMPASS) : least;
         least = (prod.get(Card.Resource.TABLET) < least) ? prod.get(Card.Resource.TABLET) : least;
         for (Card.Resource res : new Card.Resource[]{Card.Resource.GEAR, Card.Resource.COMPASS, Card.Resource.TABLET}) {
             if (cardAction.card.getProducts(player).get(res) == 0) continue;
-            if (cardAction.card.getProducts(player).get(res) == least) cardAction.weight += 2 * mult;
+            if (prod.get(res) == least)
+                cardAction.weight += 2 * mult;
             else cardAction.weight += mult;
         }
 
         //Commercial
-        if (cardAction.card.providesTrade(Game.Direction.EAST, Card.TradeType.resource)
-                || cardAction.card.providesTrade(Game.Direction.WEST, Card.TradeType.resource)) {
+        if (cardAction.card.providesTrade(Game.Direction.EAST, Card.TradeType.RESOURCE)
+                || cardAction.card.providesTrade(Game.Direction.WEST, Card.TradeType.RESOURCE)) {
             for (Card.Resource res : new Card.Resource[]{Card.Resource.WOOD, Card.Resource.STONE, Card.Resource.CLAY, Card.Resource.ORE}) {
                 if (prod.get(res) == 0) cardAction.weight++;
             }
-        } else if (cardAction.card.providesTrade(Game.Direction.EAST, Card.TradeType.industry)
-                || cardAction.card.providesTrade(Game.Direction.WEST, Card.TradeType.industry)) {
+        } else if (cardAction.card.providesTrade(Game.Direction.EAST, Card.TradeType.INDUSTRY)
+                || cardAction.card.providesTrade(Game.Direction.WEST, Card.TradeType.INDUSTRY)) {
             for (Card.Resource res : new Card.Resource[]{Card.Resource.CLOTH, Card.Resource.GLASS, Card.Resource.PAPER}) {
                 if (prod.get(res) == 0) cardAction.weight += 2;
             }
@@ -187,10 +188,14 @@ class AIImpl implements AI {
             //We've already played all our wonder stages!
             cardAction.weight = -1;
         } else {
-            cardAction.weight += Bus.bus.getGame().getEra() * -1 + 3;
+            cardAction.weight += GameImpl.INSTANCE.getEra() * -1 + 3;
             CardAction ca = new CardAction(nextStage, Player.CardAction.BUILD);
             calcBuild(ca, player, false);
             cardAction.weight += ca.weight;
+            if (GameImpl.INSTANCE.getRound() >= 5 && nextStage.getEnum().toString().contains("" + (GameImpl.INSTANCE.getEra() + 1))) {
+                //If we're at the end of the era and haven't played this era's wonder stage yet
+                cardAction.weight *= 2;
+            }
 
             //Trade cost
             int cost = getTradeGoldCost(ca, player);
@@ -209,21 +214,21 @@ class AIImpl implements AI {
 
     private void addNextEffect(CardAction cardAction, Player player) {
         CardAction ca = new CardAction(cardAction.card, Player.CardAction.BUILD);
-        Player p = Bus.bus.getGame().getPlayerDirection(player, Bus.bus.getGame().getPassingDirection());
+        Player p = GameImpl.INSTANCE.getPlayerDirection(player, GameImpl.INSTANCE.getPassingDirection());
         calcBuild(ca, p, false);
         //Perhaps we'll play a card just to spite our opponents!
-        cardAction.weight += ca.weight / 2;
+        cardAction.weight += ca.weight / 3;
     }
 
     //Simultaneously sets cardAction's trades field to the optimal solution
     private int getTradeGoldCost(CardAction cardAction, Player player) {
         //Make a new one because we don't want to mess up another player's trades
-        TradeBackend tb = new TradeBackendImpl(GameImpl.INSTANCE.getPlayers().indexOf(player));
+        TradeBackend tb = new TradeBackendImpl(player);
         if (tb.canAfford(cardAction.card)) return 0;
 
         //Favor the player who's currently losing...
-        Game.Direction favor = (Bus.bus.getGame().getPlayerDirection(player, Game.Direction.EAST).getScore().getTotalVPs()
-                < Bus.bus.getGame().getPlayerDirection(player, Game.Direction.WEST).getScore().getTotalVPs()) ?
+        Game.Direction favor = (GameImpl.INSTANCE.getPlayerDirection(player, Game.Direction.EAST).getScore().getTotalVPs()
+                < GameImpl.INSTANCE.getPlayerDirection(player, Game.Direction.WEST).getScore().getTotalVPs()) ?
                 Game.Direction.EAST : Game.Direction.WEST;
         //...and set up a direction array so that we can quickly go through them in the right order
         Game.Direction[] defaultDirectionOrder = new Game.Direction[]{favor, favor == Game.Direction.EAST ? Game.Direction.WEST : Game.Direction.EAST};
@@ -275,14 +280,14 @@ class AIImpl implements AI {
 
                 for (Game.Direction direction : buyOrder) {
                     if (tb.resourcesForSale(direction).get(res) > 0 && tb.goldAvailable() >= tb.prices(direction).get(res)) {
-                        cardAction.trades.get(direction).put(res, cardAction.trades.get(direction).get(res) + 1);
+                        cardAction.trades.get(direction).add(res, 1);
                         tb.makeTrade(res, 1, direction);
                         int cost = optimizeCostsRecurse(cardAction, tb, defaultDirectionOrder, bestTrade, bestCost);
                         if (cost < bestCost) {
                             bestCost = cost;
                         }
                         //Undo what we just did so we can try something else
-                        cardAction.trades.get(direction).put(res, cardAction.trades.get(direction).get(res) - 1);
+                        cardAction.trades.get(direction).add(res, -1);
                         tb.makeTrade(res, -1, direction);
                     }
                 }

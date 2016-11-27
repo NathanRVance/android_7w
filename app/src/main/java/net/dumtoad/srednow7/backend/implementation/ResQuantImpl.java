@@ -36,6 +36,12 @@ public class ResQuantImpl extends TreeMap<Card.Resource, Integer> implements Res
     }
 
     @Override
+    public ResQuant add(Card.Resource resource, int num) {
+        put(resource, get(resource) + num);
+        return this;
+    }
+
+    @Override
     public boolean allZeroOrBelow() {
         for (Card.Resource resource : keySet()) {
             if (get(resource) > 0)

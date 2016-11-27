@@ -47,7 +47,7 @@ class CardImpl implements Card {
 
     @Override
     public int getSpecialGold(Player player) {
-        return specialGold.getSpecialValue(player);
+        return specialGold.getSpecialValue(GameImpl.INSTANCE, player);
     }
 
     @Override
@@ -57,7 +57,7 @@ class CardImpl implements Card {
 
     @Override
     public int getSpecialVps(Player player) {
-        return specialVps.getSpecialValue(player);
+        return specialVps.getSpecialValue(GameImpl.INSTANCE, player);
     }
 
     @Override
@@ -114,12 +114,17 @@ class CardImpl implements Card {
 
     @Override
     public ResQuant getProducts(Player player) {
-        return products.getResources(player);
+        return products.getResources(GameImpl.INSTANCE, player);
+    }
+
+    @Override
+    public VariableResource.ResourceStyle getProductionStyle() {
+        return products.getStyle();
     }
 
     @Override
     public ResQuant getCosts(Player player) {
-        return costs.getResources(player);
+        return costs.getResources(GameImpl.INSTANCE, player);
     }
 
 

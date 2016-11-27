@@ -28,14 +28,14 @@ class PlayerImpl implements Player {
     private PlayBuffer playBuffer = new PlayBuffer();
     private boolean playedFree = false;
     private boolean hasFinishedTurn = false;
-    private TradeBackend tradeBackend;
+    private TradeBackendImpl tradeBackend;
     private CardList hand;
 
-    PlayerImpl(CharSequence name, boolean isAI, int ID) {
+    PlayerImpl(CharSequence name, boolean isAI) {
         this.name = name.toString();
         this.isAI = isAI;
         if (isAI) ai = new AIImpl(this);
-        tradeBackend = new TradeBackendImpl(ID);
+        tradeBackend = new TradeBackendImpl(this);
     }
 
     @Override
@@ -161,7 +161,7 @@ class PlayerImpl implements Player {
     @Override
     public boolean canPlay7thCard() {
         for (Card card : played) {
-            if (card.providesAttribute(Card.Attribute.Play7thCard))
+            if (card.providesAttribute(Card.Attribute.PLAY_7TH_CARD))
                 return true;
         }
         return false;
@@ -170,7 +170,7 @@ class PlayerImpl implements Player {
     @Override
     public boolean canPlay1Free() {
         for (Card card : played) {
-            if (card.providesAttribute(Card.Attribute.Play1Free))
+            if (card.providesAttribute(Card.Attribute.PLAY_1_FREE))
                 return true;
         }
         return false;
@@ -182,7 +182,7 @@ class PlayerImpl implements Player {
 
     @Override
     public boolean isPlayDiscard() {
-        return !played.isEmpty() && played.get(played.size() - 1).providesAttribute(Card.Attribute.FreeBuild);
+        return !played.isEmpty() && played.get(played.size() - 1).providesAttribute(Card.Attribute.FREE_BUILD);
     }
 
     @Override
@@ -253,6 +253,7 @@ class PlayerImpl implements Player {
         s.defaultReadObject();
         ai = new AIImpl(this);
         score = new ScoreImpl(this, s.readInt(), (int[]) s.readObject());
+        tradeBackend.setPlayer(this);
     }
 
     private static class PlayBuffer implements Serializable {

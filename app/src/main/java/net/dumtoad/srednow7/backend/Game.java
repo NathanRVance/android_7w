@@ -27,6 +27,11 @@ public interface Game extends Serializable {
      */
     int getEra();
 
+    /**
+     * @return round number, between 0 and 5 inclusive (6 if playing an extra card)
+     */
+    int getRound();
+
     void discard(Card card);
 
     void startNewGame();

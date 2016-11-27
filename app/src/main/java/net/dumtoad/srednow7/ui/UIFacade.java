@@ -65,6 +65,10 @@ public class UIFacade implements UI {
     public void invalidateView() {
         if (displayQueue.isEmpty()) {
             needsNewView = true;
+            //Throw up a blank fragment
+            MainActivity.getMainActivity().getFragmentManager().beginTransaction()
+                    .replace(R.id.main_layout, new Fragment(), FRAGMENT_TAG)
+                    .commit();
         } else {
             currentDisplay = displayQueue.remove();
             MainActivity.getMainActivity().getFragmentManager().beginTransaction()

@@ -9,6 +9,8 @@ public interface ResQuant extends Map<Card.Resource, Integer>, Serializable {
 
     ResQuant subtractResources(ResQuant sub);
 
+    ResQuant add(Card.Resource resource, int num);
+
     boolean allZeroOrBelow();
 
     boolean allZeroOrAbove();

@@ -1,5 +1,6 @@
 package net.dumtoad.srednow7.backend.implementation.specialValue;
 
+import net.dumtoad.srednow7.backend.Game;
 import net.dumtoad.srednow7.backend.Player;
 
 public class MultiSpecial implements SpecialValue {
@@ -11,10 +12,10 @@ public class MultiSpecial implements SpecialValue {
     }
 
     @Override
-    public int getSpecialValue(Player player) {
+    public int getSpecialValue(Game game, Player player) {
         int total = 0;
         for(SpecialValue specialValue : specialValues) {
-            total += specialValue.getSpecialValue(player);
+            total += specialValue.getSpecialValue(game, player);
         }
         return total;
     }

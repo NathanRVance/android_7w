@@ -58,18 +58,6 @@ public class MainActivity extends Activity {
         return gestureDetector.onTouchEvent(ev) || super.dispatchTouchEvent(ev);
     }
 
-    private void onSwipeRight() {
-        if (lrs != null) {
-            lrs.swipeRight();
-        }
-    }
-
-    private void onSwipeLeft() {
-        if (lrs != null) {
-            lrs.swipeLeft();
-        }
-    }
-
     public void registerLeftRightSwipe(LeftRightSwipe lrs) {
         this.lrs = lrs;
     }
@@ -81,27 +69,22 @@ public class MainActivity extends Activity {
 
         @Override
         public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
+            if(lrs == null) return false;
             boolean result = false;
-            try {
-                float diffY = e2.getY() - e1.getY();
-                float diffX = e2.getX() - e1.getX();
-                if (Math.abs(diffX) > Math.abs(diffY)) {
-                    if (Math.abs(diffX) > SWIPE_THRESHOLD && Math.abs(velocityX) > SWIPE_VELOCITY_THRESHOLD) {
-                        if (diffX > 0) {
-                            onSwipeRight();
-                        } else {
-                            onSwipeLeft();
-                        }
-                        result = true;
+            float diffY = e2.getY() - e1.getY();
+            float diffX = e2.getX() - e1.getX();
+            if (Math.abs(diffX) > Math.abs(diffY)) {
+                if (Math.abs(diffX) > SWIPE_THRESHOLD && Math.abs(velocityX) > SWIPE_VELOCITY_THRESHOLD) {
+                    if (diffX > 0) {
+                        lrs.swipeRight();
+                    } else {
+                        lrs.swipeLeft();
                     }
+                    result = true;
                 }
-
-            } catch (Exception exception) {
-                exception.printStackTrace();
             }
             return result;
         }
     }
-
 
 }

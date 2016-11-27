@@ -35,7 +35,7 @@ public class GameImpl implements Game {
     public void initialize(CharSequence[] playerNames, boolean[] ais) {
         players = new ArrayList<>();
         for (int playerID = 0; playerID < playerNames.length; playerID++) {
-            players.add(new PlayerImpl(playerNames[playerID], ais[playerID], playerID));
+            players.add(new PlayerImpl(playerNames[playerID], ais[playerID]));
         }
 
         setups = new ArrayList<>();
@@ -82,7 +82,6 @@ public class GameImpl implements Game {
                 return;
             }
         }
-
         if (round == 6) {
             round++;
             boolean someonePlayed = false;
@@ -95,7 +94,6 @@ public class GameImpl implements Game {
             if (someonePlayed)
                 return;
         }
-
         if (round >= 6) {
             round = 0;
             for (PlayerImpl player : players) {
@@ -114,7 +112,6 @@ public class GameImpl implements Game {
             }
             return;
         }
-
         round++;
         //Since there are many different ways a round can end, we'll start by passing the hands (this won't affect gameplay)
         if (getPassingDirection() == Direction.WEST) {
@@ -190,6 +187,11 @@ public class GameImpl implements Game {
     @Override
     public int getEra() {
         return era;
+    }
+
+    @Override
+    public int getRound() {
+        return round;
     }
 
     @Override

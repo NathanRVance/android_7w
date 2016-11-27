@@ -216,19 +216,19 @@ class Generate {
 
         cards.add(new CardImpl.Builder(Card.Type.COMMERCIAL, Generate.Cards.East_Trading_Post)
                 .setMessage("Can trade 1 coin for resources with player to the east.")
-                .setTradeType(Card.TradeType.resource)
+                .setTradeType(Card.TradeType.RESOURCE)
                 .addTradeDirection(Game.Direction.EAST)
                 .setMakesFree(Generate.Cards.Forum).build());
 
         cards.add(new CardImpl.Builder(Card.Type.COMMERCIAL, Generate.Cards.West_Trading_Post)
                 .setMessage("Can trade 1 coin for resources with player to the west.")
-                .setTradeType(Card.TradeType.resource)
+                .setTradeType(Card.TradeType.RESOURCE)
                 .addTradeDirection(Game.Direction.WEST)
                 .setMakesFree(Generate.Cards.Forum).build());
 
         cards.add(new CardImpl.Builder(Card.Type.COMMERCIAL, Generate.Cards.Marketplace)
-                .setMessage("Can trade 1 coin for industry products with adjacent players.")
-                .setTradeType(Card.TradeType.industry)
+                .setMessage("Can trade 1 coin for INDUSTRY products with adjacent players.")
+                .setTradeType(Card.TradeType.INDUSTRY)
                 .addTradeDirection(Game.Direction.EAST)
                 .addTradeDirection(Game.Direction.WEST)
                 .setMakesFree(Generate.Cards.Caravansery).build());
@@ -333,11 +333,11 @@ class Generate {
                 .setMakesFree(Generate.Cards.Lighthouse).build());
 
         cards.add(new CardImpl.Builder(Card.Type.COMMERCIAL, Generate.Cards.Vineyard)
-                .setMessage("1 coin for each resource card of adjacent players or your own.")
+                .setMessage("1 coin for each RESOURCE card of adjacent players or your own.")
                 .setSpecialGold(new SpecialDependsPlayed(Card.Type.RESOURCE, 1, true, true)).build());
 
         cards.add(new CardImpl.Builder(Card.Type.COMMERCIAL, Generate.Cards.Bazaar)
-                .setMessage("2 coins for each industry card of adjacent players or your own.")
+                .setMessage("2 coins for each INDUSTRY card of adjacent players or your own.")
                 .setSpecialGold(new SpecialDependsPlayed(Card.Type.INDUSTRY, 2, true, true)).build());
 
         cards.add(new CardImpl.Builder(Card.Type.MILITARY, Generate.Cards.Walls)
@@ -437,7 +437,7 @@ class Generate {
                 .setCosts(new StaticResource().setResource(Card.Resource.ORE, 1)
                         .setResource(Card.Resource.WOOD, 1)
                         .setResource(Card.Resource.CLOTH, 1))
-                .setMessage("1 coin and 1 vp for each resource card.")
+                .setMessage("1 coin and 1 vp for each RESOURCE card.")
                 .setSpecialGold(new SpecialDependsPlayed(Card.Type.RESOURCE, 1, false, true))
                 .setSpecialVps(new SpecialDependsPlayed(Card.Type.RESOURCE, 1, false, true))
                 .setMakesThisFree(Generate.Cards.Forum).build());
@@ -528,7 +528,7 @@ class Generate {
                         .setResource(Card.Resource.CLAY, 1)
                         .setResource(Card.Resource.STONE, 1)
                         .setResource(Card.Resource.WOOD, 1))
-                .setMessage("1 vp for each resource card owned by adjacent players.")
+                .setMessage("1 vp for each RESOURCE card owned by adjacent players.")
                 .setSpecialVps(new SpecialDependsPlayed(Card.Type.RESOURCE, 1, true, false)).build());
 
         cards.add(new CardImpl.Builder(Card.Type.GUILD, Generate.Cards.Craftmens_Guild)
@@ -568,7 +568,7 @@ class Generate {
                 .setCosts(new StaticResource().setResource(Card.Resource.WOOD, 3)
                         .setResource(Card.Resource.PAPER, 1)
                         .setResource(Card.Resource.GLASS, 1))
-                .setMessage("1 vp for each resource, industrial, and guild card.")
+                .setMessage("1 vp for each RESOURCE, industrial, and guild card.")
                 .setSpecialVps(new MultiSpecial(
                         new SpecialDependsPlayed(Card.Type.RESOURCE, 1, false, true),
                         new SpecialDependsPlayed(Card.Type.INDUSTRY, 1, false, true),
@@ -666,7 +666,7 @@ class Generate {
                         .setProducts(new StaticResource().setResource(Card.Resource.VP, 3)).build())
                 .addStage(new CardImpl.Builder(Card.Type.STAGE, Cards.Stage_2)
                         .setCosts(new StaticResource().setResource(Card.Resource.STONE, 2))
-                        .addAttribute(Card.Attribute.Play1Free)
+                        .addAttribute(Card.Attribute.PLAY_1_FREE)
                         .setMessage("Once per age can build a card for free.").build())
                 .addStage(new CardImpl.Builder(Card.Type.STAGE, Cards.Stage_3)
                         .setCosts(new StaticResource().setResource(Card.Resource.ORE, 2))
@@ -680,7 +680,7 @@ class Generate {
                         .setProducts(new StaticResource().setResource(Card.Resource.VP, 3)).build())
                 .addStage(new CardImpl.Builder(Card.Type.STAGE, Cards.Stage_2)
                         .setCosts(new StaticResource().setResource(Card.Resource.ORE, 3))
-                        .addAttribute(Card.Attribute.FreeBuild)
+                        .addAttribute(Card.Attribute.FREE_BUILD)
                         .setMessage("Can look through all discards since the beginning of the game, pick one, and build it for free.").build())
                 .addStage(new CardImpl.Builder(Card.Type.STAGE, Cards.Stage_3)
                         .setCosts(new StaticResource().setResource(Card.Resource.CLOTH, 2))
@@ -765,7 +765,7 @@ class Generate {
                 .addStage(new CardImpl.Builder(Card.Type.STAGE, Cards.Stage_2)
                         .setCosts(new StaticResource().setResource(Card.Resource.WOOD, 2)
                                 .setResource(Card.Resource.GLASS, 1))
-                        .addAttribute(Card.Attribute.Play7thCard)
+                        .addAttribute(Card.Attribute.PLAY_7TH_CARD)
                         .setMessage("Can now play 7th age card rather than discarding it.").build())
                 .addStage(new CardImpl.Builder(Card.Type.STAGE, Cards.Stage_3)
                         .setCosts(new StaticResource().setResource(Card.Resource.CLAY, 3)
@@ -780,7 +780,7 @@ class Generate {
                 .addStage(new CardImpl.Builder(Card.Type.STAGE, Cards.Stage_1)
                         .setCosts(new StaticResource().setResource(Card.Resource.WOOD, 2))
                         .setMessage("Can trade 1 coin for resources with adjacent players.")
-                        .setTradeType(Card.TradeType.resource)
+                        .setTradeType(Card.TradeType.RESOURCE)
                         .addTradeDirection(Game.Direction.EAST)
                         .addTradeDirection(Game.Direction.WEST).build())
                 .addStage(new CardImpl.Builder(Card.Type.STAGE, Cards.Stage_2)
@@ -798,18 +798,18 @@ class Generate {
                 .addStage(new CardImpl.Builder(Card.Type.STAGE, Cards.Stage_1)
                         .setCosts(new StaticResource().setResource(Card.Resource.ORE, 2))
                         .setProducts(new StaticResource().setResource(Card.Resource.VP, 2))
-                        .addAttribute(Card.Attribute.FreeBuild)
+                        .addAttribute(Card.Attribute.FREE_BUILD)
                         .setMessage("Can look through all discards since the beginning of the game, pick one, and build it for free.").build())
                 .addStage(new CardImpl.Builder(Card.Type.STAGE, Cards.Stage_2)
                         .setCosts(new StaticResource().setResource(Card.Resource.CLAY, 3))
                         .setProducts(new StaticResource().setResource(Card.Resource.VP, 1))
-                        .addAttribute(Card.Attribute.FreeBuild)
+                        .addAttribute(Card.Attribute.FREE_BUILD)
                         .setMessage("Can look through all discards since the beginning of the game, pick one, and build it for free.").build())
                 .addStage(new CardImpl.Builder(Card.Type.STAGE, Cards.Stage_3)
                         .setCosts(new StaticResource().setResource(Card.Resource.CLOTH, 1)
                                 .setResource(Card.Resource.PAPER, 1)
                                 .setResource(Card.Resource.GLASS, 1))
-                        .addAttribute(Card.Attribute.FreeBuild)
+                        .addAttribute(Card.Attribute.FREE_BUILD)
                         .setMessage("Can look through all discards since the beginning of the game, pick one, and build it for free.").build())
                 .build());
 

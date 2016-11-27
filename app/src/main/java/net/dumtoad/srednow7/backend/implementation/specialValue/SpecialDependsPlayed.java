@@ -1,9 +1,8 @@
 package net.dumtoad.srednow7.backend.implementation.specialValue;
 
-import net.dumtoad.srednow7.backend.Game;
 import net.dumtoad.srednow7.backend.Card;
+import net.dumtoad.srednow7.backend.Game;
 import net.dumtoad.srednow7.backend.Player;
-import net.dumtoad.srednow7.bus.Bus;
 
 public class SpecialDependsPlayed implements SpecialValue {
 
@@ -20,11 +19,11 @@ public class SpecialDependsPlayed implements SpecialValue {
     }
 
     @Override
-    public int getSpecialValue(Player player) {
+    public int getSpecialValue(Game game, Player player) {
         int ret = 0;
         if (includeAdjacent) {
             for (Game.Direction direction : Game.Direction.values()) {
-                for (Card c : Bus.bus.getGame().getPlayerDirection(player, direction).getPlayedCards()) {
+                for (Card c : game.getPlayerDirection(player, direction).getPlayedCards()) {
                     if (c.getType() == type) {
                         ret += amount;
                     }

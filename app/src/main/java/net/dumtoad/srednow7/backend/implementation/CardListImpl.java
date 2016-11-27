@@ -44,7 +44,7 @@ public class CardListImpl implements CardList {
         return null;
     }
 
-    private void writeObject(ObjectOutputStream s) throws IOException {
+    private synchronized void writeObject(ObjectOutputStream s) throws IOException {
         Enum[] names = new Enum[size()];
         for (int i = 0; i < size(); i++) {
             names[i] = get(i).getEnum();
@@ -67,7 +67,7 @@ public class CardListImpl implements CardList {
     }
 
     @Override
-    public int size() {
+    public synchronized int size() {
         return cards.size();
     }
 
@@ -101,12 +101,12 @@ public class CardListImpl implements CardList {
     }
 
     @Override
-    public boolean add(Card card) {
+    public synchronized boolean add(Card card) {
         return cards.add(card);
     }
 
     @Override
-    public boolean remove(Object o) {
+    public synchronized boolean remove(Object o) {
         return cards.remove(o);
     }
 
@@ -116,27 +116,27 @@ public class CardListImpl implements CardList {
     }
 
     @Override
-    public boolean addAll(@NonNull Collection<? extends Card> collection) {
+    public synchronized boolean addAll(@NonNull Collection<? extends Card> collection) {
         return cards.addAll(collection);
     }
 
     @Override
-    public boolean addAll(int i, @NonNull Collection<? extends Card> collection) {
+    public synchronized boolean addAll(int i, @NonNull Collection<? extends Card> collection) {
         return cards.addAll(i, collection);
     }
 
     @Override
-    public boolean removeAll(@NonNull Collection<?> collection) {
+    public synchronized boolean removeAll(@NonNull Collection<?> collection) {
         return cards.removeAll(collection);
     }
 
     @Override
-    public boolean retainAll(@NonNull Collection<?> collection) {
+    public synchronized boolean retainAll(@NonNull Collection<?> collection) {
         return cards.retainAll(collection);
     }
 
     @Override
-    public void clear() {
+    public synchronized void clear() {
         cards.clear();
     }
 
@@ -146,17 +146,17 @@ public class CardListImpl implements CardList {
     }
 
     @Override
-    public Card set(int i, Card card) {
+    public synchronized Card set(int i, Card card) {
         return cards.set(i, card);
     }
 
     @Override
-    public void add(int i, Card card) {
+    public synchronized void add(int i, Card card) {
         cards.add(i, card);
     }
 
     @Override
-    public Card remove(int i) {
+    public synchronized Card remove(int i) {
         return cards.remove(i);
     }
 

@@ -15,6 +15,8 @@ public interface Card {
 
     ResQuant getProducts(Player player);
 
+    VariableResource.ResourceStyle getProductionStyle();
+
     ResQuant getCosts(Player player);
 
     int getSpecialVps(Player player);
@@ -59,14 +61,14 @@ public interface Card {
     }
 
     enum TradeType {
-        resource,
-        industry
+        RESOURCE,
+        INDUSTRY
     }
 
     enum Attribute {
-        Play7thCard,
-        Play1Free,
-        FreeBuild
+        PLAY_7TH_CARD,
+        PLAY_1_FREE,
+        FREE_BUILD
     }
 
     interface Builder {

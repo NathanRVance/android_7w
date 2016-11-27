@@ -51,9 +51,10 @@ class AndroidBus implements Bus {
     public void loadGame(Serializable contents) {
         Serializable[] in = (Serializable[]) contents;
         try {
-            ui = (UI) in[1];
             game = (Game) in[0];
+            ui = (UI) in[1];
         } catch (Exception e) {
+            e.printStackTrace();
             ui = new UIFacade();
             game = new GameImpl();
             game.startNewGame();
