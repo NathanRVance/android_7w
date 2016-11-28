@@ -73,10 +73,11 @@ class PlayerImpl implements Player {
     }
 
     @Override
-    public void requestCardAction(CardAction action, Card card) throws BadActionException {
+    public CardActionResult requestCardAction(CardAction action, Card card) {
         switch (action) {
             case BUILD:
-                checkCanAffordBuild(card);
+                CardActionResult result = checkCanAffordBuild(card);
+                if(result != CardActionResult.OK) return result;
                 boolean hasCoupon = hasCouponFor(card) || isPlayDiscard();
                 if (hasCoupon) {
                     setToBeBuilt(card, 0, 0);
@@ -88,12 +89,12 @@ class PlayerImpl implements Player {
                     setToBeBuilt(card, 0, 0);
                 } else {
                     //We shouldn't get here
-                    throw new BadActionException("Yell at the programmer");
+                    throw new RuntimeException("This shouldn't be reached");
                 }
                 break;
             case DISCARD:
                 if (tradeBackend.hasTrade()) {
-                    throw new BadActionException("Don't trade when discarding");
+                    return CardActionResult.TRADED_WHEN_DISCARDING;
                 }
                 GameImpl.INSTANCE.discard(card);
                 addGoldBuffer(3);
@@ -101,31 +102,41 @@ class PlayerImpl implements Player {
             case WONDER:
                 Card stage = nextWonderStage();
                 if (stage == null) {
-                    throw new BadActionException("Already built all stages");
+                    return CardActionResult.ALREADY_BUILT_ALL_WONDER_STAGES;
                 } else if (tradeBackend.canAfford(stage)) {
                     setToBeBuilt(stage, tradeBackend.getGoldSpent(Game.Direction.EAST),
                             tradeBackend.getGoldSpent(Game.Direction.WEST));
                 } else {
-                    throw new BadActionException("Insufficient resources");
+                    return CardActionResult.INSUFFICIENT_RESOURCES;
                 }
                 break;
             default:
-                throw new BadActionException("Yell at the programmer");
+                throw new RuntimeException("This shouldn't be reached");
         }
         //If we haven't thrown an exception by now, the card has been played and we can remove it from the hand
         hand.remove(card);
         hasFinishedTurn = true;
         GameImpl.INSTANCE.finishedTurn();
+        return CardActionResult.OK;
     }
 
     @Override
     public boolean canAffordBuild(Card card) {
-        try {
-            checkCanAffordBuild(card);
-        } catch (BadActionException e) {
-            return false;
+        return checkCanAffordBuild(card) == CardActionResult.OK;
+    }
+
+    private CardActionResult checkCanAffordBuild(Card card) {
+        boolean hasCoupon = hasCouponFor(card) || isPlayDiscard();
+        if (getPlayedCards().contains(card)) {
+            return CardActionResult.ALREADY_BUILT;
+        } else if (hasCoupon && tradeBackend.hasTrade()) {
+            return CardActionResult.TRADED_WHEN_CAN_BUILD_FREE;
+        } else if (tradeBackend.overpaid(card)) {
+            return CardActionResult.OVERPAID;
+        } else if (!(hasCoupon || tradeBackend.canAfford(card) || (canPlay1Free() && !playedFree))) {
+            return CardActionResult.INSUFFICIENT_RESOURCES;
         }
-        return true;
+        return CardActionResult.OK;
     }
 
     @Override
@@ -135,19 +146,6 @@ class PlayerImpl implements Player {
 
     void setHand(CardList hand) {
         this.hand = hand;
-    }
-
-    private void checkCanAffordBuild(Card card) throws BadActionException {
-        boolean hasCoupon = hasCouponFor(card) || isPlayDiscard();
-        if (getPlayedCards().contains(card)) {
-            throw new BadActionException("Already built " + card.getEnum());
-        } else if (hasCoupon && tradeBackend.hasTrade()) {
-            throw new BadActionException("Don't trade, you can build for free");
-        } else if (tradeBackend.overpaid(card)) {
-            throw new BadActionException("Overpaid, undo some trades");
-        } else if (!(hasCoupon || tradeBackend.canAfford(card) || (canPlay1Free() && !playedFree))) {
-            throw new BadActionException("Insufficient resources");
-        }
     }
 
     @Override

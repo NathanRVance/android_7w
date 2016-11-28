@@ -19,9 +19,9 @@ public interface Player extends Serializable {
      *
      * @param action action to be performed using the card
      * @param card   card to be played
-     * @throws BadActionException if card can't be played. Details in exception message
+     * @return result of this request
      */
-    void requestCardAction(CardAction action, Card card) throws BadActionException;
+    CardActionResult requestCardAction(CardAction action, Card card);
 
     boolean canAffordBuild(Card card);
 
@@ -50,10 +50,14 @@ public interface Player extends Serializable {
         WONDER
     }
 
-    class BadActionException extends Exception {
-        public BadActionException(String s) {
-            super(s);
-        }
+    enum CardActionResult {
+        OK,
+        TRADED_WHEN_DISCARDING,
+        TRADED_WHEN_CAN_BUILD_FREE,
+        ALREADY_BUILT_ALL_WONDER_STAGES,
+        INSUFFICIENT_RESOURCES,
+        ALREADY_BUILT,
+        OVERPAID
     }
 
 }

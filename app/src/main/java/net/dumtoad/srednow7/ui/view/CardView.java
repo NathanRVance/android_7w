@@ -27,15 +27,35 @@ public class CardView extends Button {
     }
 
     private void requestAction(Player player, Player.CardAction action, Card card) {
-        boolean succeeded = true;
-        try {
-            player.requestCardAction(action, card);
-        } catch (Player.BadActionException e) {
-            Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
-            succeeded = false;
-        }
-        if(succeeded)
+        Player.CardActionResult result = player.requestCardAction(action, card);
+        if (result == Player.CardActionResult.OK) {
             Bus.bus.getUI().invalidateView();
+        } else {
+            String error;
+            switch (result) {
+                case TRADED_WHEN_DISCARDING:
+                    error = "Don't trade when discarding";
+                    break;
+                case TRADED_WHEN_CAN_BUILD_FREE:
+                    error = "Don't trade, you can build for free";
+                    break;
+                case ALREADY_BUILT_ALL_WONDER_STAGES:
+                    error = "Already built all stages";
+                    break;
+                case INSUFFICIENT_RESOURCES:
+                    error = "Insufficient resources";
+                    break;
+                case ALREADY_BUILT:
+                    error = "Already built " + card.getEnum();
+                    break;
+                case OVERPAID:
+                    error = "Overpaid, undo some trades";
+                    break;
+                default:
+                    error = "Yell at the programmer";
+            }
+            Toast.makeText(getContext(), error, Toast.LENGTH_SHORT).show();
+        }
     }
 
     private void build(final Card card, final Player player, final boolean freePlay) {
