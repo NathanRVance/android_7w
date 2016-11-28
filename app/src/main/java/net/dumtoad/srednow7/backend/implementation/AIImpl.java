@@ -58,22 +58,17 @@ class AIImpl implements AI {
     }
 
     private void doAction(CardAction cardAction, int actionsSize) {
-        try {
-            //Set the trades
-            player.getTradeBackend().clear();
-            for (Game.Direction direction : Game.Direction.values()) {
-                for (Card.Resource res : TradeBackend.tradeable) {
-                    player.getTradeBackend().makeTrade(res, cardAction.trades.get(direction).get(res), direction);
-                }
+        //Set the trades
+        player.getTradeBackend().clear();
+        for (Game.Direction direction : Game.Direction.values()) {
+            for (Card.Resource res : TradeBackend.tradeable) {
+                player.getTradeBackend().makeTrade(res, cardAction.trades.get(direction).get(res), direction);
             }
-            System.out.printf("Actions size: %d wonder: %s\n\taction: %s weight: %d\n"
-                    ,actionsSize, player.getWonder().getEnum().toString(), cardAction.action.toString(), cardAction.weight);
-            //Do the action
-            player.requestCardAction(cardAction.action, cardAction.card);
-        } catch (Exception e) {
-            e.printStackTrace();
-            throw new RuntimeException("Error doing action = " + cardAction.action + ", weight = " + cardAction.weight);
         }
+        System.out.printf("Actions size: %d wonder: %s\n\taction: %s weight: %d\n"
+                , actionsSize, player.getWonder().getEnum().toString(), cardAction.action.toString(), cardAction.weight);
+        //Do the action
+        player.requestCardAction(cardAction.action, cardAction.card);
     }
 
     private CardAction calcCardAction(Card card, Player.CardAction action, boolean playDiscard) {

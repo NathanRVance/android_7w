@@ -115,8 +115,7 @@ class PlayerImpl implements Player {
         }
         //If we haven't thrown an exception by now, the card has been played and we can remove it from the hand
         hand.remove(card);
-        hasFinishedTurn = true;
-        GameImpl.INSTANCE.finishedTurn();
+        GameImpl.INSTANCE.finishedTurn(this);
         return CardActionResult.OK;
     }
 
@@ -235,6 +234,10 @@ class PlayerImpl implements Player {
 
     void startTurn() {
         hasFinishedTurn = false;
+    }
+
+    void finishTurn() {
+        hasFinishedTurn = true;
     }
 
     boolean hasFinishedTurn() {

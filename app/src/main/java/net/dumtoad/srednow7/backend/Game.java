@@ -7,8 +7,6 @@ public interface Game extends Serializable {
 
     void initialize(CharSequence[] playerNames, boolean[] ais);
 
-    void finishedTurn();
-
     Setup getSetup(int playerID);
 
     /**

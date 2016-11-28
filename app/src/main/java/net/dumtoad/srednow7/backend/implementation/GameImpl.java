@@ -76,62 +76,80 @@ public class GameImpl implements Game {
     }
 
     private void startRound() {
-        for (PlayerImpl player : players) {
-            if (player.isPlayDiscard() && !discards.isEmpty()) {
-                doTurn(player, discards);
-                return;
-            }
-        }
-        if (round == 6) {
-            round++;
-            boolean someonePlayed = false;
-            for (PlayerImpl player : players) {
-                if (player.canPlay7thCard()) {
-                    doTurn(player, hands.get(players.indexOf(player)));
-                    someonePlayed = true;
-                }
-            }
-            if (someonePlayed)
-                return;
-        }
-        if (round >= 6) {
-            round = 0;
-            for (PlayerImpl player : players) {
-                player.getScore().resolveMilitary(era);
-                player.setPlayedFree(false);
-            }
-            era++;
-            if (era == 3) {
-                Bus.bus.getUI().display(UI.DisplayType.EndOfGame, 0);
-            } else {
-                for (CardList cardList : hands) {
-                    discards.addAll(cardList);
-                }
-                hands = Generate.dealHands(era, players.size());
-                startRound();
-            }
-            return;
-        }
+        if(playDiscard()) return;
+
         round++;
-        //Since there are many different ways a round can end, we'll start by passing the hands (this won't affect gameplay)
-        if (getPassingDirection() == Direction.WEST) {
-            //Players are sorted west to east
-            CardList tmp = hands.remove(0);
-            hands.add(tmp);
-        } else {
-            CardList tmp = hands.remove(hands.size() - 1);
-            hands.add(0, tmp);
+
+        if (round == 7) {
+            if(play7thCard()) return;
         }
-        for (PlayerImpl player : players) {
-            player.startTurn();
+
+        if (round >= 7) {
+            endEra();
         }
-        for (PlayerImpl player : players) {
-            doTurn(player, hands.get(players.indexOf(player)));
+
+        else {
+            //Since there are many different ways a round can end, we'll start by passing the hands (this won't affect gameplay)
+            if (getPassingDirection() == Direction.WEST) {
+                //Players are sorted west to east
+                CardList tmp = hands.remove(0);
+                hands.add(tmp);
+            } else {
+                CardList tmp = hands.remove(hands.size() - 1);
+                hands.add(0, tmp);
+            }
+            for (PlayerImpl player : players) {
+                player.startTurn();
+            }
+            for (PlayerImpl player : players) {
+                doTurn(player, hands.get(players.indexOf(player)));
+            }
         }
     }
 
-    @Override
-    public synchronized void finishedTurn() {
+    private boolean playDiscard() {
+        for (PlayerImpl player : players) {
+            if (player.isPlayDiscard() && !discards.isEmpty()) {
+                doTurn(player, discards);
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private boolean play7thCard() {
+        boolean someonePlayed = false;
+        for (PlayerImpl player : players) {
+            if (player.canPlay7thCard()) {
+                doTurn(player, hands.get(players.indexOf(player)));
+                someonePlayed = true;
+            }
+        }
+        return someonePlayed;
+    }
+
+    private void endEra() {
+        System.out.println("Ending era");
+        round = 0;
+        for (PlayerImpl player : players) {
+            player.getScore().resolveMilitary(era);
+            player.setPlayedFree(false);
+        }
+        era++;
+        if (era == 3) {
+            Bus.bus.getUI().display(UI.DisplayType.EndOfGame, 0);
+            Bus.bus.deleteSave();
+        } else {
+            for (CardList cardList : hands) {
+                discards.addAll(cardList);
+            }
+            hands = Generate.dealHands(era, players.size());
+            startRound();
+        }
+    }
+
+    synchronized void finishedTurn(PlayerImpl playerFinished) {
+        playerFinished.finishTurn();
         Bus.bus.saveToMemory();
         boolean done = true;
         for (PlayerImpl player : players) {
