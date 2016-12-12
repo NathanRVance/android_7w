@@ -17,6 +17,7 @@
     <item name="SCIENCE" type="color">#089547</item>
     <item name="GUILD" type="color">#493f8b</item>
     <item name="STAGE" type="color">#000000</item>
+    <item name="BLACK" type="color">#000</item>
 
     <item name="WOOD" type="color">#6b301c</item>
     <item name="STONE" type="color">#ff6a6a6a</item>

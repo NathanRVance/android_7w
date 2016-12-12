@@ -14,7 +14,7 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
 
-class PlayerImpl implements Player {
+public class PlayerImpl implements Player {
 
     private static final long serialVersionUID = 7686145239817565666L;
     private String name;
@@ -210,7 +210,7 @@ class PlayerImpl implements Player {
 
     private void setToBeBuilt(Card card, int goldEast, int goldWest) {
         playBuffer.card = card;
-        addGoldBuffer(card.getSpecialGold(this));
+        addGoldBuffer(card.getProducts(this).get(Card.Resource.GOLD));
         playBuffer.goldEast = goldEast;
         playBuffer.goldWest = goldWest;
     }
@@ -224,7 +224,6 @@ class PlayerImpl implements Player {
             addGold(playBuffer.goldWest * -1);
 
             played.add(playBuffer.card);
-            addGold(playBuffer.card.getProducts(this).get(Card.Resource.GOLD));
             addGold(playBuffer.card.getCosts(this).get(Card.Resource.GOLD) * -1);
         }
         addGold(playBuffer.goldSelf);

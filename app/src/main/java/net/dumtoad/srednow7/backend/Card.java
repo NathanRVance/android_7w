@@ -1,7 +1,6 @@
 package net.dumtoad.srednow7.backend;
 
-import net.dumtoad.srednow7.backend.implementation.specialValue.SpecialValue;
-import net.dumtoad.srednow7.backend.implementation.variableResource.VariableResource;
+import net.dumtoad.srednow7.backend.implementation.variableResource.ResourceStrategy;
 
 public interface Card {
 
@@ -15,17 +14,11 @@ public interface Card {
 
     ResQuant getProducts(Player player);
 
-    VariableResource.ResourceStyle getProductionStyle();
+    ResourceStrategy.ResourceStyle getProductionStyle();
 
     ResQuant getCosts(Player player);
 
-    int getSpecialVps(Player player);
-
-    boolean isSpecialVps();
-
-    int getSpecialGold(Player player);
-
-    boolean isSpecialGold();
+    boolean isSpecialIn(Resource resource);
 
     CardList makeThisFree();
 
@@ -41,7 +34,8 @@ public interface Card {
         COMMERCIAL,
         MILITARY,
         SCIENCE,
-        GUILD
+        GUILD,
+        BLACK
     }
 
     enum Resource {
@@ -74,21 +68,15 @@ public interface Card {
     interface Builder {
         Builder setMessage(String message);
 
-        Builder setCosts(VariableResource costs);
+        Builder setCosts(ResourceStrategy costs);
 
-        Builder setProducts(VariableResource products);
-
-        Builder setSpecialGold(SpecialValue specialGold);
-
-        Builder setSpecialVps(SpecialValue specialVps);
+        Builder setProducts(ResourceStrategy products);
 
         Builder setTradeType(TradeType tradeType);
 
         Builder addTradeDirection(Game.Direction direction);
 
         Builder setMakesFree(Enum card);
-
-        Builder setMakesThisFree(Enum card);
 
         Builder addAttribute(Attribute attribute);
 

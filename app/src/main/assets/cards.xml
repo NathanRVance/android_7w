@@ -1,0 +1,1373 @@
+<?xml version="1.0"?>
+<elements>
+    <cards>
+        <card name="Lumber_Yard" type="RESOURCE">
+            <products>
+                <WOOD>1</WOOD>
+            </products>
+        </card>
+        <card name="Stone_Pit" type="RESOURCE">
+            <products>
+                <STONE>1</STONE>
+            </products>
+        </card>
+        <card name="Clay_Pool" type="RESOURCE">
+            <products>
+                <CLAY>1</CLAY>
+            </products>
+        </card>
+        <card name="Ore_Vein" type="RESOURCE">
+            <products>
+                <ORE>1</ORE>
+            </products>
+        </card>
+        <card name="Tree_Farm" type="RESOURCE">
+            <costs>
+                <GOLD>1</GOLD>
+            </costs>
+            <products>
+                <WOOD>1</WOOD>
+                <CLAY>1</CLAY>
+            </products>
+        </card>
+        <card name="Excavation" type="RESOURCE">
+            <costs>
+                <GOLD>1</GOLD>
+            </costs>
+            <products>
+                <STONE>1</STONE>
+                <CLAY>1</CLAY>
+            </products>
+        </card>
+        <card name="Clay_Pit" type="RESOURCE">
+            <costs>
+                <GOLD>1</GOLD>
+            </costs>
+            <products>
+                <CLAY>1</CLAY>
+                <ORE>1</ORE>
+            </products>
+        </card>
+        <card name="Timber_Yard" type="RESOURCE">
+            <costs>
+                <GOLD>1</GOLD>
+            </costs>
+            <products>
+                <WOOD>1</WOOD>
+                <STONE>1</STONE>
+            </products>
+        </card>
+        <card name="Forest_Cave" type="RESOURCE">
+            <costs>
+                <GOLD>1</GOLD>
+            </costs>
+            <products>
+                <WOOD>1</WOOD>
+                <ORE>1</ORE>
+            </products>
+        </card>
+        <card name="Mine" type="RESOURCE">
+            <costs>
+                <GOLD>1</GOLD>
+            </costs>
+            <products>
+                <ORE>1</ORE>
+                <STONE>1</STONE>
+            </products>
+        </card>
+        <card name="Loom" type="INDUSTRY">
+            <products>
+                <CLOTH>1</CLOTH>
+            </products>
+        </card>
+        <card name="Glassworks" type="INDUSTRY">
+            <products>
+                <GLASS>1</GLASS>
+            </products>
+        </card>
+        <card name="Press" type="INDUSTRY">
+            <products>
+                <PAPER>1</PAPER>
+            </products>
+        </card>
+        <card name="Pawnshop" type="STRUCTURE">
+            <products>
+                <VP>3</VP>
+            </products>
+        </card>
+        <card name="Baths" type="STRUCTURE">
+            <costs>
+                <STONE>1</STONE>
+            </costs>
+            <products>
+                <VP>3</VP>
+            </products>
+            <makesFree>
+                Aqueduct
+            </makesFree>
+        </card>
+        <card name="Altar" type="STRUCTURE">
+            <products>
+                <VP>2</VP>
+            </products>
+            <makesFree>
+                Temple
+            </makesFree>
+        </card>
+        <card name="Theater" type="STRUCTURE">
+            <products>
+                <VP>2</VP>
+            </products>
+            <makesFree>
+                Statue
+            </makesFree>
+        </card>
+        <card name="Tavern" type="COMMERCIAL">
+            <products>
+                <GOLD>5</GOLD>
+            </products>
+        </card>
+        <card name="East_Trading_Post" type="COMMERCIAL">
+            <message>
+                Can trade 1 coin for resources with player to the east.
+            </message>
+            <trade>
+                <type>RESOURCE</type>
+                <direction>EAST</direction>
+            </trade>
+            <makesFree>
+                Forum
+            </makesFree>
+        </card>
+        <card name="West_Trading_Post" type="COMMERCIAL">
+            <message>
+                Can trade 1 coin for resources with player to the west.
+            </message>
+            <trade>
+                <type>RESOURCE</type>
+                <direction>WEST</direction>
+            </trade>
+            <makesFree>
+                Forum
+            </makesFree>
+        </card>
+        <card name="Marketplace" type="COMMERCIAL">
+            <message>
+                Can trade 1 coin for industry products with adjacent players.
+            </message>
+            <trade>
+                <type>INDUSTRY</type>
+                <direction>
+                    EAST
+                    WEST
+                </direction>
+            </trade>
+            <makesFree>
+                Caravansery
+            </makesFree>
+        </card>
+        <card name="Stockade" type="MILITARY">
+            <costs>
+                <WOOD>1</WOOD>
+            </costs>
+            <products>
+                <SHIELD>1</SHIELD>
+            </products>
+        </card>
+        <card name="Barracks" type="MILITARY">
+            <costs>
+                <ORE>1</ORE>
+            </costs>
+            <products>
+                <SHIELD>1</SHIELD>
+            </products>
+        </card>
+        <card name="Guard_Tower" type="MILITARY">
+            <costs>
+                <CLAY>1</CLAY>
+            </costs>
+            <products>
+                <SHIELD>1</SHIELD>
+            </products>
+        </card>
+        <card name="Apothecary" type="SCIENCE">
+            <costs>
+                <CLOTH>1</CLOTH>
+            </costs>
+            <products>
+                <COMPASS>1</COMPASS>
+            </products>
+            <makesFree>
+                Stables
+                Dispensary
+            </makesFree>
+        </card>
+        <card name="Workshop" type="SCIENCE">
+            <costs>
+                <GLASS>1</GLASS>
+            </costs>
+            <products>
+                <GEAR>1</GEAR>
+            </products>
+            <makesFree>
+                Archery_Range
+                Laboratory
+            </makesFree>
+        </card>
+        <card name="Scriptorium" type="SCIENCE">
+            <costs>
+                <PAPER>1</PAPER>
+            </costs>
+            <products>
+                <TABLET>1</TABLET>
+            </products>
+            <makesFree>
+                Courthouse
+                Library
+            </makesFree>
+        </card>
+        <card name="Sawmill" type="RESOURCE">
+            <costs>
+                <GOLD>1</GOLD>
+            </costs>
+            <products>
+                <WOOD>2</WOOD>
+            </products>
+        </card>
+        <card name="Quarry" type="RESOURCE">
+            <costs>
+                <GOLD>1</GOLD>
+            </costs>
+            <products>
+                <STONE>2</STONE>
+            </products>
+        </card>
+        <card name="Brickyard" type="RESOURCE">
+            <costs>
+                <GOLD>1</GOLD>
+            </costs>
+            <products>
+                <CLAY>2</CLAY>
+            </products>
+        </card>
+        <card name="Foundry" type="RESOURCE">
+            <costs>
+                <GOLD>1</GOLD>
+            </costs>
+            <products>
+                <ORE>2</ORE>
+            </products>
+        </card>
+        <card name="Aqueduct" type="STRUCTURE">
+            <costs>
+                <STONE>3</STONE>
+            </costs>
+            <products>
+                <VP>5</VP>
+            </products>
+        </card>
+        <card name="Temple" type="STRUCTURE">
+            <costs>
+                <WOOD>1</WOOD>
+                <CLAY>1</CLAY>
+                <GLASS>1</GLASS>
+            </costs>
+            <products>
+                <VP>3</VP>
+            </products>
+            <makesFree>
+                Pantheon
+            </makesFree>
+        </card>
+        <card name="Statue" type="STRUCTURE">
+            <costs>
+                <ORE>2</ORE>
+                <WOOD>1</WOOD>
+            </costs>
+            <products>
+                <VP>4</VP>
+            </products>
+            <makesFree>
+                Gardens
+            </makesFree>
+        </card>
+        <card name="Courthouse" type="STRUCTURE">
+            <costs>
+                <CLAY>2</CLAY>
+                <CLOTH>1</CLOTH>
+            </costs>
+            <products>
+                <VP>4</VP>
+            </products>
+        </card>
+        <card name="Forum" type="COMMERCIAL">
+            <costs>
+                <CLAY>2</CLAY>
+            </costs>
+            <products>
+                <CLOTH>1</CLOTH>
+                <GLASS>1</GLASS>
+                <PAPER>1</PAPER>
+            </products>
+            <makesFree>
+                Haven
+            </makesFree>
+        </card>
+        <card name="Caravansery" type="COMMERCIAL">
+            <costs>
+                <WOOD>2</WOOD>
+            </costs>
+            <products>
+                <WOOD>1</WOOD>
+                <CLAY>1</CLAY>
+                <STONE>1</STONE>
+                <ORE>1</ORE>
+            </products>
+            <makesFree>
+                Lighthouse
+            </makesFree>
+        </card>
+        <card name="Vineyard" type="COMMERCIAL">
+            <message>
+                1 coin for each resource card of adjacent players or your own.
+            </message>
+            <products>
+                <GOLD>
+                    <dependsPlayed>
+                        <type>RESOURCE</type>
+                        <goldPer>1</goldPer>
+                        <count>
+                            adjacent
+                            self
+                        </count>
+                    </dependsPlayed>
+                </GOLD>
+            </products>
+        </card>
+        <card name="Bazaar" type="COMMERCIAL">
+            <message>
+                2 coins for each industry card of adjacent players or your own.
+            </message>
+            <products>
+                <GOLD>
+                    <dependsPlayed>
+                        <type>INDUSTRY</type>
+                        <goldPer>2</goldPer>
+                        <count>
+                            adjacent
+                            self
+                        </count>
+                    </dependsPlayed>
+                </GOLD>
+            </products>
+        </card>
+        <card name="Walls" type="MILITARY">
+            <costs>
+                <STONE>3</STONE>
+            </costs>
+            <products>
+                <SHIELD>2</SHIELD>
+            </products>
+            <makesFree>
+                Fortifications
+            </makesFree>
+        </card>
+        <card name="Training_Ground" type="MILITARY">
+            <costs>
+                <ORE>2</ORE>
+                <WOOD>1</WOOD>
+            </costs>
+            <products>
+                <SHIELD>2</SHIELD>
+            </products>
+            <makesFree>
+                Circus
+            </makesFree>
+        </card>
+        <card name="Stables" type="MILITARY">
+            <costs>
+                <ORE>1</ORE>
+                <CLAY>1</CLAY>
+                <WOOD>1</WOOD>
+            </costs>
+            <products>
+                <SHIELD>2</SHIELD>
+            </products>
+        </card>
+        <card name="Archery_Range" type="MILITARY">
+            <costs>
+                <ORE>1</ORE>
+                <WOOD>2</WOOD>
+            </costs>
+            <products>
+                <SHIELD>2</SHIELD>
+            </products>
+        </card>
+        <card name="Dispensary" type="SCIENCE">
+            <costs>
+                <GLASS>1</GLASS>
+                <ORE>2</ORE>
+            </costs>
+            <products>
+                <COMPASS>1</COMPASS>
+            </products>
+            <makesFree>
+                Lodge
+                Arena
+            </makesFree>
+        </card>
+        <card name="Laboratory" type="SCIENCE">
+            <costs>
+                <PAPER>1</PAPER>
+                <CLAY>2</CLAY>
+            </costs>
+            <products>
+                <GEAR>1</GEAR>
+            </products>
+            <makesFree>
+                Siege_Workshop
+                Observatory
+            </makesFree>
+        </card>
+        <card name="Library" type="SCIENCE">
+            <costs>
+                <CLOTH>1</CLOTH>
+                <STONE>2</STONE>
+            </costs>
+            <products>
+                <TABLET>1</TABLET>
+            </products>
+            <makesFree>
+                Senate
+                University
+            </makesFree>
+        </card>
+        <card name="School" type="SCIENCE">
+            <costs>
+                <PAPER>1</PAPER>
+                <WOOD>1</WOOD>
+            </costs>
+            <products>
+                <TABLET>1</TABLET>
+            </products>
+            <makesFree>
+                Academy
+                Study
+            </makesFree>
+        </card>
+        <card name="Pantheon" type="STRUCTURE">
+            <costs>
+                <CLAY>2</CLAY>
+                <ORE>1</ORE>
+                <PAPER>1</PAPER>
+                <CLOTH>1</CLOTH>
+                <GLASS>1</GLASS>
+            </costs>
+            <products>
+                <VP>7</VP>
+            </products>
+        </card>
+        <card name="Gardens" type="STRUCTURE">
+            <costs>
+                <CLAY>2</CLAY>
+                <WOOD>1</WOOD>
+            </costs>
+            <products>
+                <VP>5</VP>
+            </products>
+        </card>
+        <card name="Town_Hall" type="STRUCTURE">
+            <costs>
+                <STONE>2</STONE>
+                <ORE>1</ORE>
+                <GLASS>1</GLASS>
+            </costs>
+            <products>
+                <VP>6</VP>
+            </products>
+        </card>
+        <card name="Palace" type="STRUCTURE">
+            <costs>
+                <WOOD>1</WOOD>
+                <CLAY>1</CLAY>
+                <ORE>1</ORE>
+                <STONE>1</STONE>
+                <PAPER>1</PAPER>
+                <CLOTH>1</CLOTH>
+                <GLASS>1</GLASS>
+            </costs>
+            <products>
+                <VP>8</VP>
+            </products>
+        </card>
+        <card name="Senate" type="STRUCTURE">
+            <costs>
+                <WOOD>2</WOOD>
+                <ORE>1</ORE>
+                <STONE>1</STONE>
+            </costs>
+            <products>
+                <VP>6</VP>
+            </products>
+        </card>
+        <card name="Haven" type="COMMERCIAL">
+            <costs>
+                <ORE>1</ORE>
+                <WOOD>1</WOOD>
+                <CLOTH>1</CLOTH>
+            </costs>
+            <message>
+                1 coin and 1 vp for each resource card.
+            </message>
+            <products>
+                <GOLD>
+                    <dependsPlayed>
+                        <type>RESOURCE</type>
+                        <goldPer>1</goldPer>
+                        <count>
+                            self
+                        </count>
+                    </dependsPlayed>
+                </GOLD>
+                <VP>
+                    <dependsPlayed>
+                        <type>RESOURCE</type>
+                        <goldPer>1</goldPer>
+                        <count>
+                            self
+                        </count>
+                    </dependsPlayed>
+                </VP>
+            </products>
+        </card>
+        <card name="Lighthouse" type="COMMERCIAL">
+            <costs>
+                <STONE>1</STONE>
+                <GLASS>1</GLASS>
+            </costs>
+            <message>
+                1 coin and 1 vp for each commercial card.
+            </message>
+            <products>
+                <GOLD>
+                    <dependsPlayed>
+                        <type>COMMERCIAL</type>
+                        <goldPer>1</goldPer>
+                        <count>
+                            self
+                        </count>
+                    </dependsPlayed>
+                </GOLD>
+                <VP>
+                    <dependsPlayed>
+                        <type>COMMERCIAL</type>
+                        <goldPer>1</goldPer>
+                        <count>
+                            self
+                        </count>
+                    </dependsPlayed>
+                </VP>
+            </products>
+        </card>
+        <card name="Chamber_Of_Commerce" type="COMMERCIAL">
+            <costs>
+                <CLAY>2</CLAY>
+                <PAPER>1</PAPER>
+            </costs>
+            <message>
+                2 coins and 2 vps for each industrial card.
+            </message>
+            <products>
+                <GOLD>
+                    <dependsPlayed>
+                        <type>INDUSTRY</type>
+                        <goldPer>2</goldPer>
+                        <count>
+                            self
+                        </count>
+                    </dependsPlayed>
+                </GOLD>
+                <VP>
+                    <dependsPlayed>
+                        <type>INDUSTRY</type>
+                        <goldPer>2</goldPer>
+                        <count>
+                            self
+                        </count>
+                    </dependsPlayed>
+                </VP>
+            </products>
+        </card>
+        <card name="Arena" type="COMMERCIAL">
+            <costs>
+                <CLAY>2</CLAY>
+                <PAPER>1</PAPER>
+            </costs>
+            <message>
+                3 coins and 1 vp for each completed wonder stage
+            </message>
+            <products>
+                <GOLD>
+                    <dependsPlayed>
+                        <type>STAGE</type>
+                        <goldPer>3</goldPer>
+                        <count>
+                            self
+                        </count>
+                    </dependsPlayed>
+                </GOLD>
+                <VP>
+                    <dependsPlayed>
+                        <type>STAGE</type>
+                        <goldPer>1</goldPer>
+                        <count>
+                            self
+                        </count>
+                    </dependsPlayed>
+                </VP>
+            </products>
+        </card>
+        <card name="Fortifications" type="MILITARY">
+            <costs>
+                <ORE>3</ORE>
+                <STONE>1</STONE>
+            </costs>
+            <products>
+                <SHIELD>3</SHIELD>
+            </products>
+        </card>
+        <card name="Circus" type="MILITARY">
+            <costs>
+                <STONE>3</STONE>
+                <ORE>1</ORE>
+            </costs>
+            <products>
+                <SHIELD>3</SHIELD>
+            </products>
+        </card>
+        <card name="Arsenal" type="MILITARY">
+            <costs>
+                <ORE>1</ORE>
+                <WOOD>2</WOOD>
+                <CLOTH>1</CLOTH>
+            </costs>
+            <products>
+                <SHIELD>3</SHIELD>
+            </products>
+        </card>
+        <card name="Siege_Workshop" type="MILITARY">
+            <costs>
+                <CLAY>3</CLAY>
+                <WOOD>1</WOOD>
+            </costs>
+            <products>
+                <SHIELD>3</SHIELD>
+            </products>
+        </card>
+        <card name="Lodge" type="SCIENCE">
+            <costs>
+                <CLAY>2</CLAY>
+                <CLOTH>1</CLOTH>
+                <PAPER>1</PAPER>
+            </costs>
+            <products>
+                <COMPASS>1</COMPASS>
+            </products>
+        </card>
+        <card name="Observatory" type="SCIENCE">
+            <costs>
+                <ORE>2</ORE>
+                <CLOTH>1</CLOTH>
+                <GLASS>1</GLASS>
+            </costs>
+            <products>
+                <GEAR>1</GEAR>
+            </products>
+        </card>
+        <card name="University" type="SCIENCE">
+            <costs>
+                <WOOD>2</WOOD>
+                <GLASS>1</GLASS>
+                <PAPER>1</PAPER>
+            </costs>
+            <products>
+                <TABLET>1</TABLET>
+            </products>
+        </card>
+        <card name="Academy" type="SCIENCE">
+            <costs>
+                <STONE>3</STONE>
+                <GLASS>1</GLASS>
+            </costs>
+            <products>
+                <COMPASS>1</COMPASS>
+            </products>
+        </card>
+        <card name="Study" type="SCIENCE">
+            <costs>
+                <WOOD>1</WOOD>
+                <CLOTH>1</CLOTH>
+                <PAPER>1</PAPER>
+            </costs>
+            <products>
+                <GEAR>1</GEAR>
+            </products>
+        </card>
+        <card name="Workers_Guild" type="GUILD">
+            <costs>
+                <ORE>2</ORE>
+                <CLAY>1</CLAY>
+                <STONE>1</STONE>
+                <WOOD>1</WOOD>
+            </costs>
+            <message>
+                1 vp for each resource card owned by adjacent players.
+            </message>
+            <products>
+                <VP>
+                    <dependsPlayed>
+                        <type>RESOURCE</type>
+                        <goldPer>1</goldPer>
+                        <count>
+                            adjacent
+                        </count>
+                    </dependsPlayed>
+                </VP>
+            </products>
+        </card>
+        <card name="Craftmens_Guild" type="GUILD">
+            <costs>
+                <ORE>2</ORE>
+                <STONE>2</STONE>
+            </costs>
+            <message>
+                2 vps for each industrial card owned by adjacent players.
+            </message>
+            <products>
+                <VP>
+                    <dependsPlayed>
+                        <type>INDUSTRY</type>
+                        <goldPer>2</goldPer>
+                        <count>
+                            adjacent
+                        </count>
+                    </dependsPlayed>
+                </VP>
+            </products>
+        </card>
+        <card name="Traders_Guild" type="GUILD">
+            <costs>
+                <CLOTH>1</CLOTH>
+                <PAPER>1</PAPER>
+                <GLASS>1</GLASS>
+            </costs>
+            <message>
+                1 vp for each commercial card owned by adjacent players.
+            </message>
+            <products>
+                <VP>
+                    <dependsPlayed>
+                        <type>COMMERCIAL</type>
+                        <goldPer>1</goldPer>
+                        <count>
+                            adjacent
+                        </count>
+                    </dependsPlayed>
+                </VP>
+            </products>
+        </card>
+        <card name="Philosophers_Guild" type="GUILD">
+            <costs>
+                <CLAY>3</CLAY>
+                <CLOTH>1</CLOTH>
+                <PAPER>1</PAPER>
+            </costs>
+            <message>
+                1 vp for each scientific card owned by adjacent players.
+            </message>
+            <products>
+                <VP>
+                    <dependsPlayed>
+                        <type>SCIENCE</type>
+                        <goldPer>1</goldPer>
+                        <count>
+                            adjacent
+                        </count>
+                    </dependsPlayed>
+                </VP>
+            </products>
+        </card>
+        <card name="Spy_Guild" type="GUILD">
+            <costs>
+                <CLAY>3</CLAY>
+                <GLASS>1</GLASS>
+            </costs>
+            <message>
+                1 vp for each military card owned by adjacent players.
+            </message>
+            <products>
+                <VP>
+                    <dependsPlayed>
+                        <type>MILITARY</type>
+                        <goldPer>1</goldPer>
+                        <count>
+                            adjacent
+                        </count>
+                    </dependsPlayed>
+                </VP>
+            </products>
+        </card>
+        <card name="Strategy_Guild" type="GUILD">
+            <costs>
+                <ORE>2</ORE>
+                <STONE>1</STONE>
+                <CLOTH>1</CLOTH>
+            </costs>
+            <message>
+                1 vp for each military defeat by adjacent players.
+            </message>
+            <products>
+                <VP>
+                    <militaryLosses>
+                        <count>
+                            adjacent
+                        </count>
+                    </militaryLosses>
+                </VP>
+            </products>
+        </card>
+        <card name="Shipowners_Guild" type="GUILD">
+            <costs>
+                <WOOD>3</WOOD>
+                <PAPER>1</PAPER>
+                <GLASS>1</GLASS>
+            </costs>
+            <message>
+                1 vp for each resource, industrial, and guild card.
+            </message>
+            <products>
+                <VP>
+                    <dependsPlayed>
+                        <type>RESOURCE</type>
+                        <goldPer>1</goldPer>
+                        <count>
+                            self
+                        </count>
+                    </dependsPlayed>
+                    <dependsPlayed>
+                        <type>INDUSTRY</type>
+                        <goldPer>1</goldPer>
+                        <count>
+                            self
+                        </count>
+                    </dependsPlayed>
+                    <dependsPlayed>
+                        <type>GUILD</type>
+                        <goldPer>1</goldPer>
+                        <count>
+                            self
+                        </count>
+                    </dependsPlayed>
+                </VP>
+            </products>
+        </card>
+        <card name="Scientists_Guild" type="GUILD">
+            <costs>
+                <WOOD>2</WOOD>
+                <ORE>2</ORE>
+                <CLOTH>1</CLOTH>
+            </costs>
+            <products>
+                <COMPASS>1</COMPASS>
+                <GEAR>1</GEAR>
+                <TABLET>1</TABLET>
+            </products>
+        </card>
+        <card name="Magistrates_Guild" type="GUILD">
+            <costs>
+                <WOOD>3</WOOD>
+                <STONE>1</STONE>
+                <CLOTH>1</CLOTH>
+            </costs>
+            <message>
+                1 vp for each structure card owned by adjacent players.
+            </message>
+            <products>
+                <VP>
+                    <dependsPlayed>
+                        <type>STRUCTURE</type>
+                        <goldPer>1</goldPer>
+                        <count>
+                            adjacent
+                        </count>
+                    </dependsPlayed>
+                </VP>
+            </products>
+        </card>
+        <card name="Builders_Guild" type="GUILD">
+            <costs>
+                <STONE>2</STONE>
+                <CLAY>2</CLAY>
+                <GLASS>1</GLASS>
+            </costs>
+            <message>
+                1 vp for each completed wonder stage by you or adjacent players.
+            </message>
+            <products>
+                <VP>
+                    <dependsPlayed>
+                        <type>STAGE</type>
+                        <goldPer>1</goldPer>
+                        <count>
+                            adjacent
+                            self
+                        </count>
+                    </dependsPlayed>
+                </VP>
+            </products>
+        </card>
+    </cards>
+
+    <wonders>
+        <wonder name="The_Colossus_of_Rhodes" resource="ORE">
+            <side>
+                <card name="Stage_1" type="STAGE">
+                    <costs>
+                        <WOOD>2</WOOD>
+                    </costs>
+                    <products>
+                        <VP>3</VP>
+                    </products>
+                </card>
+                <card name="Stage_2" type="STAGE">
+                    <costs>
+                        <CLAY>3</CLAY>
+                    </costs>
+                    <products>
+                        <SHIELD>2</SHIELD>
+                    </products>
+                </card>
+                <card name="Stage_3" type="STAGE">
+                    <costs>
+                        <ORE>4</ORE>
+                    </costs>
+                    <products>
+                        <VP>7</VP>
+                    </products>
+                </card>
+            </side>
+            <side>
+                <card name="Stage_1" type="STAGE">
+                    <costs>
+                        <STONE>3</STONE>
+                    </costs>
+                    <products>
+                        <SHIELD>1</SHIELD>
+                        <VP>3</VP>
+                        <GOLD>3</GOLD>
+                    </products>
+                </card>
+                <card name="Stage_2" type="STAGE">
+                    <costs>
+                        <ORE>4</ORE>
+                    </costs>
+                    <products>
+                        <SHIELD>1</SHIELD>
+                        <VP>4</VP>
+                        <GOLD>4</GOLD>
+                    </products>
+                </card>
+            </side>
+        </wonder>
+        <wonder name="The_Lighthouse_of_Alexandria" resource="GLASS">
+            <side>
+                <card name="Stage_1" type="STAGE">
+                    <costs>
+                        <STONE>2</STONE>
+                    </costs>
+                    <products>
+                        <VP>3</VP>
+                    </products>
+                </card>
+                <card name="Stage_2" type="STAGE">
+                    <costs>
+                        <ORE>2</ORE>
+                    </costs>
+                    <products>
+                        <CLAY>1</CLAY>
+                        <ORE>1</ORE>
+                        <WOOD>1</WOOD>
+                        <STONE>1</STONE>
+                    </products>
+                </card>
+                <card name="Stage_3" type="STAGE">
+                    <costs>
+                        <GLASS>2</GLASS>
+                    </costs>
+                    <products>
+                        <VP>7</VP>
+                    </products>
+                </card>
+            </side>
+            <side>
+                <card name="Stage_1" type="STAGE">
+                    <costs>
+                        <CLAY>2</CLAY>
+                    </costs>
+                    <products>
+                        <CLAY>1</CLAY>
+                        <ORE>1</ORE>
+                        <WOOD>1</WOOD>
+                        <STONE>1</STONE>
+                    </products>
+                </card>
+                <card name="Stage_2" type="STAGE">
+                    <costs>
+                        <WOOD>2</WOOD>
+                    </costs>
+                    <products>
+                        <GLASS>1</GLASS>
+                        <CLOTH>1</CLOTH>
+                        <PAPER>1</PAPER>
+                    </products>
+                </card>
+                <card name="Stage_3" type="STAGE">
+                    <costs>
+                        <STONE>3</STONE>
+                    </costs>
+                    <products>
+                        <VP>7</VP>
+                    </products>
+                </card>
+            </side>
+        </wonder>
+        <wonder name="The_Temple_of_Artemis_in_Ephesus" resource="PAPER">
+            <side>
+                <card name="Stage_1" type="STAGE">
+                    <costs>
+                        <STONE>2</STONE>
+                    </costs>
+                    <products>
+                        <VP>3</VP>
+                    </products>
+                </card>
+                <card name="Stage_2" type="STAGE">
+                    <costs>
+                        <WOOD>2</WOOD>
+                    </costs>
+                    <products>
+                        <GOLD>9</GOLD>
+                    </products>
+                </card>
+                <card name="Stage_3" type="STAGE">
+                    <costs>
+                        <PAPER>2</PAPER>
+                    </costs>
+                    <products>
+                        <VP>7</VP>
+                    </products>
+                </card>
+            </side>
+            <side>
+                <card name="Stage_1" type="STAGE">
+                    <costs>
+                        <STONE>2</STONE>
+                    </costs>
+                    <products>
+                        <VP>2</VP>
+                        <GOLD>4</GOLD>
+                    </products>
+                </card>
+                <card name="Stage_2" type="STAGE">
+                    <costs>
+                        <WOOD>2</WOOD>
+                    </costs>
+                    <products>
+                        <VP>3</VP>
+                        <GOLD>4</GOLD>
+                    </products>
+                </card>
+                <card name="Stage_3" type="STAGE">
+                    <costs>
+                        <CLOTH>1</CLOTH>
+                        <GLASS>1</GLASS>
+                        <PAPER>1</PAPER>
+                    </costs>
+                    <products>
+                        <VP>5</VP>
+                        <GOLD>4</GOLD>
+                    </products>
+                </card>
+            </side>
+        </wonder>
+        <wonder name="The_Hanging_Gardens_of_Babylon" resource="CLAY">
+            <side>
+                <card name="Stage_1" type="STAGE">
+                    <costs>
+                        <CLAY>2</CLAY>
+                    </costs>
+                    <products>
+                        <VP>3</VP>
+                    </products>
+                </card>
+                <card name="Stage_2" type="STAGE">
+                    <costs>
+                        <WOOD>3</WOOD>
+                    </costs>
+                    <products>
+                        <TABLET>1</TABLET>
+                        <COMPASS>1</COMPASS>
+                        <GEAR>1</GEAR>
+                    </products>
+                </card>
+                <card name="Stage_3" type="STAGE">
+                    <costs>
+                        <CLAY>4</CLAY>
+                    </costs>
+                    <products>
+                        <VP>7</VP>
+                    </products>
+                </card>
+            </side>
+            <side>
+                <card name="Stage_1" type="STAGE">
+                    <costs>
+                        <CLAY>1</CLAY>
+                        <CLOTH>1</CLOTH>
+                    </costs>
+                    <products>
+                        <VP>3</VP>
+                    </products>
+                </card>
+                <card name="Stage_2" type="STAGE">
+                    <costs>
+                        <WOOD>2</WOOD>
+                        <GLASS>1</GLASS>
+                    </costs>
+                    <message>
+                        Can now play 7th age card rather than discarding it.
+                    </message>
+                    <attribute>
+                        PLAY_7TH_CARD
+                    </attribute>
+                </card>
+                <card name="Stage_3" type="STAGE">
+                    <costs>
+                        <CLAY>3</CLAY>
+                        <PAPER>1</PAPER>
+                    </costs>
+                    <products>
+                        <TABLET>1</TABLET>
+                        <COMPASS>1</COMPASS>
+                        <GEAR>1</GEAR>
+                    </products>
+                </card>
+            </side>
+        </wonder>
+        <wonder name="The_Statue_of_Zeus_in_Olympia" resource="WOOD">
+            <side>
+                <card name="Stage_1" type="STAGE">
+                    <costs>
+                        <WOOD>2</WOOD>
+                    </costs>
+                    <products>
+                        <VP>3</VP>
+                    </products>
+                </card>
+                <card name="Stage_2" type="STAGE">
+                    <costs>
+                        <STONE>2</STONE>
+                    </costs>
+                    <message>
+                        Once per age can build a card for free.
+                    </message>
+                    <attribute>
+                        PLAY_1_FREE
+                    </attribute>
+                </card>
+                <card name="Stage_3" type="STAGE">
+                    <costs>
+                        <ORE>2</ORE>
+                    </costs>
+                    <products>
+                        <VP>7</VP>
+                    </products>
+                </card>
+            </side>
+            <side>
+                <card name="Stage_1" type="STAGE">
+                    <costs>
+                        <WOOD>2</WOOD>
+                    </costs>
+                    <message>
+                        Can trade 1 coin for resources with adjacent players.
+                    </message>
+                    <trade>
+                        <type>RESOURCE</type>
+                        <direction>
+                            EAST
+                            WEST
+                        </direction>
+                    </trade>
+                </card>
+                <card name="Stage_2" type="STAGE">
+                    <costs>
+                        <STONE>2</STONE>
+                    </costs>
+                    <products>
+                        <VP>5</VP>
+                    </products>
+                </card>
+                <card name="Stage_3" type="STAGE">
+                    <costs>
+                        <ORE>2</ORE>
+                    </costs>
+                    <message>
+                        Can copy one Guild card built by an adjacent player.
+                    </message>
+                    <products>
+                        <VP>
+                            <bestAdjacentGuildVps/>
+                        </VP>
+                    </products>
+                </card>
+            </side>
+        </wonder>
+        <wonder name="The_Mausoleum_of_Halicarnassus" resource="CLOTH">
+            <side>
+                <card name="Stage_1" type="STAGE">
+                    <costs>
+                        <CLAY>2</CLAY>
+                    </costs>
+                    <products>
+                        <VP>3</VP>
+                    </products>
+                </card>
+                <card name="Stage_2" type="STAGE">
+                    <costs>
+                        <ORE>3</ORE>
+                    </costs>
+                    <message>
+                        Can look through all discards, pick one, and build it for free.
+                    </message>
+                    <attribute>
+                        FREE_BUILD
+                    </attribute>
+                </card>
+                <card name="Stage_3" type="STAGE">
+                    <costs>
+                        <CLOTH>2</CLOTH>
+                    </costs>
+                    <products>
+                        <VP>7</VP>
+                    </products>
+                </card>
+            </side>
+            <side>
+                <card name="Stage_1" type="STAGE">
+                    <costs>
+                        <ORE>2</ORE>
+                    </costs>
+                    <products>
+                        <VP>2</VP>
+                    </products>
+                    <message>
+                        Can look through all discards, pick one, and build it for free.
+                    </message>
+                    <attribute>
+                        FREE_BUILD
+                    </attribute>
+                </card>
+                <card name="Stage_2" type="STAGE">
+                    <costs>
+                        <CLAY>3</CLAY>
+                    </costs>
+                    <products>
+                        <VP>1</VP>
+                    </products>
+                    <message>
+                        Can look through all discards, pick one, and build it for free.
+                    </message>
+                    <attribute>
+                        FREE_BUILD
+                    </attribute>
+                </card>
+                <card name="Stage_3" type="STAGE">
+                    <costs>
+                        <CLOTH>1</CLOTH>
+                        <PAPER>1</PAPER>
+                        <GLASS>1</GLASS>
+                    </costs>
+                    <message>
+                        Can look through all discards, pick one, and build it for free.
+                    </message>
+                    <attribute>
+                        FREE_BUILD
+                    </attribute>
+                </card>
+            </side>
+        </wonder>
+        <wonder name="The_Pyramids_of_Giza" resource="STONE">
+            <side>
+                <card name="Stage_1" type="STAGE">
+                    <costs>
+                        <STONE>2</STONE>
+                    </costs>
+                    <products>
+                        <VP>3</VP>
+                    </products>
+                </card>
+                <card name="Stage_2" type="STAGE">
+                    <costs>
+                        <WOOD>3</WOOD>
+                    </costs>
+                    <products>
+                        <VP>5</VP>
+                    </products>
+                </card>
+                <card name="Stage_3" type="STAGE">
+                    <costs>
+                        <STONE>4</STONE>
+                    </costs>
+                    <products>
+                        <VP>7</VP>
+                    </products>
+                </card>
+            </side>
+            <side>
+                <card name="Stage_1" type="STAGE">
+                    <costs>
+                        <WOOD>2</WOOD>
+                    </costs>
+                    <products>
+                        <VP>3</VP>
+                    </products>
+                </card>
+                <card name="Stage_2" type="STAGE">
+                    <costs>
+                        <STONE>3</STONE>
+                    </costs>
+                    <products>
+                        <VP>5</VP>
+                    </products>
+                </card>
+                <card name="Stage_3" type="STAGE">
+                    <costs>
+                        <CLAY>3</CLAY>
+                    </costs>
+                    <products>
+                        <VP>5</VP>
+                    </products>
+                </card>
+                <card name="Stage_4" type="STAGE">
+                    <costs>
+                        <STONE>4</STONE>
+                    </costs>
+                    <products>
+                        <VP>7</VP>
+                    </products>
+                </card>
+            </side>
+        </wonder>
+    </wonders>
+</elements>

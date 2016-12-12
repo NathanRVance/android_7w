@@ -1,15 +1,22 @@
 package net.dumtoad.srednow7.backend.implementation;
 
+import net.dumtoad.srednow7.MainActivity;
 import net.dumtoad.srednow7.backend.Card;
 import net.dumtoad.srednow7.backend.CardList;
 import net.dumtoad.srednow7.backend.Game;
 import net.dumtoad.srednow7.backend.Wonder;
 import net.dumtoad.srednow7.backend.implementation.specialValue.AdjacentMilitaryLosses;
 import net.dumtoad.srednow7.backend.implementation.specialValue.BestAdjacentGuildVps;
-import net.dumtoad.srednow7.backend.implementation.specialValue.MultiSpecial;
 import net.dumtoad.srednow7.backend.implementation.specialValue.SpecialDependsPlayed;
-import net.dumtoad.srednow7.backend.implementation.variableResource.StaticResource;
+import net.dumtoad.srednow7.backend.implementation.variableResource.ResourceStrategy;
+import net.dumtoad.srednow7.backend.implementation.variableResource.StandardResource;
 
+import org.jdom2.Document;
+import org.jdom2.Element;
+import org.jdom2.JDOMException;
+import org.jdom2.input.SAXBuilder;
+
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -41,11 +48,18 @@ class Generate {
     private static CardList allCards;
 
     static {
-        cards = getCards();
-        resolveCoupons();
-
-        wondersA = getWondersA();
-        wondersB = getWondersB();
+        Document doc = null;
+        try {
+            doc = new SAXBuilder().build(MainActivity.getMainActivity().getAssets().open("cards.xml"));
+        } catch (IOException | JDOMException e) {
+            e.printStackTrace();
+        }
+        cards = getCardsFromXML(doc);
+        for (CardImpl card : cards) {
+            card.resolveCoupons();
+        }
+        wondersA = getWondersFromXML(doc, 0);
+        wondersB = getWondersFromXML(doc, 1);
     }
 
     static List<Wonder[]> getWonders() {
@@ -128,709 +142,107 @@ class Generate {
         return deck;
     }
 
-    private static void resolveCoupons() {
-        for (CardImpl card : cards) {
-            card.resolveCoupons();
-        }
-    }
-
-    static Card findCardByName(Enum name) {
-        for (Card card : cards)
+    static CardImpl findCardByName(Enum name) {
+        for (CardImpl card : cards)
             if (card.getEnum() == name)
                 return card;
         throw new RuntimeException("That shouldn't have happended!");
     }
 
-    private static List<CardImpl> getCards() {
+    private static List<CardImpl> getCardsFromXML(Document doc) {
         List<CardImpl> cards = new ArrayList<>();
 
-        cards.add(new CardImpl.Builder(Card.Type.RESOURCE, Generate.Cards.Lumber_Yard)
-                .setProducts(new StaticResource().setResource(Card.Resource.WOOD, 1)).build());
-
-        cards.add(new CardImpl.Builder(Card.Type.RESOURCE, Generate.Cards.Stone_Pit)
-                .setProducts(new StaticResource().setResource(Card.Resource.STONE, 1)).build());
-
-        cards.add(new CardImpl.Builder(Card.Type.RESOURCE, Generate.Cards.Clay_Pool)
-                .setProducts(new StaticResource().setResource(Card.Resource.CLAY, 1)).build());
-
-        cards.add(new CardImpl.Builder(Card.Type.RESOURCE, Generate.Cards.Ore_Vein)
-                .setProducts(new StaticResource().setResource(Card.Resource.ORE, 1)).build());
-
-        cards.add(new CardImpl.Builder(Card.Type.RESOURCE, Generate.Cards.Tree_Farm)
-                .setCosts(new StaticResource().setResource(Card.Resource.GOLD, 1))
-                .setProducts(new StaticResource().setResource(Card.Resource.WOOD, 1)
-                        .setResource(Card.Resource.CLAY, 1)).build());
-
-        cards.add(new CardImpl.Builder(Card.Type.RESOURCE, Generate.Cards.Excavation)
-                .setCosts(new StaticResource().setResource(Card.Resource.GOLD, 1))
-                .setProducts(new StaticResource().setResource(Card.Resource.STONE, 1)
-                        .setResource(Card.Resource.CLAY, 1)).build());
-
-        cards.add(new CardImpl.Builder(Card.Type.RESOURCE, Generate.Cards.Clay_Pit)
-                .setCosts(new StaticResource().setResource(Card.Resource.GOLD, 1))
-                .setProducts(new StaticResource().setResource(Card.Resource.CLAY, 1)
-                        .setResource(Card.Resource.ORE, 1)).build());
-
-        cards.add(new CardImpl.Builder(Card.Type.RESOURCE, Generate.Cards.Timber_Yard)
-                .setCosts(new StaticResource().setResource(Card.Resource.GOLD, 1))
-                .setProducts(new StaticResource().setResource(Card.Resource.WOOD, 1)
-                        .setResource(Card.Resource.STONE, 1)).build());
-
-        cards.add(new CardImpl.Builder(Card.Type.RESOURCE, Generate.Cards.Forest_Cave)
-                .setCosts(new StaticResource().setResource(Card.Resource.GOLD, 1))
-                .setProducts(new StaticResource().setResource(Card.Resource.WOOD, 1)
-                        .setResource(Card.Resource.ORE, 1)).build());
-
-        cards.add(new CardImpl.Builder(Card.Type.RESOURCE, Generate.Cards.Mine)
-                .setCosts(new StaticResource().setResource(Card.Resource.GOLD, 1))
-                .setProducts(new StaticResource().setResource(Card.Resource.ORE, 1)
-                        .setResource(Card.Resource.STONE, 1)).build());
-
-        cards.add(new CardImpl.Builder(Card.Type.INDUSTRY, Generate.Cards.Loom)
-                .setProducts(new StaticResource().setResource(Card.Resource.CLOTH, 1)).build());
-
-        cards.add(new CardImpl.Builder(Card.Type.INDUSTRY, Generate.Cards.Glassworks)
-                .setProducts(new StaticResource().setResource(Card.Resource.GLASS, 1)).build());
-
-        cards.add(new CardImpl.Builder(Card.Type.INDUSTRY, Generate.Cards.Press)
-                .setProducts(new StaticResource().setResource(Card.Resource.PAPER, 1)).build());
-
-        cards.add(new CardImpl.Builder(Card.Type.STRUCTURE, Generate.Cards.Pawnshop)
-                .setProducts(new StaticResource().setResource(Card.Resource.VP, 3)).build());
-
-        cards.add(new CardImpl.Builder(Card.Type.STRUCTURE, Generate.Cards.Baths)
-                .setCosts(new StaticResource().setResource(Card.Resource.STONE, 1))
-                .setProducts(new StaticResource().setResource(Card.Resource.VP, 3))
-                .setMakesFree(Generate.Cards.Aqueduct).build());
-
-        cards.add(new CardImpl.Builder(Card.Type.STRUCTURE, Generate.Cards.Altar)
-                .setProducts(new StaticResource().setResource(Card.Resource.VP, 2))
-                .setMakesFree(Generate.Cards.Temple).build());
-
-        cards.add(new CardImpl.Builder(Card.Type.STRUCTURE, Generate.Cards.Theater)
-                .setProducts(new StaticResource().setResource(Card.Resource.VP, 2))
-                .setMakesFree(Generate.Cards.Statue).build());
-
-        cards.add(new CardImpl.Builder(Card.Type.COMMERCIAL, Generate.Cards.Tavern)
-                .setProducts(new StaticResource().setResource(Card.Resource.GOLD, 5)).build());
-
-        cards.add(new CardImpl.Builder(Card.Type.COMMERCIAL, Generate.Cards.East_Trading_Post)
-                .setMessage("Can trade 1 coin for resources with player to the east.")
-                .setTradeType(Card.TradeType.RESOURCE)
-                .addTradeDirection(Game.Direction.EAST)
-                .setMakesFree(Generate.Cards.Forum).build());
-
-        cards.add(new CardImpl.Builder(Card.Type.COMMERCIAL, Generate.Cards.West_Trading_Post)
-                .setMessage("Can trade 1 coin for resources with player to the west.")
-                .setTradeType(Card.TradeType.RESOURCE)
-                .addTradeDirection(Game.Direction.WEST)
-                .setMakesFree(Generate.Cards.Forum).build());
-
-        cards.add(new CardImpl.Builder(Card.Type.COMMERCIAL, Generate.Cards.Marketplace)
-                .setMessage("Can trade 1 coin for INDUSTRY products with adjacent players.")
-                .setTradeType(Card.TradeType.INDUSTRY)
-                .addTradeDirection(Game.Direction.EAST)
-                .addTradeDirection(Game.Direction.WEST)
-                .setMakesFree(Generate.Cards.Caravansery).build());
-
-        cards.add(new CardImpl.Builder(Card.Type.MILITARY, Generate.Cards.Stockade)
-                .setCosts(new StaticResource().setResource(Card.Resource.WOOD, 1))
-                .setProducts(new StaticResource().setResource(Card.Resource.SHIELD, 1)).build());
-
-        cards.add(new CardImpl.Builder(Card.Type.MILITARY, Generate.Cards.Barracks)
-                .setCosts(new StaticResource().setResource(Card.Resource.ORE, 1))
-                .setProducts(new StaticResource().setResource(Card.Resource.SHIELD, 1)).build());
-
-        cards.add(new CardImpl.Builder(Card.Type.MILITARY, Generate.Cards.Guard_Tower)
-                .setCosts(new StaticResource().setResource(Card.Resource.CLAY, 1))
-                .setProducts(new StaticResource().setResource(Card.Resource.SHIELD, 1)).build());
-
-        cards.add(new CardImpl.Builder(Card.Type.SCIENCE, Generate.Cards.Apothecary)
-                .setCosts(new StaticResource().setResource(Card.Resource.CLOTH, 1))
-                .setProducts(new StaticResource().setResource(Card.Resource.COMPASS, 1))
-                .setMakesFree(Generate.Cards.Stables)
-                .setMakesFree(Generate.Cards.Dispensary).build());
-
-        cards.add(new CardImpl.Builder(Card.Type.SCIENCE, Generate.Cards.Workshop)
-                .setCosts(new StaticResource().setResource(Card.Resource.GLASS, 1))
-                .setProducts(new StaticResource().setResource(Card.Resource.GEAR, 1))
-                .setMakesFree(Generate.Cards.Archery_Range)
-                .setMakesFree(Generate.Cards.Laboratory).build());
-
-        cards.add(new CardImpl.Builder(Card.Type.SCIENCE, Generate.Cards.Scriptorium)
-                .setCosts(new StaticResource().setResource(Card.Resource.PAPER, 1))
-                .setProducts(new StaticResource().setResource(Card.Resource.TABLET, 1))
-                .setMakesFree(Generate.Cards.Courthouse)
-                .setMakesFree(Generate.Cards.Library).build());
-
-        cards.add(new CardImpl.Builder(Card.Type.RESOURCE, Generate.Cards.Sawmill)
-                .setCosts(new StaticResource().setResource(Card.Resource.GOLD, 1))
-                .setProducts(new StaticResource().setResource(Card.Resource.WOOD, 2)).build());
-
-        cards.add(new CardImpl.Builder(Card.Type.RESOURCE, Generate.Cards.Quarry)
-                .setCosts(new StaticResource().setResource(Card.Resource.GOLD, 1))
-                .setProducts(new StaticResource().setResource(Card.Resource.STONE, 2)).build());
-
-        cards.add(new CardImpl.Builder(Card.Type.RESOURCE, Generate.Cards.Brickyard)
-                .setCosts(new StaticResource().setResource(Card.Resource.GOLD, 1))
-                .setProducts(new StaticResource().setResource(Card.Resource.CLAY, 2)).build());
-
-        cards.add(new CardImpl.Builder(Card.Type.RESOURCE, Generate.Cards.Foundry)
-                .setCosts(new StaticResource().setResource(Card.Resource.GOLD, 1))
-                .setProducts(new StaticResource().setResource(Card.Resource.ORE, 2)).build());
-
-        cards.add(new CardImpl.Builder(Card.Type.INDUSTRY, Generate.Cards.Loom)
-                .setProducts(new StaticResource().setResource(Card.Resource.CLOTH, 1)).build());
-
-        cards.add(new CardImpl.Builder(Card.Type.INDUSTRY, Generate.Cards.Glassworks)
-                .setProducts(new StaticResource().setResource(Card.Resource.GLASS, 1)).build());
-
-        cards.add(new CardImpl.Builder(Card.Type.INDUSTRY, Generate.Cards.Press)
-                .setProducts(new StaticResource().setResource(Card.Resource.PAPER, 1)).build());
-
-        cards.add(new CardImpl.Builder(Card.Type.STRUCTURE, Generate.Cards.Aqueduct)
-                .setCosts(new StaticResource().setResource(Card.Resource.STONE, 3))
-                .setProducts(new StaticResource().setResource(Card.Resource.VP, 5))
-                .setMakesThisFree(Generate.Cards.Baths).build());
-
-        cards.add(new CardImpl.Builder(Card.Type.STRUCTURE, Generate.Cards.Temple)
-                .setCosts(new StaticResource().setResource(Card.Resource.WOOD, 1)
-                        .setResource(Card.Resource.CLAY, 1)
-                        .setResource(Card.Resource.GLASS, 1))
-                .setProducts(new StaticResource().setResource(Card.Resource.VP, 3))
-                .setMakesThisFree(Generate.Cards.Altar)
-                .setMakesFree(Generate.Cards.Pantheon).build());
-
-        cards.add(new CardImpl.Builder(Card.Type.STRUCTURE, Generate.Cards.Statue)
-                .setCosts(new StaticResource().setResource(Card.Resource.ORE, 2)
-                        .setResource(Card.Resource.WOOD, 1))
-                .setProducts(new StaticResource().setResource(Card.Resource.VP, 4))
-                .setMakesThisFree(Generate.Cards.Theater)
-                .setMakesFree(Generate.Cards.Gardens).build());
-
-        cards.add(new CardImpl.Builder(Card.Type.STRUCTURE, Generate.Cards.Courthouse)
-                .setCosts(new StaticResource().setResource(Card.Resource.CLAY, 2)
-                        .setResource(Card.Resource.CLOTH, 1))
-                .setProducts(new StaticResource().setResource(Card.Resource.VP, 4))
-                .setMakesThisFree(Generate.Cards.Scriptorium).build());
-
-        cards.add(new CardImpl.Builder(Card.Type.COMMERCIAL, Generate.Cards.Forum)
-                .setCosts(new StaticResource().setResource(Card.Resource.CLAY, 2))
-                .setProducts(new StaticResource().setResource(Card.Resource.CLOTH, 1)
-                        .setResource(Card.Resource.GLASS, 1)
-                        .setResource(Card.Resource.PAPER, 1))
-                .setMakesThisFree(Generate.Cards.East_Trading_Post)
-                .setMakesThisFree(Generate.Cards.West_Trading_Post)
-                .setMakesFree(Generate.Cards.Haven).build());
-
-        cards.add(new CardImpl.Builder(Card.Type.COMMERCIAL, Generate.Cards.Caravansery)
-                .setCosts(new StaticResource().setResource(Card.Resource.WOOD, 2))
-                .setProducts(new StaticResource().setResource(Card.Resource.WOOD, 1)
-                        .setResource(Card.Resource.CLAY, 1)
-                        .setResource(Card.Resource.STONE, 1)
-                        .setResource(Card.Resource.ORE, 1))
-                .setMakesThisFree(Generate.Cards.Marketplace)
-                .setMakesFree(Generate.Cards.Lighthouse).build());
-
-        cards.add(new CardImpl.Builder(Card.Type.COMMERCIAL, Generate.Cards.Vineyard)
-                .setMessage("1 coin for each RESOURCE card of adjacent players or your own.")
-                .setSpecialGold(new SpecialDependsPlayed(Card.Type.RESOURCE, 1, true, true)).build());
-
-        cards.add(new CardImpl.Builder(Card.Type.COMMERCIAL, Generate.Cards.Bazaar)
-                .setMessage("2 coins for each INDUSTRY card of adjacent players or your own.")
-                .setSpecialGold(new SpecialDependsPlayed(Card.Type.INDUSTRY, 2, true, true)).build());
-
-        cards.add(new CardImpl.Builder(Card.Type.MILITARY, Generate.Cards.Walls)
-                .setCosts(new StaticResource().setResource(Card.Resource.STONE, 3))
-                .setProducts(new StaticResource().setResource(Card.Resource.SHIELD, 2))
-                .setMakesFree(Generate.Cards.Fortifications).build());
-
-        cards.add(new CardImpl.Builder(Card.Type.MILITARY, Generate.Cards.Training_Ground)
-                .setCosts(new StaticResource().setResource(Card.Resource.ORE, 2)
-                        .setResource(Card.Resource.WOOD, 1))
-                .setProducts(new StaticResource().setResource(Card.Resource.SHIELD, 2))
-                .setMakesFree(Generate.Cards.Circus).build());
-
-        cards.add(new CardImpl.Builder(Card.Type.MILITARY, Generate.Cards.Stables)
-                .setCosts(new StaticResource().setResource(Card.Resource.ORE, 1)
-                        .setResource(Card.Resource.CLAY, 1)
-                        .setResource(Card.Resource.WOOD, 1))
-                .setProducts(new StaticResource().setResource(Card.Resource.SHIELD, 2))
-                .setMakesThisFree(Generate.Cards.Apothecary).build());
-
-        cards.add(new CardImpl.Builder(Card.Type.MILITARY, Generate.Cards.Archery_Range)
-                .setCosts(new StaticResource().setResource(Card.Resource.ORE, 1)
-                        .setResource(Card.Resource.WOOD, 2))
-                .setProducts(new StaticResource().setResource(Card.Resource.SHIELD, 2))
-                .setMakesThisFree(Generate.Cards.Workshop).build());
-
-        cards.add(new CardImpl.Builder(Card.Type.SCIENCE, Generate.Cards.Dispensary)
-                .setCosts(new StaticResource().setResource(Card.Resource.GLASS, 1)
-                        .setResource(Card.Resource.ORE, 2))
-                .setProducts(new StaticResource().setResource(Card.Resource.COMPASS, 1))
-                .setMakesThisFree(Generate.Cards.Apothecary)
-                .setMakesFree(Generate.Cards.Lodge)
-                .setMakesFree(Generate.Cards.Arena).build());
-
-        cards.add(new CardImpl.Builder(Card.Type.SCIENCE, Generate.Cards.Laboratory)
-                .setCosts(new StaticResource().setResource(Card.Resource.PAPER, 1)
-                        .setResource(Card.Resource.CLAY, 2))
-                .setProducts(new StaticResource().setResource(Card.Resource.GEAR, 1))
-                .setMakesThisFree(Generate.Cards.Workshop)
-                .setMakesFree(Generate.Cards.Siege_Workshop)
-                .setMakesFree(Generate.Cards.Observatory).build());
-
-        cards.add(new CardImpl.Builder(Card.Type.SCIENCE, Generate.Cards.Library)
-                .setCosts(new StaticResource().setResource(Card.Resource.CLOTH, 1)
-                        .setResource(Card.Resource.STONE, 2))
-                .setProducts(new StaticResource().setResource(Card.Resource.TABLET, 1))
-                .setMakesThisFree(Generate.Cards.Scriptorium)
-                .setMakesFree(Generate.Cards.Senate)
-                .setMakesFree(Generate.Cards.University).build());
-
-        cards.add(new CardImpl.Builder(Card.Type.SCIENCE, Generate.Cards.School)
-                .setCosts(new StaticResource().setResource(Card.Resource.PAPER, 1)
-                        .setResource(Card.Resource.WOOD, 1))
-                .setProducts(new StaticResource().setResource(Card.Resource.TABLET, 1))
-                .setMakesFree(Generate.Cards.Academy)
-                .setMakesFree(Generate.Cards.Study).build());
-
-        cards.add(new CardImpl.Builder(Card.Type.STRUCTURE, Generate.Cards.Pantheon)
-                .setCosts(new StaticResource().setResource(Card.Resource.CLAY, 2)
-                        .setResource(Card.Resource.ORE, 1)
-                        .setResource(Card.Resource.PAPER, 1)
-                        .setResource(Card.Resource.CLOTH, 1)
-                        .setResource(Card.Resource.GLASS, 1))
-                .setProducts(new StaticResource().setResource(Card.Resource.VP, 7))
-                .setMakesThisFree(Generate.Cards.Temple).build());
-
-        cards.add(new CardImpl.Builder(Card.Type.STRUCTURE, Generate.Cards.Gardens)
-                .setCosts(new StaticResource().setResource(Card.Resource.CLAY, 2)
-                        .setResource(Card.Resource.WOOD, 1))
-                .setProducts(new StaticResource().setResource(Card.Resource.VP, 5))
-                .setMakesThisFree(Generate.Cards.Statue).build());
-
-        cards.add(new CardImpl.Builder(Card.Type.STRUCTURE, Generate.Cards.Town_Hall)
-                .setCosts(new StaticResource().setResource(Card.Resource.STONE, 2)
-                        .setResource(Card.Resource.ORE, 1)
-                        .setResource(Card.Resource.GLASS, 1))
-                .setProducts(new StaticResource().setResource(Card.Resource.VP, 6)).build());
-
-        cards.add(new CardImpl.Builder(Card.Type.STRUCTURE, Generate.Cards.Palace)
-                .setCosts(new StaticResource().setResource(Card.Resource.WOOD, 1)
-                        .setResource(Card.Resource.CLAY, 1)
-                        .setResource(Card.Resource.ORE, 1)
-                        .setResource(Card.Resource.STONE, 1)
-                        .setResource(Card.Resource.PAPER, 1)
-                        .setResource(Card.Resource.CLOTH, 1)
-                        .setResource(Card.Resource.GLASS, 1))
-                .setProducts(new StaticResource().setResource(Card.Resource.VP, 8)).build());
-
-        cards.add(new CardImpl.Builder(Card.Type.STRUCTURE, Generate.Cards.Senate)
-                .setCosts(new StaticResource().setResource(Card.Resource.WOOD, 2)
-                        .setResource(Card.Resource.ORE, 1)
-                        .setResource(Card.Resource.STONE, 1))
-                .setProducts(new StaticResource().setResource(Card.Resource.VP, 6))
-                .setMakesThisFree(Generate.Cards.Library).build());
-
-        cards.add(new CardImpl.Builder(Card.Type.COMMERCIAL, Generate.Cards.Haven)
-                .setCosts(new StaticResource().setResource(Card.Resource.ORE, 1)
-                        .setResource(Card.Resource.WOOD, 1)
-                        .setResource(Card.Resource.CLOTH, 1))
-                .setMessage("1 coin and 1 vp for each RESOURCE card.")
-                .setSpecialGold(new SpecialDependsPlayed(Card.Type.RESOURCE, 1, false, true))
-                .setSpecialVps(new SpecialDependsPlayed(Card.Type.RESOURCE, 1, false, true))
-                .setMakesThisFree(Generate.Cards.Forum).build());
-
-        cards.add(new CardImpl.Builder(Card.Type.COMMERCIAL, Generate.Cards.Lighthouse)
-                .setCosts(new StaticResource().setResource(Card.Resource.STONE, 1)
-                        .setResource(Card.Resource.GLASS, 1))
-                .setMessage("1 coin and 1 vp for each commercial card.")
-                .setSpecialGold(new SpecialDependsPlayed(Card.Type.COMMERCIAL, 1, false, true))
-                .setSpecialVps(new SpecialDependsPlayed(Card.Type.COMMERCIAL, 1, false, true))
-                .setMakesThisFree(Generate.Cards.Caravansery).build());
-
-        cards.add(new CardImpl.Builder(Card.Type.COMMERCIAL, Generate.Cards.Chamber_Of_Commerce)
-                .setCosts(new StaticResource().setResource(Card.Resource.CLAY, 2)
-                        .setResource(Card.Resource.PAPER, 1))
-                .setMessage("2 coins and 2 vps for each industrial card.")
-                .setSpecialGold(new SpecialDependsPlayed(Card.Type.INDUSTRY, 2, false, true))
-                .setSpecialVps(new SpecialDependsPlayed(Card.Type.INDUSTRY, 2, false, true)).build());
-
-        cards.add(new CardImpl.Builder(Card.Type.COMMERCIAL, Generate.Cards.Arena)
-                .setCosts(new StaticResource().setResource(Card.Resource.STONE, 2)
-                        .setResource(Card.Resource.ORE, 1))
-                .setMessage("3 coins and 1 vp for each completed wonder stage")
-                .setSpecialGold(new SpecialDependsPlayed(Card.Type.STAGE, 3, false, true))
-                .setSpecialVps(new SpecialDependsPlayed(Card.Type.STAGE, 1, false, true))
-                .setMakesThisFree(Generate.Cards.Dispensary).build());
-
-        cards.add(new CardImpl.Builder(Card.Type.MILITARY, Generate.Cards.Fortifications)
-                .setCosts(new StaticResource().setResource(Card.Resource.ORE, 3)
-                        .setResource(Card.Resource.STONE, 1))
-                .setProducts(new StaticResource().setResource(Card.Resource.SHIELD, 3))
-                .setMakesThisFree(Generate.Cards.Walls).build());
-
-        cards.add(new CardImpl.Builder(Card.Type.MILITARY, Generate.Cards.Circus)
-                .setCosts(new StaticResource().setResource(Card.Resource.STONE, 3)
-                        .setResource(Card.Resource.ORE, 1))
-                .setProducts(new StaticResource().setResource(Card.Resource.SHIELD, 3))
-                .setMakesThisFree(Generate.Cards.Training_Ground).build());
-
-        cards.add(new CardImpl.Builder(Card.Type.MILITARY, Generate.Cards.Arsenal)
-                .setCosts(new StaticResource().setResource(Card.Resource.ORE, 1)
-                        .setResource(Card.Resource.WOOD, 2)
-                        .setResource(Card.Resource.CLOTH, 1))
-                .setProducts(new StaticResource().setResource(Card.Resource.SHIELD, 3)).build());
-
-        cards.add(new CardImpl.Builder(Card.Type.MILITARY, Generate.Cards.Siege_Workshop)
-                .setCosts(new StaticResource().setResource(Card.Resource.CLAY, 3)
-                        .setResource(Card.Resource.WOOD, 1))
-                .setProducts(new StaticResource().setResource(Card.Resource.SHIELD, 3))
-                .setMakesThisFree(Generate.Cards.Laboratory).build());
-
-        cards.add(new CardImpl.Builder(Card.Type.SCIENCE, Generate.Cards.Lodge)
-                .setCosts(new StaticResource().setResource(Card.Resource.CLAY, 2)
-                        .setResource(Card.Resource.CLOTH, 1)
-                        .setResource(Card.Resource.PAPER, 1))
-                .setProducts(new StaticResource().setResource(Card.Resource.COMPASS, 1))
-                .setMakesThisFree(Generate.Cards.Dispensary).build());
-
-        cards.add(new CardImpl.Builder(Card.Type.SCIENCE, Generate.Cards.Observatory)
-                .setCosts(new StaticResource().setResource(Card.Resource.ORE, 2)
-                        .setResource(Card.Resource.GLASS, 1)
-                        .setResource(Card.Resource.CLOTH, 1))
-                .setProducts(new StaticResource().setResource(Card.Resource.GEAR, 1))
-                .setMakesThisFree(Generate.Cards.Laboratory).build());
-
-        cards.add(new CardImpl.Builder(Card.Type.SCIENCE, Generate.Cards.University)
-                .setCosts(new StaticResource().setResource(Card.Resource.WOOD, 2)
-                        .setResource(Card.Resource.GLASS, 1)
-                        .setResource(Card.Resource.PAPER, 1))
-                .setProducts(new StaticResource().setResource(Card.Resource.TABLET, 1))
-                .setMakesThisFree(Generate.Cards.Library).build());
-
-        cards.add(new CardImpl.Builder(Card.Type.SCIENCE, Generate.Cards.Academy)
-                .setCosts(new StaticResource().setResource(Card.Resource.STONE, 3)
-                        .setResource(Card.Resource.GLASS, 1))
-                .setProducts(new StaticResource().setResource(Card.Resource.COMPASS, 1))
-                .setMakesThisFree(Generate.Cards.School).build());
-
-        cards.add(new CardImpl.Builder(Card.Type.SCIENCE, Generate.Cards.Study)
-                .setCosts(new StaticResource().setResource(Card.Resource.WOOD, 1)
-                        .setResource(Card.Resource.CLOTH, 1)
-                        .setResource(Card.Resource.PAPER, 1))
-                .setProducts(new StaticResource().setResource(Card.Resource.GEAR, 1))
-                .setMakesThisFree(Generate.Cards.School).build());
-
-        cards.add(new CardImpl.Builder(Card.Type.GUILD, Generate.Cards.Workers_Guild)
-                .setCosts(new StaticResource().setResource(Card.Resource.ORE, 2)
-                        .setResource(Card.Resource.CLAY, 1)
-                        .setResource(Card.Resource.STONE, 1)
-                        .setResource(Card.Resource.WOOD, 1))
-                .setMessage("1 vp for each RESOURCE card owned by adjacent players.")
-                .setSpecialVps(new SpecialDependsPlayed(Card.Type.RESOURCE, 1, true, false)).build());
-
-        cards.add(new CardImpl.Builder(Card.Type.GUILD, Generate.Cards.Craftmens_Guild)
-                .setCosts(new StaticResource().setResource(Card.Resource.ORE, 2)
-                        .setResource(Card.Resource.STONE, 2))
-                .setMessage("2 vps for each industrial card owned by adjacent players.")
-                .setSpecialVps(new SpecialDependsPlayed(Card.Type.INDUSTRY, 2, true, false)).build());
-
-        cards.add(new CardImpl.Builder(Card.Type.GUILD, Generate.Cards.Traders_Guild)
-                .setCosts(new StaticResource().setResource(Card.Resource.CLOTH, 1)
-                        .setResource(Card.Resource.PAPER, 1)
-                        .setResource(Card.Resource.GLASS, 1))
-                .setMessage("1 vp for each commercial card owned by adjacent players.")
-                .setSpecialVps(new SpecialDependsPlayed(Card.Type.COMMERCIAL, 1, true, false)).build());
-
-        cards.add(new CardImpl.Builder(Card.Type.GUILD, Generate.Cards.Philosophers_Guild)
-                .setCosts(new StaticResource().setResource(Card.Resource.CLAY, 3)
-                        .setResource(Card.Resource.CLOTH, 1)
-                        .setResource(Card.Resource.PAPER, 1))
-                .setMessage("1 vp for each scientific card owned by adjacent players.")
-                .setSpecialVps(new SpecialDependsPlayed(Card.Type.SCIENCE, 1, true, false)).build());
-
-        cards.add(new CardImpl.Builder(Card.Type.GUILD, Generate.Cards.Spy_Guild)
-                .setCosts(new StaticResource().setResource(Card.Resource.CLAY, 3)
-                        .setResource(Card.Resource.GLASS, 1))
-                .setMessage("1 vp for each military card owned by adjacent players.")
-                .setSpecialVps(new SpecialDependsPlayed(Card.Type.MILITARY, 1, true, false)).build());
-
-        cards.add(new CardImpl.Builder(Card.Type.GUILD, Generate.Cards.Strategy_Guild)
-                .setCosts(new StaticResource().setResource(Card.Resource.ORE, 2)
-                        .setResource(Card.Resource.STONE, 1)
-                        .setResource(Card.Resource.CLOTH, 1))
-                .setMessage("1 vp for each military defeat by adjacent players.")
-                .setSpecialVps(new AdjacentMilitaryLosses()).build());
-
-        cards.add(new CardImpl.Builder(Card.Type.GUILD, Generate.Cards.Shipowners_Guild)
-                .setCosts(new StaticResource().setResource(Card.Resource.WOOD, 3)
-                        .setResource(Card.Resource.PAPER, 1)
-                        .setResource(Card.Resource.GLASS, 1))
-                .setMessage("1 vp for each RESOURCE, industrial, and guild card.")
-                .setSpecialVps(new MultiSpecial(
-                        new SpecialDependsPlayed(Card.Type.RESOURCE, 1, false, true),
-                        new SpecialDependsPlayed(Card.Type.INDUSTRY, 1, false, true),
-                        new SpecialDependsPlayed(Card.Type.GUILD, 1, false, true))).build());
-
-        cards.add(new CardImpl.Builder(Card.Type.GUILD, Generate.Cards.Scientists_Guild)
-                .setCosts(new StaticResource().setResource(Card.Resource.WOOD, 2)
-                        .setResource(Card.Resource.ORE, 2)
-                        .setResource(Card.Resource.CLOTH, 1))
-                .setProducts(new StaticResource().setResource(Card.Resource.COMPASS, 1)
-                        .setResource(Card.Resource.GEAR, 1)
-                        .setResource(Card.Resource.TABLET, 1)).build());
-
-        cards.add(new CardImpl.Builder(Card.Type.GUILD, Generate.Cards.Magistrates_Guild)
-                .setCosts(new StaticResource().setResource(Card.Resource.WOOD, 3)
-                        .setResource(Card.Resource.STONE, 1)
-                        .setResource(Card.Resource.CLOTH, 1))
-                .setMessage("1 vp for each structure card owned by adjacent players.")
-                .setSpecialVps(new SpecialDependsPlayed(Card.Type.STRUCTURE, 1, true, false)).build());
-
-        cards.add(new CardImpl.Builder(Card.Type.GUILD, Generate.Cards.Builders_Guild)
-                .setCosts(new StaticResource().setResource(Card.Resource.STONE, 2)
-                        .setResource(Card.Resource.CLAY, 2)
-                        .setResource(Card.Resource.GLASS, 1))
-                .setMessage("1 vp for each completed wonder stage by you or adjacent players.")
-                .setSpecialVps(new SpecialDependsPlayed(Card.Type.STAGE, 1, true, false)).build());
-
+        Element root = doc.getRootElement();
+        for (Element card : root.getChildren("cards").get(0).getChildren()) {
+            cards.add(getCard(card));
+        }
         return cards;
     }
 
-    private static List<Wonder> getWondersA() {
+    private static List<Wonder> getWondersFromXML(Document doc, int side) {
         List<Wonder> wonders = new ArrayList<>();
 
-        //Rhodes
-        wonders.add(new WonderImpl.Builder(Wonders.The_Colossus_of_Rhodes, Card.Resource.ORE)
-                .addStage(new CardImpl.Builder(Card.Type.STAGE, Cards.Stage_1)
-                        .setCosts(new StaticResource().setResource(Card.Resource.WOOD, 2))
-                        .setProducts(new StaticResource().setResource(Card.Resource.VP, 3)).build())
-                .addStage(new CardImpl.Builder(Card.Type.STAGE, Cards.Stage_2)
-                        .setCosts(new StaticResource().setResource(Card.Resource.CLAY, 3))
-                        .setProducts(new StaticResource().setResource(Card.Resource.SHIELD, 2)).build())
-                .addStage(new CardImpl.Builder(Card.Type.STAGE, Cards.Stage_3)
-                        .setCosts(new StaticResource().setResource(Card.Resource.ORE, 4))
-                        .setProducts(new StaticResource().setResource(Card.Resource.VP, 7)).build())
-                .build());
-
-        //Alexandria
-        wonders.add(new WonderImpl.Builder(Wonders.The_Lighthouse_of_Alexandria, Card.Resource.GLASS)
-                .addStage(new CardImpl.Builder(Card.Type.STAGE, Cards.Stage_1)
-                        .setCosts(new StaticResource().setResource(Card.Resource.STONE, 2))
-                        .setProducts(new StaticResource().setResource(Card.Resource.VP, 3)).build())
-                .addStage(new CardImpl.Builder(Card.Type.STAGE, Cards.Stage_2)
-                        .setCosts(new StaticResource().setResource(Card.Resource.ORE, 2))
-                        .setProducts(new StaticResource().setResource(Card.Resource.CLAY, 1)
-                                .setResource(Card.Resource.ORE, 1)
-                                .setResource(Card.Resource.WOOD, 1)
-                                .setResource(Card.Resource.STONE, 1)).build())
-                .addStage(new CardImpl.Builder(Card.Type.STAGE, Cards.Stage_3)
-                        .setCosts(new StaticResource().setResource(Card.Resource.GLASS, 2))
-                        .setProducts(new StaticResource().setResource(Card.Resource.VP, 7)).build())
-                .build());
-
-        //Ephesus
-        wonders.add(new WonderImpl.Builder(Wonders.The_Temple_of_Artemis_in_Ephesus, Card.Resource.PAPER)
-                .addStage(new CardImpl.Builder(Card.Type.STAGE, Cards.Stage_1)
-                        .setCosts(new StaticResource().setResource(Card.Resource.STONE, 2))
-                        .setProducts(new StaticResource().setResource(Card.Resource.VP, 3)).build())
-                .addStage(new CardImpl.Builder(Card.Type.STAGE, Cards.Stage_2)
-                        .setCosts(new StaticResource().setResource(Card.Resource.WOOD, 2))
-                        .setProducts(new StaticResource().setResource(Card.Resource.GOLD, 9)).build())
-                .addStage(new CardImpl.Builder(Card.Type.STAGE, Cards.Stage_3)
-                        .setCosts(new StaticResource().setResource(Card.Resource.PAPER, 2))
-                        .setProducts(new StaticResource().setResource(Card.Resource.VP, 7)).build())
-                .build());
-
-        //Babylon
-        wonders.add(new WonderImpl.Builder(Wonders.The_Hanging_Gardens_of_Babylon, Card.Resource.CLAY)
-                .addStage(new CardImpl.Builder(Card.Type.STAGE, Cards.Stage_1)
-                        .setCosts(new StaticResource().setResource(Card.Resource.CLAY, 2))
-                        .setProducts(new StaticResource().setResource(Card.Resource.VP, 3)).build())
-                .addStage(new CardImpl.Builder(Card.Type.STAGE, Cards.Stage_2)
-                        .setCosts(new StaticResource().setResource(Card.Resource.WOOD, 3))
-                        .setProducts(new StaticResource().setResource(Card.Resource.TABLET, 1)
-                                .setResource(Card.Resource.COMPASS, 1)
-                                .setResource(Card.Resource.GEAR, 1)).build())
-                .addStage(new CardImpl.Builder(Card.Type.STAGE, Cards.Stage_3)
-                        .setCosts(new StaticResource().setResource(Card.Resource.CLAY, 4))
-                        .setProducts(new StaticResource().setResource(Card.Resource.VP, 7)).build())
-                .build());
-
-        //Olympia
-        wonders.add(new WonderImpl.Builder(Wonders.The_Statue_of_Zeus_in_Olympia, Card.Resource.WOOD)
-                .addStage(new CardImpl.Builder(Card.Type.STAGE, Cards.Stage_1)
-                        .setCosts(new StaticResource().setResource(Card.Resource.WOOD, 2))
-                        .setProducts(new StaticResource().setResource(Card.Resource.VP, 3)).build())
-                .addStage(new CardImpl.Builder(Card.Type.STAGE, Cards.Stage_2)
-                        .setCosts(new StaticResource().setResource(Card.Resource.STONE, 2))
-                        .addAttribute(Card.Attribute.PLAY_1_FREE)
-                        .setMessage("Once per age can build a card for free.").build())
-                .addStage(new CardImpl.Builder(Card.Type.STAGE, Cards.Stage_3)
-                        .setCosts(new StaticResource().setResource(Card.Resource.ORE, 2))
-                        .setProducts(new StaticResource().setResource(Card.Resource.VP, 7)).build())
-                .build());
-
-        //Halicarnassus
-        wonders.add(new WonderImpl.Builder(Wonders.The_Mausoleum_of_Halicarnassus, Card.Resource.CLOTH)
-                .addStage(new CardImpl.Builder(Card.Type.STAGE, Cards.Stage_1)
-                        .setCosts(new StaticResource().setResource(Card.Resource.CLAY, 2))
-                        .setProducts(new StaticResource().setResource(Card.Resource.VP, 3)).build())
-                .addStage(new CardImpl.Builder(Card.Type.STAGE, Cards.Stage_2)
-                        .setCosts(new StaticResource().setResource(Card.Resource.ORE, 3))
-                        .addAttribute(Card.Attribute.FREE_BUILD)
-                        .setMessage("Can look through all discards since the beginning of the game, pick one, and build it for free.").build())
-                .addStage(new CardImpl.Builder(Card.Type.STAGE, Cards.Stage_3)
-                        .setCosts(new StaticResource().setResource(Card.Resource.CLOTH, 2))
-                        .setProducts(new StaticResource().setResource(Card.Resource.VP, 7)).build())
-                .build());
-
-        //Giza
-        wonders.add(new WonderImpl.Builder(Wonders.The_Pyrimids_of_Giza, Card.Resource.STONE)
-                .addStage(new CardImpl.Builder(Card.Type.STAGE, Cards.Stage_1)
-                        .setCosts(new StaticResource().setResource(Card.Resource.STONE, 2))
-                        .setProducts(new StaticResource().setResource(Card.Resource.VP, 3)).build())
-                .addStage(new CardImpl.Builder(Card.Type.STAGE, Cards.Stage_2)
-                        .setCosts(new StaticResource().setResource(Card.Resource.WOOD, 3))
-                        .setProducts(new StaticResource().setResource(Card.Resource.VP, 5)).build())
-                .addStage(new CardImpl.Builder(Card.Type.STAGE, Cards.Stage_3)
-                        .setCosts(new StaticResource().setResource(Card.Resource.STONE, 4))
-                        .setProducts(new StaticResource().setResource(Card.Resource.VP, 7)).build())
-                .build());
+        Element root = doc.getRootElement();
+        for (Element wonder : root.getChildren("wonders").get(0).getChildren()) {
+            System.out.println("Processing wonder " + wonder.getAttributeValue("name"));
+            WonderImpl.Builder builder = new WonderImpl.Builder(
+                    Wonders.valueOf(wonder.getAttributeValue("name")), Card.Resource.valueOf(wonder.getAttributeValue("resource")));
+            for (Element stage : wonder.getChildren().get(side).getChildren()) {
+                builder.addStage(getCard(stage));
+            }
+            wonders.add(builder.build());
+        }
 
         return wonders;
     }
 
-    private static List<Wonder> getWondersB() {
-        List<Wonder> wonders = new ArrayList<>();
+    private static CardImpl getCard(Element card) {
+        CardImpl.Builder builder = new CardImpl.Builder(
+                Card.Type.valueOf(card.getAttributeValue("type")), Cards.valueOf(card.getAttributeValue("name")));
+        for (Element component : card.getChildren()) {
+            switch (component.getName()) {
+                case "costs":
+                    builder.setCosts(getResource(component));
+                    break;
+                case "products":
+                    builder.setProducts(getResource(component));
+                    break;
+                case "trade":
+                    builder.setTradeType(Card.TradeType.valueOf(component.getChildText("type")));
+                    for (String direction : component.getChildTextTrim("direction").split("\n")) {
+                        builder.addTradeDirection(Game.Direction.valueOf(direction.trim()));
+                    }
+                    break;
+                case "attribute":
+                    for (String attribute : component.getTextTrim().split("\n")) {
+                        builder.addAttribute(Card.Attribute.valueOf(attribute.trim()));
+                    }
+                    break;
+                case "makesFree":
+                    for (String makesFree : component.getTextTrim().split("\n")) {
+                        builder.setMakesFree(Cards.valueOf(makesFree.trim()));
+                    }
+                    break;
+                case "message":
+                    builder.setMessage(component.getTextNormalize());
+                    break;
+                default:
+                    throw new RuntimeException("Can't handle case " + component.getName());
+            }
+        }
+        return builder.build();
+    }
 
-        //Rhodes
-        wonders.add(new WonderImpl.Builder(Wonders.The_Colossus_of_Rhodes, Card.Resource.ORE)
-                .addStage(new CardImpl.Builder(Card.Type.STAGE, Cards.Stage_1)
-                        .setCosts(new StaticResource().setResource(Card.Resource.STONE, 3))
-                        .setProducts(new StaticResource().setResource(Card.Resource.SHIELD, 1)
-                                .setResource(Card.Resource.VP, 3)
-                                .setResource(Card.Resource.GOLD, 3)).build())
-                .addStage(new CardImpl.Builder(Card.Type.STAGE, Cards.Stage_2)
-                        .setCosts(new StaticResource().setResource(Card.Resource.ORE, 4))
-                        .setProducts(new StaticResource().setResource(Card.Resource.SHIELD, 1)
-                                .setResource(Card.Resource.VP, 4)
-                                .setResource(Card.Resource.GOLD, 4)).build())
-                .build());
-
-        //Alexandria
-        wonders.add(new WonderImpl.Builder(Wonders.The_Lighthouse_of_Alexandria, Card.Resource.GLASS)
-                .addStage(new CardImpl.Builder(Card.Type.STAGE, Cards.Stage_1)
-                        .setCosts(new StaticResource().setResource(Card.Resource.CLAY, 2))
-                        .setProducts(new StaticResource().setResource(Card.Resource.CLAY, 1)
-                                .setResource(Card.Resource.ORE, 1)
-                                .setResource(Card.Resource.WOOD, 1)
-                                .setResource(Card.Resource.STONE, 1)).build())
-                .addStage(new CardImpl.Builder(Card.Type.STAGE, Cards.Stage_2)
-                        .setCosts(new StaticResource().setResource(Card.Resource.WOOD, 2))
-                        .setProducts(new StaticResource().setResource(Card.Resource.GLASS, 1)
-                                .setResource(Card.Resource.CLOTH, 1)
-                                .setResource(Card.Resource.PAPER, 1)).build())
-                .addStage(new CardImpl.Builder(Card.Type.STAGE, Cards.Stage_3)
-                        .setCosts(new StaticResource().setResource(Card.Resource.STONE, 3))
-                        .setProducts(new StaticResource().setResource(Card.Resource.VP, 7)).build())
-                .build());
-
-        //Ephesus
-        wonders.add(new WonderImpl.Builder(Wonders.The_Temple_of_Artemis_in_Ephesus, Card.Resource.PAPER)
-                .addStage(new CardImpl.Builder(Card.Type.STAGE, Cards.Stage_1)
-                        .setCosts(new StaticResource().setResource(Card.Resource.STONE, 2))
-                        .setProducts(new StaticResource().setResource(Card.Resource.VP, 2)
-                                .setResource(Card.Resource.GOLD, 4)).build())
-                .addStage(new CardImpl.Builder(Card.Type.STAGE, Cards.Stage_2)
-                        .setCosts(new StaticResource().setResource(Card.Resource.WOOD, 2))
-                        .setProducts(new StaticResource().setResource(Card.Resource.VP, 3)
-                                .setResource(Card.Resource.GOLD, 4)).build())
-                .addStage(new CardImpl.Builder(Card.Type.STAGE, Cards.Stage_3)
-                        .setCosts(new StaticResource().setResource(Card.Resource.GLASS, 1)
-                                .setResource(Card.Resource.CLOTH, 1)
-                                .setResource(Card.Resource.PAPER, 1))
-                        .setProducts(new StaticResource().setResource(Card.Resource.VP, 5)
-                                .setResource(Card.Resource.GOLD, 4)).build())
-                .build());
-
-        //Babylon
-        wonders.add(new WonderImpl.Builder(Wonders.The_Hanging_Gardens_of_Babylon, Card.Resource.CLAY)
-                .addStage(new CardImpl.Builder(Card.Type.STAGE, Cards.Stage_1)
-                        .setCosts(new StaticResource().setResource(Card.Resource.CLAY, 1)
-                                .setResource(Card.Resource.CLOTH, 1))
-                        .setProducts(new StaticResource().setResource(Card.Resource.VP, 3)).build())
-                .addStage(new CardImpl.Builder(Card.Type.STAGE, Cards.Stage_2)
-                        .setCosts(new StaticResource().setResource(Card.Resource.WOOD, 2)
-                                .setResource(Card.Resource.GLASS, 1))
-                        .addAttribute(Card.Attribute.PLAY_7TH_CARD)
-                        .setMessage("Can now play 7th age card rather than discarding it.").build())
-                .addStage(new CardImpl.Builder(Card.Type.STAGE, Cards.Stage_3)
-                        .setCosts(new StaticResource().setResource(Card.Resource.CLAY, 3)
-                                .setResource(Card.Resource.PAPER, 1))
-                        .setProducts(new StaticResource().setResource(Card.Resource.TABLET, 1)
-                                .setResource(Card.Resource.COMPASS, 1)
-                                .setResource(Card.Resource.GEAR, 1)).build())
-                .build());
-
-        //Olympia
-        wonders.add(new WonderImpl.Builder(Wonders.The_Statue_of_Zeus_in_Olympia, Card.Resource.WOOD)
-                .addStage(new CardImpl.Builder(Card.Type.STAGE, Cards.Stage_1)
-                        .setCosts(new StaticResource().setResource(Card.Resource.WOOD, 2))
-                        .setMessage("Can trade 1 coin for resources with adjacent players.")
-                        .setTradeType(Card.TradeType.RESOURCE)
-                        .addTradeDirection(Game.Direction.EAST)
-                        .addTradeDirection(Game.Direction.WEST).build())
-                .addStage(new CardImpl.Builder(Card.Type.STAGE, Cards.Stage_2)
-                        .setCosts(new StaticResource().setResource(Card.Resource.STONE, 2))
-                        .setProducts(new StaticResource().setResource(Card.Resource.VP, 5)).build())
-                .addStage(new CardImpl.Builder(Card.Type.STAGE, Cards.Stage_3)
-                        .setCosts(new StaticResource().setResource(Card.Resource.ORE, 2)
-                                .setResource(Card.Resource.CLOTH, 1))
-                        .setMessage("Can copy one Guild card built by an adjacent player.")
-                        .setSpecialVps(new BestAdjacentGuildVps()).build())
-                .build());
-
-        //Halicarnassus
-        wonders.add(new WonderImpl.Builder(Wonders.The_Mausoleum_of_Halicarnassus, Card.Resource.CLOTH)
-                .addStage(new CardImpl.Builder(Card.Type.STAGE, Cards.Stage_1)
-                        .setCosts(new StaticResource().setResource(Card.Resource.ORE, 2))
-                        .setProducts(new StaticResource().setResource(Card.Resource.VP, 2))
-                        .addAttribute(Card.Attribute.FREE_BUILD)
-                        .setMessage("Can look through all discards since the beginning of the game, pick one, and build it for free.").build())
-                .addStage(new CardImpl.Builder(Card.Type.STAGE, Cards.Stage_2)
-                        .setCosts(new StaticResource().setResource(Card.Resource.CLAY, 3))
-                        .setProducts(new StaticResource().setResource(Card.Resource.VP, 1))
-                        .addAttribute(Card.Attribute.FREE_BUILD)
-                        .setMessage("Can look through all discards since the beginning of the game, pick one, and build it for free.").build())
-                .addStage(new CardImpl.Builder(Card.Type.STAGE, Cards.Stage_3)
-                        .setCosts(new StaticResource().setResource(Card.Resource.CLOTH, 1)
-                                .setResource(Card.Resource.PAPER, 1)
-                                .setResource(Card.Resource.GLASS, 1))
-                        .addAttribute(Card.Attribute.FREE_BUILD)
-                        .setMessage("Can look through all discards since the beginning of the game, pick one, and build it for free.").build())
-                .build());
-
-        //Giza
-        wonders.add(new WonderImpl.Builder(Wonders.The_Pyrimids_of_Giza, Card.Resource.STONE)
-                .addStage(new CardImpl.Builder(Card.Type.STAGE, Cards.Stage_1)
-                        .setCosts(new StaticResource().setResource(Card.Resource.WOOD, 2))
-                        .setProducts(new StaticResource().setResource(Card.Resource.VP, 3)).build())
-                .addStage(new CardImpl.Builder(Card.Type.STAGE, Cards.Stage_2)
-                        .setCosts(new StaticResource().setResource(Card.Resource.STONE, 3))
-                        .setProducts(new StaticResource().setResource(Card.Resource.VP, 5)).build())
-                .addStage(new CardImpl.Builder(Card.Type.STAGE, Cards.Stage_3)
-                        .setCosts(new StaticResource().setResource(Card.Resource.CLAY, 3))
-                        .setProducts(new StaticResource().setResource(Card.Resource.VP, 5)).build())
-                .addStage(new CardImpl.Builder(Card.Type.STAGE, Cards.Stage_4)
-                        .setCosts(new StaticResource().setResource(Card.Resource.STONE, 4)
-                                .setResource(Card.Resource.PAPER, 1))
-                        .setProducts(new StaticResource().setResource(Card.Resource.VP, 7)).build())
-                .build());
-
-        return wonders;
+    private static ResourceStrategy getResource(Element component) {
+        StandardResource standardResource = new StandardResource();
+        for (Element resource : component.getChildren()) {
+            Card.Resource res = Card.Resource.valueOf(resource.getName());
+            if (resource.getChildren().size() == 0) {
+                standardResource.setResource(res, Integer.parseInt(resource.getTextNormalize()));
+            } else {
+                for (Element special : resource.getChildren()) {
+                    switch (special.getName()) {
+                        case "dependsPlayed":
+                            String count = special.getChildTextNormalize("count");
+                            standardResource.setResource(res, new SpecialDependsPlayed(
+                                    Card.Type.valueOf(special.getChildTextNormalize("type")),
+                                    Integer.parseInt(special.getChildTextNormalize("goldPer")),
+                                    count.contains("adjacent"),
+                                    count.contains("self")));
+                            break;
+                        case "militaryLosses":
+                            standardResource.setResource(res, new AdjacentMilitaryLosses());
+                            break;
+                        case "bestAdjacentGuildVps":
+                            standardResource.setResource(res, new BestAdjacentGuildVps());
+                            break;
+                        default:
+                            throw new RuntimeException("Can't handle case " + special.getName());
+                    }
+                }
+            }
+        }
+        return standardResource;
     }
 
     private enum Cards {
@@ -922,10 +334,39 @@ class Generate {
         The_Hanging_Gardens_of_Babylon,
         The_Statue_of_Zeus_in_Olympia,
         The_Mausoleum_of_Halicarnassus,
-        The_Pyrimids_of_Giza
+        The_Pyramids_of_Giza
     }
 
     private enum CitiesExpansionCards {
-
+        Hideout,
+        Gambling_Den,
+        Residence,
+        Clandestine_Dock_East,
+        Clandestine_Dock_West,
+        Pigeon_Loft,
+        Militia,
+        Secret_Warehouse,
+        Gates_Of_The_City,
+        Lair,
+        Architect_Cabinet,
+        Mercenaries,
+        Sepulcher,
+        Consulate,
+        Black_Market,
+        Tabularium,
+        Gambling_House,
+        Spy_Ring,
+        Slave_Market,
+        Brotherhood,
+        Secret_Society,
+        Builders_Union,
+        Capitol,
+        Torture_Chamber,
+        Cenotaph,
+        Embassy,
+        Contingent,
+        Mourners_Guild,
+        Counterfeiters_Guild,
+        Guild_Of_Shadows
     }
 }

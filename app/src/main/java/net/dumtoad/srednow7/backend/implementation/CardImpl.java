@@ -5,10 +5,8 @@ import net.dumtoad.srednow7.backend.CardList;
 import net.dumtoad.srednow7.backend.Game;
 import net.dumtoad.srednow7.backend.Player;
 import net.dumtoad.srednow7.backend.ResQuant;
-import net.dumtoad.srednow7.backend.implementation.specialValue.NotSoSpecial;
-import net.dumtoad.srednow7.backend.implementation.specialValue.SpecialValue;
-import net.dumtoad.srednow7.backend.implementation.variableResource.StaticResource;
-import net.dumtoad.srednow7.backend.implementation.variableResource.VariableResource;
+import net.dumtoad.srednow7.backend.implementation.variableResource.StandardResource;
+import net.dumtoad.srednow7.backend.implementation.variableResource.ResourceStrategy;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,13 +17,10 @@ class CardImpl implements Card {
     private Enum name;
     private List<Enum> makesFreeEnum;
     private CardList makesFree = new CardListImpl();
-    private List<Enum> makesThisFreeEnum;
     private CardList makesThisFree = new CardListImpl();
     private String message;
-    private VariableResource costs;
-    private VariableResource products;
-    private SpecialValue specialGold;
-    private SpecialValue specialVps;
+    private ResourceStrategy costs;
+    private ResourceStrategy products;
     private TradeType tradeType;
     private List<Game.Direction> tradeDirections;
     private List<Attribute> attributes;
@@ -34,35 +29,12 @@ class CardImpl implements Card {
         type = builder.type;
         name = builder.name;
         makesFreeEnum = builder.makesFreeEnum;
-        makesThisFreeEnum = builder.makesThisFreeEnum;
         message = builder.message;
         costs = builder.costs;
         products = builder.products;
-        specialGold = builder.specialGold;
-        specialVps = builder.specialVps;
         tradeType = builder.tradeType;
         tradeDirections = builder.tradeDirections;
         attributes = builder.attributes;
-    }
-
-    @Override
-    public int getSpecialGold(Player player) {
-        return specialGold.getSpecialValue(GameImpl.INSTANCE, player);
-    }
-
-    @Override
-    public boolean isSpecialGold() {
-        return specialGold.isSpecial();
-    }
-
-    @Override
-    public int getSpecialVps(Player player) {
-        return specialVps.getSpecialValue(GameImpl.INSTANCE, player);
-    }
-
-    @Override
-    public boolean isSpecialVps() {
-        return specialVps.isSpecial();
     }
 
     @Override
@@ -83,13 +55,14 @@ class CardImpl implements Card {
     void resolveCoupons() {
         makesFree = new CardListImpl();
         for (Enum e : makesFreeEnum) {
-            makesFree.add(Generate.findCardByName(e));
+            CardImpl madeFree = Generate.findCardByName(e);
+            makesFree.add(madeFree);
+            madeFree.madeFreeBy(this);
         }
+    }
 
-        makesThisFree = new CardListImpl();
-        for (Enum e : makesThisFreeEnum) {
-            makesThisFree.add(Generate.findCardByName(e));
-        }
+    private void madeFreeBy(Card card) {
+        makesThisFree.add(card);
     }
 
     @Override
@@ -118,7 +91,7 @@ class CardImpl implements Card {
     }
 
     @Override
-    public VariableResource.ResourceStyle getProductionStyle() {
+    public ResourceStrategy.ResourceStyle getProductionStyle() {
         return products.getStyle();
     }
 
@@ -127,20 +100,22 @@ class CardImpl implements Card {
         return costs.getResources(GameImpl.INSTANCE, player);
     }
 
+    @Override
+    public boolean isSpecialIn(Resource resource) {
+        return products.isSpecialIn(resource);
+    }
+
 
     public static class Builder implements Card.Builder {
 
         private Type type;
         private Enum name;
         private String message = "";
-        private VariableResource costs = new StaticResource();
-        private VariableResource products = new StaticResource();
-        private SpecialValue specialGold = new NotSoSpecial();
-        private SpecialValue specialVps = new NotSoSpecial();
+        private ResourceStrategy costs = new StandardResource();
+        private ResourceStrategy products = new StandardResource();
         private TradeType tradeType;
         private List<Game.Direction> tradeDirections = new ArrayList<>();
         private List<Enum> makesFreeEnum = new ArrayList<>();
-        private List<Enum> makesThisFreeEnum = new ArrayList<>();
         private List<Attribute> attributes = new ArrayList<>();
 
         public Builder(Type type, Enum name) {
@@ -155,26 +130,14 @@ class CardImpl implements Card {
         }
 
         @Override
-        public Builder setCosts(VariableResource costs) {
+        public Builder setCosts(ResourceStrategy costs) {
             this.costs = costs;
             return this;
         }
 
         @Override
-        public Builder setProducts(VariableResource products) {
+        public Builder setProducts(ResourceStrategy products) {
             this.products = products;
-            return this;
-        }
-
-        @Override
-        public Builder setSpecialGold(SpecialValue specialGold) {
-            this.specialGold = specialGold;
-            return this;
-        }
-
-        @Override
-        public Builder setSpecialVps(SpecialValue specialVps) {
-            this.specialVps = specialVps;
             return this;
         }
 
@@ -193,12 +156,6 @@ class CardImpl implements Card {
         @Override
         public Builder setMakesFree(Enum card) {
             this.makesFreeEnum.add(card);
-            return this;
-        }
-
-        @Override
-        public Builder setMakesThisFree(Enum card) {
-            this.makesThisFreeEnum.add(card);
             return this;
         }
 

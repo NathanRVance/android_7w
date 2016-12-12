@@ -12,7 +12,7 @@ public class BestAdjacentGuildVps implements SpecialValue {
         for (Game.Direction direction : Game.Direction.values()) {
             for (Card c : game.getPlayerDirection(player, direction).getPlayedCards()) {
                 if (c.getType() == Card.Type.GUILD) {
-                    int vps = c.getProducts(player).get(Card.Resource.VP) + c.getSpecialVps(player);
+                    int vps = c.getProducts(player).get(Card.Resource.VP);
                     max = (vps > max) ? vps : max;
                 }
             }

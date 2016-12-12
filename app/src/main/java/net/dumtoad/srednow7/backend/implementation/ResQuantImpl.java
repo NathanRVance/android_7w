@@ -59,6 +59,16 @@ public class ResQuantImpl extends TreeMap<Card.Resource, Integer> implements Res
         return true;
     }
 
+    @Override
+    public boolean equals(Object other) {
+        if(! (other instanceof ResQuantImpl)) return false;
+        boolean equal = true;
+        for(Card.Resource resource : Card.Resource.values()) {
+            equal &= get(resource) == ((ResQuantImpl) other).get(resource);
+        }
+        return equal;
+    }
+
     private void writeObject(ObjectOutputStream s) throws IOException {
         s.defaultWriteObject();
     }

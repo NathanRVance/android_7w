@@ -163,24 +163,24 @@ public class UIUtil {
             sb.append('\n');
         }
 
-        if (printSpecialVps && card.isSpecialVps()) {
+        if (printSpecialVps && card.isSpecialIn(Card.Resource.VP)) {
             sb.append("Currently produces:\n");
             sb.append(" ");
             fcs = new ForegroundColorSpan(getColorId(Card.Resource.VP.toString()));
             appendSb(sb, Card.Resource.VP.toString().toLowerCase(), fcs);
             sb.append(": ");
-            sb.append(String.valueOf(card.getSpecialVps(player)));
+            sb.append(String.valueOf(card.getProducts(player).get(Card.Resource.VP)));
             sb.append("\n");
         }
 
-        if (printSpecialGold && card.isSpecialGold()) {
-            if (!card.isSpecialVps())
+        if (printSpecialGold && card.isSpecialIn(Card.Resource.GOLD)) {
+            if (!card.isSpecialIn(Card.Resource.VP))
                 sb.append("Currently produces:\n");
             sb.append(" ");
             fcs = new ForegroundColorSpan(getColorId(Card.Resource.GOLD.toString()));
             appendSb(sb, Card.Resource.GOLD.toString().toLowerCase(), fcs);
             sb.append(": ");
-            sb.append(String.valueOf(card.getSpecialGold(player)));
+            sb.append(String.valueOf(card.getProducts(player).get(Card.Resource.GOLD)));
             sb.append("\n");
         }
 

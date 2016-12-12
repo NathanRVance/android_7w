@@ -6,7 +6,7 @@ import net.dumtoad.srednow7.backend.Player;
 import net.dumtoad.srednow7.backend.ResQuant;
 import net.dumtoad.srednow7.backend.implementation.ResQuantImpl;
 
-public class StealScience implements VariableResource {
+public class StealScience implements ResourceStrategy {
 
     //Copies one of the symbols on a green card in an adjacent city
     //In the case of multiple StealSciences, a card can only be copied once
@@ -31,5 +31,10 @@ public class StealScience implements VariableResource {
     @Override
     public ResourceStyle getStyle() {
         return ResourceStyle.STOLEN_SCIENCE;
+    }
+
+    @Override
+    public boolean isSpecialIn(Card.Resource resource) {
+        return resource == Card.Resource.COMPASS || resource == Card.Resource.TABLET || resource == Card.Resource.GEAR;
     }
 }

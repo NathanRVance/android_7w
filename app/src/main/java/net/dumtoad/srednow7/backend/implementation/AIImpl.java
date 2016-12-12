@@ -119,14 +119,11 @@ class AIImpl implements AI {
             cardAction.weight += cardAction.card.getProducts(player).get(res) * mult;
         }
 
-        //Gold gets 1 for every 3 gold
-        int gold = cardAction.card.getProducts(player).get(Card.Resource.GOLD);
-        gold += cardAction.card.getSpecialGold(player);
-        cardAction.weight += gold / 3;
+        //Gold add 1 for every 3 gold
+        cardAction.weight += cardAction.card.getProducts(player).get(Card.Resource.GOLD) / 3;
 
         //VPs get 1 weight each
         cardAction.weight += cardAction.card.getProducts(player).get(Card.Resource.VP);
-        cardAction.weight += cardAction.card.getSpecialVps(player);
 
         //Military is worth 2 for each shield for each battle it will turn the tide in, 1(ish) otherwise
         int shields = cardAction.card.getProducts(player).get(Card.Resource.SHIELD);

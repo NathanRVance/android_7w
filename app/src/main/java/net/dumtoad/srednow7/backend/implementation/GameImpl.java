@@ -18,7 +18,7 @@ import java.util.Random;
 
 public class GameImpl implements Game {
     private static final long serialVersionUID = -1169145061029792425L;
-    static GameImpl INSTANCE;
+    public static GameImpl INSTANCE;
 
     private List<PlayerImpl> players = new ArrayList<>();
     private List<Setup> setups = new ArrayList<>();
@@ -183,7 +183,7 @@ public class GameImpl implements Game {
     }
 
     @Override
-    public List<? extends Player> getPlayers() {
+    public List<PlayerImpl> getPlayers() {
         return players;
     }
 

@@ -5,8 +5,7 @@ import net.dumtoad.srednow7.backend.Game;
 import net.dumtoad.srednow7.backend.Player;
 import net.dumtoad.srednow7.backend.ResQuant;
 import net.dumtoad.srednow7.backend.Score;
-import net.dumtoad.srednow7.backend.implementation.variableResource.VariableResource;
-import net.dumtoad.srednow7.bus.Bus;
+import net.dumtoad.srednow7.backend.implementation.variableResource.ResourceStrategy;
 
 class ScoreImpl implements Score {
 
@@ -74,7 +73,6 @@ class ScoreImpl implements Score {
         for (Card card : player.getPlayedCards()) {
             if (card.getType() == Card.Type.STAGE) {
                 vps += card.getProducts(player).get(Card.Resource.VP);
-                vps += card.getSpecialVps(player);
             }
         }
         return vps;
@@ -97,7 +95,6 @@ class ScoreImpl implements Score {
         for (Card card : player.getPlayedCards()) {
             if (card.getType() == Card.Type.COMMERCIAL) {
                 vps += card.getProducts(player).get(Card.Resource.VP);
-                vps += card.getSpecialVps(player);
             }
         }
         return vps;
@@ -109,7 +106,6 @@ class ScoreImpl implements Score {
         for (Card card : player.getPlayedCards()) {
             if (card.getType() == Card.Type.GUILD) {
                 vps += card.getProducts(player).get(Card.Resource.VP);
-                vps += card.getSpecialVps(player);
             }
         }
         return vps;
@@ -122,7 +118,7 @@ class ScoreImpl implements Score {
         ResQuant stealable = new ResQuantImpl();
         int numStolen = 0;
         for (Card card : player.getPlayedCards()) {
-            if (card.getProductionStyle() == VariableResource.ResourceStyle.STOLEN_SCIENCE) {
+            if (card.getProductionStyle() == ResourceStrategy.ResourceStyle.STOLEN_SCIENCE) {
                 stealable = card.getProducts(player); // = not add because they are all the same
                 numStolen++;
             } else if (card.getProducts(player).get(Card.Resource.COMPASS) == 1 && card.getProducts(player).get(Card.Resource.GEAR) == 1
