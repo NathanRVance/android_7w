@@ -36,7 +36,7 @@ public class StandardResource implements ResourceStrategy {
 
     @Override
     public boolean isSpecialIn(Card.Resource resource) {
-        return special.containsKey(resource) && special.get(resource).isSpecial();
+        return special.containsKey(resource);
     }
 
     @Override

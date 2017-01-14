@@ -7,6 +7,4 @@ public interface SpecialValue {
 
     int getSpecialValue(Game game, Player player);
 
-    boolean isSpecial();
-
 }

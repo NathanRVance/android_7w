@@ -15,6 +15,7 @@ import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+import java.util.Set;
 
 public class GameImpl implements Game {
     private static final long serialVersionUID = -1169145061029792425L;
@@ -26,13 +27,16 @@ public class GameImpl implements Game {
     private int era;
     private int round;
     private CardList discards = new CardListImpl();
+    private Set<Generate.Expansion> expansions;
 
     public GameImpl() {
         INSTANCE = this;
     }
 
     @Override
-    public void initialize(CharSequence[] playerNames, boolean[] ais) {
+    public void initialize(CharSequence[] playerNames, boolean[] ais, Set<Generate.Expansion> expansions) {
+        this.expansions = expansions;
+        Generate.initialize(playerNames.length, expansions);
         players = new ArrayList<>();
         for (int playerID = 0; playerID < playerNames.length; playerID++) {
             players.add(new PlayerImpl(playerNames[playerID], ais[playerID]));
@@ -76,19 +80,17 @@ public class GameImpl implements Game {
     }
 
     private void startRound() {
-        if(playDiscard()) return;
+        if (playDiscard()) return;
 
         round++;
 
-        if (round == 7) {
-            if(play7thCard()) return;
+        if (round == Generate.getCardsPerPlayer()) {
+            if (play7thCard()) return;
         }
 
-        if (round >= 7) {
+        if (round >= Generate.getCardsPerPlayer()) {
             endEra();
-        }
-
-        else {
+        } else {
             //Since there are many different ways a round can end, we'll start by passing the hands (this won't affect gameplay)
             if (getPassingDirection() == Direction.WEST) {
                 //Players are sorted west to east
@@ -234,10 +236,15 @@ public class GameImpl implements Game {
     }
 
     private void writeObject(ObjectOutputStream s) throws IOException {
+        s.writeInt(players.size());
+        s.writeObject(expansions);
         s.defaultWriteObject();
     }
 
     private void readObject(ObjectInputStream s) throws IOException, ClassNotFoundException {
+        int numPlayers = s.readInt();
+        expansions = (Set<Generate.Expansion>) s.readObject();
+        Generate.initialize(numPlayers, expansions);
         s.defaultReadObject();
         INSTANCE = this;
         for (int i = 0; i < players.size(); i++) {

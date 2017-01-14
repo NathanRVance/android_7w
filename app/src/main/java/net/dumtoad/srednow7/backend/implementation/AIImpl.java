@@ -52,7 +52,7 @@ class AIImpl implements AI {
         if (player.getWonder().getResource() == Card.Resource.CLOTH
                 || player.getWonder().getResource() == Card.Resource.PAPER
                 || player.getWonder().getResource() == Card.Resource.GLASS
-                || player.getWonder().getEnum().toString().contains("Babylon")) {
+                || player.getWonder().getName().contains("Babylon")) {
             scientist = true;
         }
     }
@@ -66,7 +66,7 @@ class AIImpl implements AI {
             }
         }
         System.out.printf("Actions size: %d wonder: %s\n\taction: %s weight: %d\n"
-                , actionsSize, player.getWonder().getEnum().toString(), cardAction.action.toString(), cardAction.weight);
+                , actionsSize, player.getWonder().getName(), cardAction.action.toString(), cardAction.weight);
         //Do the action
         player.requestCardAction(cardAction.action, cardAction.card);
     }
@@ -184,7 +184,7 @@ class AIImpl implements AI {
             CardAction ca = new CardAction(nextStage, Player.CardAction.BUILD);
             calcBuild(ca, player, false);
             cardAction.weight += ca.weight;
-            if (GameImpl.INSTANCE.getRound() >= 5 && nextStage.getEnum().toString().contains("" + (GameImpl.INSTANCE.getEra() + 1))) {
+            if (GameImpl.INSTANCE.getRound() >= 5 && nextStage.getName().contains("" + (GameImpl.INSTANCE.getEra() + 1))) {
                 //If we're at the end of the era and haven't played this era's wonder stage yet
                 cardAction.weight *= 2;
             }

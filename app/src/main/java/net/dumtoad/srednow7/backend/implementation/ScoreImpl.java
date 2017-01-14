@@ -24,7 +24,8 @@ class ScoreImpl implements Score {
         this.militaryVictories = militaryVictories;
     }
 
-    int[] getMilitaryVictories() {
+    @Override
+    public int[] getMilitaryVictories() {
         return militaryVictories;
     }
 

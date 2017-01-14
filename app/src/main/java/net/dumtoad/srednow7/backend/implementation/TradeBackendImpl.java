@@ -74,10 +74,17 @@ class TradeBackendImpl implements TradeBackend {
                 (resource == Card.Resource.CLOTH || resource == Card.Resource.GLASS || resource == Card.Resource.PAPER) ?
                         Card.TradeType.INDUSTRY : Card.TradeType.RESOURCE;
 
+        int cost = 2;
         for (Card card : player.getPlayedCards()) {
-            if (card.providesTrade(direction, type)) return 1;
+            if (card.providesTrade(direction, type))
+                cost = 1;
         }
-        return 2;
+        for (Card card : player.getPlayedCards()) {
+            if (card.makesTradeCheaper(direction))
+                cost--;
+        }
+        if(cost < 0) cost = 0;
+        return cost;
     }
 
     @Override

@@ -40,9 +40,13 @@ public interface Player extends Serializable {
 
     boolean isPlayDiscard();
 
+    boolean canBuildWonderFree();
+
     TradeBackend getTradeBackend();
 
     int getGold();
+
+    void addGoldBuffer(int amount);
 
     enum CardAction {
         BUILD,

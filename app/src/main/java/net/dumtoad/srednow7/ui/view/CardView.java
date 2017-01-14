@@ -20,7 +20,7 @@ public class CardView extends Button {
 
     public CardView(Card card, Context context, Player player, boolean buildable, boolean freePlay) {
         super(context);
-        setText(UIUtil.formatEnum(card.getEnum(), card.getType()));
+        setText(UIUtil.formatName(card.getName(), card.getType()));
         setTextSize(TypedValue.COMPLEX_UNIT_PX, context.getResources().getDimension(R.dimen.textsize));
         if (buildable) build(card, player, freePlay);
         else view(card, player);
@@ -46,7 +46,7 @@ public class CardView extends Button {
                     error = "Insufficient resources";
                     break;
                 case ALREADY_BUILT:
-                    error = "Already built " + card.getEnum();
+                    error = "Already built " + UIUtil.formatName(card.getName(), card.getType());
                     break;
                 case OVERPAID:
                     error = "Overpaid, undo some trades";
@@ -60,7 +60,7 @@ public class CardView extends Button {
 
     private void build(final Card card, final Player player, final boolean freePlay) {
         setOnClickListener(v -> new AlertDialog.Builder(getContext())
-                .setTitle(UIUtil.formatEnum(card.getEnum(), card.getType()))
+                .setTitle(UIUtil.formatName(card.getName(), card.getType()))
                 .setMessage(UIUtil.getSummary(card, player, true, true))
                 .setNegativeButton("OK", (dialog, which) -> {
                     //Do nothing
@@ -107,7 +107,7 @@ public class CardView extends Button {
 
     private void view(final Card card, final Player player) {
         setOnClickListener(v -> new AlertDialog.Builder(getContext())
-                .setTitle(UIUtil.formatEnum(card.getEnum(), card.getType()))
+                .setTitle(UIUtil.formatName(card.getName(), card.getType()))
                 .setMessage(UIUtil.getSummary(card, player, true, false))
                 .setPositiveButton("Ok", (dialog, which) -> {
                     //Do nothing

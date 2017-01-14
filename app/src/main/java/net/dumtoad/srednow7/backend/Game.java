@@ -1,11 +1,14 @@
 package net.dumtoad.srednow7.backend;
 
+import net.dumtoad.srednow7.backend.implementation.Generate;
+
 import java.io.Serializable;
 import java.util.List;
+import java.util.Set;
 
 public interface Game extends Serializable {
 
-    void initialize(CharSequence[] playerNames, boolean[] ais);
+    void initialize(CharSequence[] playerNames, boolean[] ais, Set<Generate.Expansion> expansions);
 
     Setup getSetup(int playerID);
 

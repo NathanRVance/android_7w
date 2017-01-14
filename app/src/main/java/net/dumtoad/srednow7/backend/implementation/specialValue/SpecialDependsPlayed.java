@@ -40,8 +40,4 @@ public class SpecialDependsPlayed implements SpecialValue {
         return ret;
     }
 
-    @Override
-    public boolean isSpecial() {
-        return true;
-    }
 }

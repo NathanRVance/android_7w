@@ -1,16 +1,19 @@
 package net.dumtoad.srednow7.backend;
 
+import net.dumtoad.srednow7.backend.implementation.action.Action;
 import net.dumtoad.srednow7.backend.implementation.variableResource.ResourceStrategy;
 
 public interface Card {
 
-    Enum getEnum();
+    String getName();
 
     CharSequence getMessage();
 
     Type getType();
 
     boolean providesTrade(Game.Direction direction, TradeType type);
+
+    boolean makesTradeCheaper(Game.Direction direction);
 
     ResQuant getProducts(Player player);
 
@@ -25,6 +28,8 @@ public interface Card {
     CardList makesFree();
 
     boolean providesAttribute(Attribute attribute);
+
+    void performActions(Player player);
 
     enum Type {
         STAGE,
@@ -56,13 +61,16 @@ public interface Card {
 
     enum TradeType {
         RESOURCE,
-        INDUSTRY
+        INDUSTRY,
+        ONECHEAPER
     }
 
     enum Attribute {
         PLAY_7TH_CARD,
         PLAY_1_FREE,
-        FREE_BUILD
+        FREE_BUILD,
+        FREE_WONDER,
+        DOVE
     }
 
     interface Builder {
@@ -76,9 +84,11 @@ public interface Card {
 
         Builder addTradeDirection(Game.Direction direction);
 
-        Builder setMakesFree(Enum card);
+        Builder setMakesFree(String card);
 
         Builder addAttribute(Attribute attribute);
+
+        Builder addAction(Action action);
 
         Card build();
     }

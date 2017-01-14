@@ -20,8 +20,4 @@ public class MultiSpecial implements SpecialValue {
         return total;
     }
 
-    @Override
-    public boolean isSpecial() {
-        return true;
-    }
 }

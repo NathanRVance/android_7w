@@ -20,8 +20,4 @@ public class BestAdjacentGuildVps implements SpecialValue {
         return max;
     }
 
-    @Override
-    public boolean isSpecial() {
-        return true;
-    }
 }

@@ -1,63 +1,72 @@
 <?xml version="1.0"?>
 <elements>
     <cards>
-        <card name="Lumber_Yard" type="RESOURCE">
+        <card name="Lumber_Yard" type="RESOURCE" era="0">
+            <players>3 4</players>
             <products>
                 <WOOD>1</WOOD>
             </products>
         </card>
-        <card name="Stone_Pit" type="RESOURCE">
+        <card name="Stone_Pit" type="RESOURCE" era="0">
+            <players>3 5</players>
             <products>
                 <STONE>1</STONE>
             </products>
         </card>
-        <card name="Clay_Pool" type="RESOURCE">
+        <card name="Clay_Pool" type="RESOURCE" era="0">
+            <players>3 5</players>
             <products>
                 <CLAY>1</CLAY>
             </products>
         </card>
-        <card name="Ore_Vein" type="RESOURCE">
+        <card name="Ore_Vein" type="RESOURCE" era="0">
+            <players>3 4</players>
             <products>
                 <ORE>1</ORE>
             </products>
         </card>
-        <card name="Tree_Farm" type="RESOURCE">
-            <costs>
-                <GOLD>1</GOLD>
-            </costs>
-            <products>
-                <WOOD>1</WOOD>
-                <CLAY>1</CLAY>
-            </products>
-        </card>
-        <card name="Excavation" type="RESOURCE">
-            <costs>
-                <GOLD>1</GOLD>
-            </costs>
-            <products>
-                <STONE>1</STONE>
-                <CLAY>1</CLAY>
-            </products>
-        </card>
-        <card name="Clay_Pit" type="RESOURCE">
-            <costs>
-                <GOLD>1</GOLD>
-            </costs>
-            <products>
-                <CLAY>1</CLAY>
-                <ORE>1</ORE>
-            </products>
-        </card>
-        <card name="Timber_Yard" type="RESOURCE">
+        <card name="Tree_Farm" type="RESOURCE" era="0">
+            <players>6</players>
             <costs>
                 <GOLD>1</GOLD>
             </costs>
             <products>
                 <WOOD>1</WOOD>
+                <CLAY>1</CLAY>
+            </products>
+        </card>
+        <card name="Excavation" type="RESOURCE" era="0">
+            <players>4</players>
+            <costs>
+                <GOLD>1</GOLD>
+            </costs>
+            <products>
+                <STONE>1</STONE>
+                <CLAY>1</CLAY>
+            </products>
+        </card>
+        <card name="Clay_Pit" type="RESOURCE" era="0">
+            <players>3</players>
+            <costs>
+                <GOLD>1</GOLD>
+            </costs>
+            <products>
+                <CLAY>1</CLAY>
+                <ORE>1</ORE>
+            </products>
+        </card>
+        <card name="Timber_Yard" type="RESOURCE" era="0">
+            <players>3</players>
+            <costs>
+                <GOLD>1</GOLD>
+            </costs>
+            <products>
+                <WOOD>1</WOOD>
                 <STONE>1</STONE>
             </products>
         </card>
-        <card name="Forest_Cave" type="RESOURCE">
+        <card name="Forest_Cave" type="RESOURCE" era="0">
+            <players>5</players>
             <costs>
                 <GOLD>1</GOLD>
             </costs>
@@ -66,7 +75,8 @@
                 <ORE>1</ORE>
             </products>
         </card>
-        <card name="Mine" type="RESOURCE">
+        <card name="Mine" type="RESOURCE" era="0">
+            <players>6</players>
             <costs>
                 <GOLD>1</GOLD>
             </costs>
@@ -75,27 +85,32 @@
                 <STONE>1</STONE>
             </products>
         </card>
-        <card name="Loom" type="INDUSTRY">
+        <card name="Loom" type="INDUSTRY" era="0">
+            <players>3 6</players>
             <products>
                 <CLOTH>1</CLOTH>
             </products>
         </card>
-        <card name="Glassworks" type="INDUSTRY">
+        <card name="Glassworks" type="INDUSTRY" era="0">
+            <players>3 6</players>
             <products>
                 <GLASS>1</GLASS>
             </products>
         </card>
-        <card name="Press" type="INDUSTRY">
+        <card name="Press" type="INDUSTRY" era="0">
+            <players>3 6</players>
             <products>
                 <PAPER>1</PAPER>
             </products>
         </card>
-        <card name="Pawnshop" type="STRUCTURE">
+        <card name="Pawnshop" type="STRUCTURE" era="0">
+            <players>4 7</players>
             <products>
                 <VP>3</VP>
             </products>
         </card>
-        <card name="Baths" type="STRUCTURE">
+        <card name="Baths" type="STRUCTURE" era="0">
+            <players>3 7</players>
             <costs>
                 <STONE>1</STONE>
             </costs>
@@ -106,7 +121,8 @@
                 Aqueduct
             </makesFree>
         </card>
-        <card name="Altar" type="STRUCTURE">
+        <card name="Altar" type="STRUCTURE" era="0">
+            <players>3 5</players>
             <products>
                 <VP>2</VP>
             </products>
@@ -114,7 +130,8 @@
                 Temple
             </makesFree>
         </card>
-        <card name="Theater" type="STRUCTURE">
+        <card name="Theater" type="STRUCTURE" era="0">
+            <players>3 6</players>
             <products>
                 <VP>2</VP>
             </products>
@@ -122,12 +139,14 @@
                 Statue
             </makesFree>
         </card>
-        <card name="Tavern" type="COMMERCIAL">
+        <card name="Tavern" type="COMMERCIAL" era="0">
+            <players>4 5 7</players>
             <products>
                 <GOLD>5</GOLD>
             </products>
         </card>
-        <card name="East_Trading_Post" type="COMMERCIAL">
+        <card name="East_Trading_Post" type="COMMERCIAL" era="0">
+            <players>3 7</players>
             <message>
                 Can trade 1 coin for resources with player to the east.
             </message>
@@ -139,7 +158,8 @@
                 Forum
             </makesFree>
         </card>
-        <card name="West_Trading_Post" type="COMMERCIAL">
+        <card name="West_Trading_Post" type="COMMERCIAL" era="0">
+            <players>3 7</players>
             <message>
                 Can trade 1 coin for resources with player to the west.
             </message>
@@ -151,7 +171,8 @@
                 Forum
             </makesFree>
         </card>
-        <card name="Marketplace" type="COMMERCIAL">
+        <card name="Marketplace" type="COMMERCIAL" era="0">
+            <players>3 6</players>
             <message>
                 Can trade 1 coin for industry products with adjacent players.
             </message>
@@ -166,7 +187,8 @@
                 Caravansery
             </makesFree>
         </card>
-        <card name="Stockade" type="MILITARY">
+        <card name="Stockade" type="MILITARY" era="0">
+            <players>3 7</players>
             <costs>
                 <WOOD>1</WOOD>
             </costs>
@@ -174,7 +196,8 @@
                 <SHIELD>1</SHIELD>
             </products>
         </card>
-        <card name="Barracks" type="MILITARY">
+        <card name="Barracks" type="MILITARY" era="0">
+            <players>3 5</players>
             <costs>
                 <ORE>1</ORE>
             </costs>
@@ -182,7 +205,8 @@
                 <SHIELD>1</SHIELD>
             </products>
         </card>
-        <card name="Guard_Tower" type="MILITARY">
+        <card name="Guard_Tower" type="MILITARY" era="0">
+            <players>3 4</players>
             <costs>
                 <CLAY>1</CLAY>
             </costs>
@@ -190,7 +214,8 @@
                 <SHIELD>1</SHIELD>
             </products>
         </card>
-        <card name="Apothecary" type="SCIENCE">
+        <card name="Apothecary" type="SCIENCE" era="0">
+            <players>3 5</players>
             <costs>
                 <CLOTH>1</CLOTH>
             </costs>
@@ -202,7 +227,8 @@
                 Dispensary
             </makesFree>
         </card>
-        <card name="Workshop" type="SCIENCE">
+        <card name="Workshop" type="SCIENCE" era="0">
+            <players>3 7</players>
             <costs>
                 <GLASS>1</GLASS>
             </costs>
@@ -214,7 +240,8 @@
                 Laboratory
             </makesFree>
         </card>
-        <card name="Scriptorium" type="SCIENCE">
+        <card name="Scriptorium" type="SCIENCE" era="0">
+            <players>3 4</players>
             <costs>
                 <PAPER>1</PAPER>
             </costs>
@@ -226,7 +253,8 @@
                 Library
             </makesFree>
         </card>
-        <card name="Sawmill" type="RESOURCE">
+        <card name="Sawmill" type="RESOURCE" era="1">
+            <players>3 4</players>
             <costs>
                 <GOLD>1</GOLD>
             </costs>
@@ -234,7 +262,8 @@
                 <WOOD>2</WOOD>
             </products>
         </card>
-        <card name="Quarry" type="RESOURCE">
+        <card name="Quarry" type="RESOURCE" era="1">
+            <players>3 4</players>
             <costs>
                 <GOLD>1</GOLD>
             </costs>
@@ -242,7 +271,8 @@
                 <STONE>2</STONE>
             </products>
         </card>
-        <card name="Brickyard" type="RESOURCE">
+        <card name="Brickyard" type="RESOURCE" era="1">
+            <players>3 4</players>
             <costs>
                 <GOLD>1</GOLD>
             </costs>
@@ -250,7 +280,8 @@
                 <CLAY>2</CLAY>
             </products>
         </card>
-        <card name="Foundry" type="RESOURCE">
+        <card name="Foundry" type="RESOURCE" era="1">
+            <players>3 4</players>
             <costs>
                 <GOLD>1</GOLD>
             </costs>
@@ -258,7 +289,26 @@
                 <ORE>2</ORE>
             </products>
         </card>
-        <card name="Aqueduct" type="STRUCTURE">
+        <card name="Loom" type="INDUSTRY" era="1">
+            <players>3 5</players>
+            <products>
+                <CLOTH>1</CLOTH>
+            </products>
+        </card>
+        <card name="Glassworks" type="INDUSTRY" era="1">
+            <players>3 5</players>
+            <products>
+                <GLASS>1</GLASS>
+            </products>
+        </card>
+        <card name="Press" type="INDUSTRY" era="1">
+            <players>3 5</players>
+            <products>
+                <PAPER>1</PAPER>
+            </products>
+        </card>
+        <card name="Aqueduct" type="STRUCTURE" era="1">
+            <players>3 7</players>
             <costs>
                 <STONE>3</STONE>
             </costs>
@@ -266,7 +316,8 @@
                 <VP>5</VP>
             </products>
         </card>
-        <card name="Temple" type="STRUCTURE">
+        <card name="Temple" type="STRUCTURE" era="1">
+            <players>3 6</players>
             <costs>
                 <WOOD>1</WOOD>
                 <CLAY>1</CLAY>
@@ -279,7 +330,8 @@
                 Pantheon
             </makesFree>
         </card>
-        <card name="Statue" type="STRUCTURE">
+        <card name="Statue" type="STRUCTURE" era="1">
+            <players>3 6</players>
             <costs>
                 <ORE>2</ORE>
                 <WOOD>1</WOOD>
@@ -291,7 +343,8 @@
                 Gardens
             </makesFree>
         </card>
-        <card name="Courthouse" type="STRUCTURE">
+        <card name="Courthouse" type="STRUCTURE" era="1">
+            <players>3 5</players>
             <costs>
                 <CLAY>2</CLAY>
                 <CLOTH>1</CLOTH>
@@ -300,7 +353,8 @@
                 <VP>4</VP>
             </products>
         </card>
-        <card name="Forum" type="COMMERCIAL">
+        <card name="Forum" type="COMMERCIAL" era="1">
+            <players>3 6 7</players>
             <costs>
                 <CLAY>2</CLAY>
             </costs>
@@ -313,7 +367,8 @@
                 Haven
             </makesFree>
         </card>
-        <card name="Caravansery" type="COMMERCIAL">
+        <card name="Caravansery" type="COMMERCIAL" era="1">
+            <players>3 5 6</players>
             <costs>
                 <WOOD>2</WOOD>
             </costs>
@@ -327,7 +382,8 @@
                 Lighthouse
             </makesFree>
         </card>
-        <card name="Vineyard" type="COMMERCIAL">
+        <card name="Vineyard" type="COMMERCIAL" era="1">
+            <players>3 6</players>
             <message>
                 1 coin for each resource card of adjacent players or your own.
             </message>
@@ -335,7 +391,7 @@
                 <GOLD>
                     <dependsPlayed>
                         <type>RESOURCE</type>
-                        <goldPer>1</goldPer>
+                        <amntPer>1</amntPer>
                         <count>
                             adjacent
                             self
@@ -344,7 +400,8 @@
                 </GOLD>
             </products>
         </card>
-        <card name="Bazaar" type="COMMERCIAL">
+        <card name="Bazaar" type="COMMERCIAL" era="1">
+            <players>4 7</players>
             <message>
                 2 coins for each industry card of adjacent players or your own.
             </message>
@@ -352,7 +409,7 @@
                 <GOLD>
                     <dependsPlayed>
                         <type>INDUSTRY</type>
-                        <goldPer>2</goldPer>
+                        <amntPer>2</amntPer>
                         <count>
                             adjacent
                             self
@@ -361,7 +418,8 @@
                 </GOLD>
             </products>
         </card>
-        <card name="Walls" type="MILITARY">
+        <card name="Walls" type="MILITARY" era="1">
+            <players>3 7</players>
             <costs>
                 <STONE>3</STONE>
             </costs>
@@ -372,7 +430,8 @@
                 Fortifications
             </makesFree>
         </card>
-        <card name="Training_Ground" type="MILITARY">
+        <card name="Training_Ground" type="MILITARY" era="1">
+            <players>4 6 7</players>
             <costs>
                 <ORE>2</ORE>
                 <WOOD>1</WOOD>
@@ -384,7 +443,8 @@
                 Circus
             </makesFree>
         </card>
-        <card name="Stables" type="MILITARY">
+        <card name="Stables" type="MILITARY" era="1">
+            <players>3 5</players>
             <costs>
                 <ORE>1</ORE>
                 <CLAY>1</CLAY>
@@ -394,7 +454,8 @@
                 <SHIELD>2</SHIELD>
             </products>
         </card>
-        <card name="Archery_Range" type="MILITARY">
+        <card name="Archery_Range" type="MILITARY" era="1">
+            <players>3 6</players>
             <costs>
                 <ORE>1</ORE>
                 <WOOD>2</WOOD>
@@ -403,7 +464,8 @@
                 <SHIELD>2</SHIELD>
             </products>
         </card>
-        <card name="Dispensary" type="SCIENCE">
+        <card name="Dispensary" type="SCIENCE" era="1">
+            <players>3 4</players>
             <costs>
                 <GLASS>1</GLASS>
                 <ORE>2</ORE>
@@ -416,7 +478,8 @@
                 Arena
             </makesFree>
         </card>
-        <card name="Laboratory" type="SCIENCE">
+        <card name="Laboratory" type="SCIENCE" era="1">
+            <players>3 5</players>
             <costs>
                 <PAPER>1</PAPER>
                 <CLAY>2</CLAY>
@@ -429,7 +492,8 @@
                 Observatory
             </makesFree>
         </card>
-        <card name="Library" type="SCIENCE">
+        <card name="Library" type="SCIENCE" era="1">
+            <players>3 6</players>
             <costs>
                 <CLOTH>1</CLOTH>
                 <STONE>2</STONE>
@@ -442,7 +506,8 @@
                 University
             </makesFree>
         </card>
-        <card name="School" type="SCIENCE">
+        <card name="School" type="SCIENCE" era="1">
+            <players>3 7</players>
             <costs>
                 <PAPER>1</PAPER>
                 <WOOD>1</WOOD>
@@ -455,7 +520,8 @@
                 Study
             </makesFree>
         </card>
-        <card name="Pantheon" type="STRUCTURE">
+        <card name="Pantheon" type="STRUCTURE" era="2">
+            <players>3 6</players>
             <costs>
                 <CLAY>2</CLAY>
                 <ORE>1</ORE>
@@ -467,7 +533,8 @@
                 <VP>7</VP>
             </products>
         </card>
-        <card name="Gardens" type="STRUCTURE">
+        <card name="Gardens" type="STRUCTURE" era="2">
+            <players>3 4</players>
             <costs>
                 <CLAY>2</CLAY>
                 <WOOD>1</WOOD>
@@ -476,7 +543,8 @@
                 <VP>5</VP>
             </products>
         </card>
-        <card name="Town_Hall" type="STRUCTURE">
+        <card name="Town_Hall" type="STRUCTURE" era="2">
+            <players>3 5 6</players>
             <costs>
                 <STONE>2</STONE>
                 <ORE>1</ORE>
@@ -486,7 +554,8 @@
                 <VP>6</VP>
             </products>
         </card>
-        <card name="Palace" type="STRUCTURE">
+        <card name="Palace" type="STRUCTURE" era="2">
+            <players>3 7</players>
             <costs>
                 <WOOD>1</WOOD>
                 <CLAY>1</CLAY>
@@ -500,7 +569,8 @@
                 <VP>8</VP>
             </products>
         </card>
-        <card name="Senate" type="STRUCTURE">
+        <card name="Senate" type="STRUCTURE" era="2">
+            <players>3 5</players>
             <costs>
                 <WOOD>2</WOOD>
                 <ORE>1</ORE>
@@ -510,7 +580,8 @@
                 <VP>6</VP>
             </products>
         </card>
-        <card name="Haven" type="COMMERCIAL">
+        <card name="Haven" type="COMMERCIAL" era="2">
+            <players>3 4</players>
             <costs>
                 <ORE>1</ORE>
                 <WOOD>1</WOOD>
@@ -523,7 +594,7 @@
                 <GOLD>
                     <dependsPlayed>
                         <type>RESOURCE</type>
-                        <goldPer>1</goldPer>
+                        <amntPer>1</amntPer>
                         <count>
                             self
                         </count>
@@ -532,7 +603,7 @@
                 <VP>
                     <dependsPlayed>
                         <type>RESOURCE</type>
-                        <goldPer>1</goldPer>
+                        <amntPer>1</amntPer>
                         <count>
                             self
                         </count>
@@ -540,7 +611,8 @@
                 </VP>
             </products>
         </card>
-        <card name="Lighthouse" type="COMMERCIAL">
+        <card name="Lighthouse" type="COMMERCIAL" era="2">
+            <players>3 6</players>
             <costs>
                 <STONE>1</STONE>
                 <GLASS>1</GLASS>
@@ -552,7 +624,7 @@
                 <GOLD>
                     <dependsPlayed>
                         <type>COMMERCIAL</type>
-                        <goldPer>1</goldPer>
+                        <amntPer>1</amntPer>
                         <count>
                             self
                         </count>
@@ -561,7 +633,7 @@
                 <VP>
                     <dependsPlayed>
                         <type>COMMERCIAL</type>
-                        <goldPer>1</goldPer>
+                        <amntPer>1</amntPer>
                         <count>
                             self
                         </count>
@@ -569,7 +641,8 @@
                 </VP>
             </products>
         </card>
-        <card name="Chamber_Of_Commerce" type="COMMERCIAL">
+        <card name="Chamber_Of_Commerce" type="COMMERCIAL" era="2">
+            <players>4 6</players>
             <costs>
                 <CLAY>2</CLAY>
                 <PAPER>1</PAPER>
@@ -581,7 +654,7 @@
                 <GOLD>
                     <dependsPlayed>
                         <type>INDUSTRY</type>
-                        <goldPer>2</goldPer>
+                        <amntPer>2</amntPer>
                         <count>
                             self
                         </count>
@@ -590,7 +663,7 @@
                 <VP>
                     <dependsPlayed>
                         <type>INDUSTRY</type>
-                        <goldPer>2</goldPer>
+                        <amntPer>2</amntPer>
                         <count>
                             self
                         </count>
@@ -598,7 +671,8 @@
                 </VP>
             </products>
         </card>
-        <card name="Arena" type="COMMERCIAL">
+        <card name="Arena" type="COMMERCIAL" era="2">
+            <players>3 5 7</players>
             <costs>
                 <CLAY>2</CLAY>
                 <PAPER>1</PAPER>
@@ -610,7 +684,7 @@
                 <GOLD>
                     <dependsPlayed>
                         <type>STAGE</type>
-                        <goldPer>3</goldPer>
+                        <amntPer>3</amntPer>
                         <count>
                             self
                         </count>
@@ -619,7 +693,7 @@
                 <VP>
                     <dependsPlayed>
                         <type>STAGE</type>
-                        <goldPer>1</goldPer>
+                        <amntPer>1</amntPer>
                         <count>
                             self
                         </count>
@@ -627,7 +701,8 @@
                 </VP>
             </products>
         </card>
-        <card name="Fortifications" type="MILITARY">
+        <card name="Fortifications" type="MILITARY" era="2">
+            <players>3 7</players>
             <costs>
                 <ORE>3</ORE>
                 <STONE>1</STONE>
@@ -636,7 +711,8 @@
                 <SHIELD>3</SHIELD>
             </products>
         </card>
-        <card name="Circus" type="MILITARY">
+        <card name="Circus" type="MILITARY" era="2">
+            <players>4 5 6</players>
             <costs>
                 <STONE>3</STONE>
                 <ORE>1</ORE>
@@ -645,7 +721,8 @@
                 <SHIELD>3</SHIELD>
             </products>
         </card>
-        <card name="Arsenal" type="MILITARY">
+        <card name="Arsenal" type="MILITARY" era="2">
+            <players>3 4 7</players>
             <costs>
                 <ORE>1</ORE>
                 <WOOD>2</WOOD>
@@ -655,7 +732,8 @@
                 <SHIELD>3</SHIELD>
             </products>
         </card>
-        <card name="Siege_Workshop" type="MILITARY">
+        <card name="Siege_Workshop" type="MILITARY" era="2">
+            <players>3 5</players>
             <costs>
                 <CLAY>3</CLAY>
                 <WOOD>1</WOOD>
@@ -664,7 +742,8 @@
                 <SHIELD>3</SHIELD>
             </products>
         </card>
-        <card name="Lodge" type="SCIENCE">
+        <card name="Lodge" type="SCIENCE" era="2">
+            <players>3 6</players>
             <costs>
                 <CLAY>2</CLAY>
                 <CLOTH>1</CLOTH>
@@ -674,7 +753,8 @@
                 <COMPASS>1</COMPASS>
             </products>
         </card>
-        <card name="Observatory" type="SCIENCE">
+        <card name="Observatory" type="SCIENCE" era="2">
+            <players>3 7</players>
             <costs>
                 <ORE>2</ORE>
                 <CLOTH>1</CLOTH>
@@ -684,7 +764,8 @@
                 <GEAR>1</GEAR>
             </products>
         </card>
-        <card name="University" type="SCIENCE">
+        <card name="University" type="SCIENCE" era="2">
+            <players>3 4</players>
             <costs>
                 <WOOD>2</WOOD>
                 <GLASS>1</GLASS>
@@ -694,7 +775,8 @@
                 <TABLET>1</TABLET>
             </products>
         </card>
-        <card name="Academy" type="SCIENCE">
+        <card name="Academy" type="SCIENCE" era="2">
+            <players>3 7</players>
             <costs>
                 <STONE>3</STONE>
                 <GLASS>1</GLASS>
@@ -703,7 +785,8 @@
                 <COMPASS>1</COMPASS>
             </products>
         </card>
-        <card name="Study" type="SCIENCE">
+        <card name="Study" type="SCIENCE" era="2">
+            <players>3 5</players>
             <costs>
                 <WOOD>1</WOOD>
                 <CLOTH>1</CLOTH>
@@ -713,7 +796,7 @@
                 <GEAR>1</GEAR>
             </products>
         </card>
-        <card name="Workers_Guild" type="GUILD">
+        <card name="Workers_Guild" type="GUILD" era="2">
             <costs>
                 <ORE>2</ORE>
                 <CLAY>1</CLAY>
@@ -727,7 +810,7 @@
                 <VP>
                     <dependsPlayed>
                         <type>RESOURCE</type>
-                        <goldPer>1</goldPer>
+                        <amntPer>1</amntPer>
                         <count>
                             adjacent
                         </count>
@@ -735,7 +818,7 @@
                 </VP>
             </products>
         </card>
-        <card name="Craftmens_Guild" type="GUILD">
+        <card name="Craftmens_Guild" type="GUILD" era="2">
             <costs>
                 <ORE>2</ORE>
                 <STONE>2</STONE>
@@ -747,7 +830,7 @@
                 <VP>
                     <dependsPlayed>
                         <type>INDUSTRY</type>
-                        <goldPer>2</goldPer>
+                        <amntPer>2</amntPer>
                         <count>
                             adjacent
                         </count>
@@ -755,7 +838,7 @@
                 </VP>
             </products>
         </card>
-        <card name="Traders_Guild" type="GUILD">
+        <card name="Traders_Guild" type="GUILD" era="2">
             <costs>
                 <CLOTH>1</CLOTH>
                 <PAPER>1</PAPER>
@@ -768,7 +851,7 @@
                 <VP>
                     <dependsPlayed>
                         <type>COMMERCIAL</type>
-                        <goldPer>1</goldPer>
+                        <amntPer>1</amntPer>
                         <count>
                             adjacent
                         </count>
@@ -776,7 +859,7 @@
                 </VP>
             </products>
         </card>
-        <card name="Philosophers_Guild" type="GUILD">
+        <card name="Philosophers_Guild" type="GUILD" era="2">
             <costs>
                 <CLAY>3</CLAY>
                 <CLOTH>1</CLOTH>
@@ -789,7 +872,7 @@
                 <VP>
                     <dependsPlayed>
                         <type>SCIENCE</type>
-                        <goldPer>1</goldPer>
+                        <amntPer>1</amntPer>
                         <count>
                             adjacent
                         </count>
@@ -797,7 +880,7 @@
                 </VP>
             </products>
         </card>
-        <card name="Spy_Guild" type="GUILD">
+        <card name="Spy_Guild" type="GUILD" era="2">
             <costs>
                 <CLAY>3</CLAY>
                 <GLASS>1</GLASS>
@@ -809,7 +892,7 @@
                 <VP>
                     <dependsPlayed>
                         <type>MILITARY</type>
-                        <goldPer>1</goldPer>
+                        <amntPer>1</amntPer>
                         <count>
                             adjacent
                         </count>
@@ -817,7 +900,7 @@
                 </VP>
             </products>
         </card>
-        <card name="Strategy_Guild" type="GUILD">
+        <card name="Strategy_Guild" type="GUILD" era="2">
             <costs>
                 <ORE>2</ORE>
                 <STONE>1</STONE>
@@ -829,6 +912,7 @@
             <products>
                 <VP>
                     <militaryLosses>
+                        <amntPer>1</amntPer>
                         <count>
                             adjacent
                         </count>
@@ -836,7 +920,7 @@
                 </VP>
             </products>
         </card>
-        <card name="Shipowners_Guild" type="GUILD">
+        <card name="Shipowners_Guild" type="GUILD" era="2">
             <costs>
                 <WOOD>3</WOOD>
                 <PAPER>1</PAPER>
@@ -849,21 +933,21 @@
                 <VP>
                     <dependsPlayed>
                         <type>RESOURCE</type>
-                        <goldPer>1</goldPer>
+                        <amntPer>1</amntPer>
                         <count>
                             self
                         </count>
                     </dependsPlayed>
                     <dependsPlayed>
                         <type>INDUSTRY</type>
-                        <goldPer>1</goldPer>
+                        <amntPer>1</amntPer>
                         <count>
                             self
                         </count>
                     </dependsPlayed>
                     <dependsPlayed>
                         <type>GUILD</type>
-                        <goldPer>1</goldPer>
+                        <amntPer>1</amntPer>
                         <count>
                             self
                         </count>
@@ -871,7 +955,7 @@
                 </VP>
             </products>
         </card>
-        <card name="Scientists_Guild" type="GUILD">
+        <card name="Scientists_Guild" type="GUILD" era="2">
             <costs>
                 <WOOD>2</WOOD>
                 <ORE>2</ORE>
@@ -883,7 +967,7 @@
                 <TABLET>1</TABLET>
             </products>
         </card>
-        <card name="Magistrates_Guild" type="GUILD">
+        <card name="Magistrates_Guild" type="GUILD" era="2">
             <costs>
                 <WOOD>3</WOOD>
                 <STONE>1</STONE>
@@ -896,7 +980,7 @@
                 <VP>
                     <dependsPlayed>
                         <type>STRUCTURE</type>
-                        <goldPer>1</goldPer>
+                        <amntPer>1</amntPer>
                         <count>
                             adjacent
                         </count>
@@ -904,7 +988,7 @@
                 </VP>
             </products>
         </card>
-        <card name="Builders_Guild" type="GUILD">
+        <card name="Builders_Guild" type="GUILD" era="2">
             <costs>
                 <STONE>2</STONE>
                 <CLAY>2</CLAY>
@@ -917,13 +1001,427 @@
                 <VP>
                     <dependsPlayed>
                         <type>STAGE</type>
-                        <goldPer>1</goldPer>
+                        <amntPer>1</amntPer>
                         <count>
                             adjacent
                             self
                         </count>
                     </dependsPlayed>
                 </VP>
+            </products>
+        </card>
+
+        <!--Cities expansions-->
+        <card name="Hideout" type="BLACK" era="0">
+            <expansions>Cities</expansions>
+            <products>
+                <VP>2</VP>
+            </products>
+            <action>
+                <loseGold>1</loseGold>
+            </action>
+        </card>
+        <card name="Gambling_Den" type="BLACK" era="0">
+            <expansions>Cities</expansions>
+            <products>
+                <GOLD>6</GOLD>
+            </products>
+            <action>
+                <addGoldAdjacent>1</addGoldAdjacent>
+            </action>
+        </card>
+        <card name="Residence" type="BLACK" era="0">
+            <expansions>Cities</expansions>
+            <costs>
+                <CLAY>1</CLAY>
+            </costs>
+            <products>
+                <VP>1</VP>
+            </products>
+            <attribute>
+                DOVE
+            </attribute>
+        </card>
+        <card name="Clandestine_Dock_East" type="BLACK" era="0">
+            <expansions>Cities</expansions>
+            <costs>
+                <GOLD>1</GOLD>
+            </costs>
+            <trade>
+                <type>ONECHEAPER</type>
+                <direction>EAST</direction>
+            </trade>
+        </card>
+        <card name="Clandestine_Dock_West" type="BLACK" era="0">
+            <expansions>Cities</expansions>
+            <costs>
+                <GOLD>1</GOLD>
+            </costs>
+            <trade>
+                <type>ONECHEAPER</type>
+                <direction>WEST</direction>
+            </trade>
+        </card>
+        <card name="Pigeon_Loft" type="BLACK" era="0">
+            <expansions>Cities</expansions>
+            <costs>
+                <GOLD>1</GOLD>
+                <ORE>1</ORE>
+            </costs>
+            <products>
+                <stealScience/>
+            </products>
+        </card>
+        <card name="Militia" type="BLACK" era="0">
+            <expansions>Cities</expansions>
+            <costs>
+                <GOLD>3</GOLD>
+            </costs>
+            <products>
+                <SHIELD>2</SHIELD>
+            </products>
+        </card>
+        <card name="Secret_Warehouse" type="BLACK" era="0">
+            <expansions>Cities</expansions>
+            <costs>
+                <GOLD>2</GOLD>
+            </costs>
+            <products>
+                <somethingIProduceAlready/>
+            </products>
+        </card>
+        <card name="Gates_Of_The_City" type="BLACK" era="0">
+            <expansions>Cities</expansions>
+            <costs>
+                <GOLD>1</GOLD>
+                <WOOD>1</WOOD>
+            </costs>
+            <products>
+                <VP>4</VP>
+            </products>
+        </card>
+        <card name="Lair" type="BLACK" era="1">
+            <expansions>Cities</expansions>
+            <costs>
+                <WOOD>1</WOOD>
+                <GLASS>1</GLASS>
+            </costs>
+            <products>
+                <VP>3</VP>
+            </products>
+            <action>
+                <loseGold>2</loseGold>
+            </action>
+        </card>
+        <card name="Architect_Cabinet" type="BLACK" era="1">
+            <expansions>Cities</expansions>
+            <costs>
+                <GOLD>1</GOLD>
+                <PAPER>1</PAPER>
+            </costs>
+            <products>
+                <VP>2</VP>
+            </products>
+            <attribute>
+                FREE_WONDER
+            </attribute>
+        </card>
+        <card name="Mercenaries" type="BLACK" era="1">
+            <expansions>Cities</expansions>
+            <costs>
+                <GOLD>4</GOLD>
+                <PAPER>1</PAPER>
+            </costs>
+            <products>
+                <SHIELD>3</SHIELD>
+            </products>
+        </card>
+        <card name="Sepulcher" type="BLACK" era="1">
+            <expansions>Cities</expansions>
+            <costs>
+                <STONE>1</STONE>
+                <GLASS>1</GLASS>
+                <CLOTH>1</CLOTH>
+            </costs>
+            <products>
+                <VP>4</VP>
+            </products>
+            <action>
+                <loseGold>
+                    <militaryVictories>
+                        <amntPer>1</amntPer>
+                        <count>
+                            self
+                        </count>
+                    </militaryVictories>
+                </loseGold>
+            </action>
+        </card>
+        <card name="Consulate" type="BLACK" era="1">
+            <expansions>Cities</expansions>
+            <costs>
+                <CLAY>1</CLAY>
+                <PAPER>1</PAPER>
+            </costs>
+            <products>
+                <VP>2</VP>
+            </products>
+            <attribute>
+                DOVE
+            </attribute>
+        </card>
+        <card name="Black_Market" type="BLACK" era="1">
+            <expansions>Cities</expansions>
+            <costs>
+                <ORE>1</ORE>
+                <CLOTH>1</CLOTH>
+            </costs>
+            <products>
+                <somethingIDontProduce/>
+            </products>
+        </card>
+        <card name="Tabularium" type="BLACK" era="1">
+            <expansions>Cities</expansions>
+            <costs>
+                <GOLD>2</GOLD>
+                <ORE>1</ORE>
+                <WOOD>1</WOOD>
+                <CLOTH>1</CLOTH>
+            </costs>
+            <products>
+                <VP>6</VP>
+            </products>
+        </card>
+        <card name="Gambling_House" type="BLACK" era="1">
+            <expansions>Cities</expansions>
+            <costs>
+                <GOLD>1</GOLD>
+            </costs>
+            <products>
+                <GOLD>9</GOLD>
+            </products>
+            <action>
+                <addGoldAdjacent>2</addGoldAdjacent>
+            </action>
+        </card>
+        <card name="Spy_Ring" type="BLACK" era="1">
+            <expansions>Cities</expansions>
+            <costs>
+                <GOLD>2</GOLD>
+                <STONE>1</STONE>
+                <CLAY>1</CLAY>
+            </costs>
+            <products>
+                <stealScience/>
+            </products>
+        </card>
+        <card name="Mourners_Guild" type="GUILD" era="2">
+            <expansions>Cities</expansions>
+            <costs>
+                <CLAY>2</CLAY>
+                <WOOD>1</WOOD>
+                <GLASS>1</GLASS>
+                <CLOTH>1</CLOTH>
+            </costs>
+            <products>
+                <VP>
+                    <militaryVictories>
+                        <amntPer>1</amntPer>
+                        <count>
+                            adjacent
+                        </count>
+                    </militaryVictories>
+                </VP>
+            </products>
+        </card>
+        <card name="Counterfeiters_Guild" type="GUILD" era="2">
+            <expansions>Cities</expansions>
+            <costs>
+                <ORE>3</ORE>
+                <GLASS>1</GLASS>
+                <CLOTH>1</CLOTH>
+            </costs>
+            <products>
+                <VP>5</VP>
+            </products>
+            <action>
+                <loseGold>3</loseGold>
+            </action>
+        </card>
+        <card name="Guild_Of_Shadows" type="GUILD" era="2">
+            <expansions>Cities</expansions>
+            <costs>
+                <STONE>2</STONE>
+                <WOOD>1</WOOD>
+                <PAPER>1</PAPER>
+            </costs>
+            <products>
+                <VP>
+                    <dependsPlayed>
+                        <type>BLACK</type>
+                        <amntPer>1</amntPer>
+                        <count>
+                            adjacent
+                        </count>
+                    </dependsPlayed>
+                </VP>
+            </products>
+        </card>
+        <card name="Slave_Market" type="BLACK" era="2">
+            <expansions>Cities</expansions>
+            <costs>
+                <ORE>2</ORE>
+                <WOOD>2</WOOD>
+            </costs>
+            <products>
+                <VP>
+                    <militaryVictories>
+                        <amntPer>1</amntPer>
+                        <count>
+                            self
+                        </count>
+                    </militaryVictories>
+                </VP>
+                <GOLD>
+                    <militaryVictories>
+                        <amntPer>1</amntPer>
+                        <count>
+                            self
+                        </count>
+                    </militaryVictories>
+                </GOLD>
+            </products>
+        </card>
+        <card name="Brotherhood" type="BLACK" era="2">
+            <expansions>Cities</expansions>
+            <costs>
+                <WOOD>2</WOOD>
+                <ORE>1</ORE>
+                <CLOTH>1</CLOTH>
+            </costs>
+            <products>
+                <VP>4</VP>
+            </products>
+            <action>
+                <loseGold>3</loseGold>
+            </action>
+        </card>
+        <card name="Secret_Society" type="BLACK" era="2">
+            <expansions>Cities</expansions>
+            <costs>
+                <STONE>1</STONE>
+                <PAPER>1</PAPER>
+            </costs>
+            <products>
+                <VP>
+                    <dependsPlayed>
+                        <type>BLACK</type>
+                        <amntPer>1</amntPer>
+                        <count>
+                            self
+                        </count>
+                    </dependsPlayed>
+                </VP>
+                <GOLD>
+                    <dependsPlayed>
+                        <type>BLACK</type>
+                        <amntPer>1</amntPer>
+                        <count>
+                            self
+                        </count>
+                    </dependsPlayed>
+                </GOLD>
+            </products>
+        </card>
+        <card name="Builders_Union" type="BLACK" era="2">
+            <expansions>Cities</expansions>
+            <costs>
+                <CLAY>1</CLAY>
+                <WOOD>1</WOOD>
+                <PAPER>1</PAPER>
+                <GLASS>1</GLASS>
+            </costs>
+            <products>
+                <VP>4</VP>
+            </products>
+            <action>
+                <loseGold>
+                    <dependsPlayed>
+                        <amntPer>1</amntPer>
+                        <type>STAGE</type>
+                        <count>self</count>
+                    </dependsPlayed>
+                </loseGold>
+            </action>
+        </card>
+        <card name="Capitol" type="BLACK" era="2">
+            <expansions>Cities</expansions>
+            <costs>
+                <GOLD>2</GOLD>
+                <CLAY>2</CLAY>
+                <STONE>2</STONE>
+                <GLASS>1</GLASS>
+                <PAPER>1</PAPER>
+            </costs>
+            <products>
+                <VP>8</VP>
+            </products>
+        </card>
+        <card name="Torture_Chamber" type="BLACK" era="2">
+            <expansions>Cities</expansions>
+            <costs>
+                <GOLD>3</GOLD>
+                <ORE>2</ORE>
+                <GLASS>1</GLASS>
+            </costs>
+            <products>
+                <stealScience/>
+            </products>
+        </card>
+        <card name="Cenotaph" type="BLACK" era="2">
+            <expansions>Cities</expansions>
+            <costs>
+                <CLAY>2</CLAY>
+                <STONE>1</STONE>
+                <CLOTH>1</CLOTH>
+                <GLASS>1</GLASS>
+            </costs>
+            <products>
+                <VP>5</VP>
+            </products>
+            <action>
+                <loseGold>
+                    <militaryVictories>
+                        <amntPer>1</amntPer>
+                        <count>
+                            self
+                        </count>
+                    </militaryVictories>
+                </loseGold>
+            </action>
+        </card>
+        <card name="Embassy" type="BLACK" era="2">
+            <expansions>Cities</expansions>
+            <costs>
+                <STONE>1</STONE>
+                <CLOTH>1</CLOTH>
+                <PAPER>1</PAPER>
+            </costs>
+            <products>
+                <VP>3</VP>
+            </products>
+            <attribute>
+                DOVE
+            </attribute>
+        </card>
+        <card name="Contingent" type="BLACK" era="2">
+            <expansions>Cities</expansions>
+            <costs>
+                <GOLD>5</GOLD>
+                <CLOTH>1</CLOTH>
+            </costs>
+            <products>
+                <SHIELD>5</SHIELD>
             </products>
         </card>
     </cards>

@@ -3,13 +3,19 @@ package net.dumtoad.srednow7.backend.implementation.action;
 import net.dumtoad.srednow7.backend.Player;
 import net.dumtoad.srednow7.backend.implementation.GameImpl;
 import net.dumtoad.srednow7.backend.implementation.PlayerImpl;
+import net.dumtoad.srednow7.backend.implementation.specialValue.SpecialValue;
 
 public class LoseGold implements Action {
 
     private int amount;
+    private SpecialValue specialValue = null;
 
     public LoseGold(int amount) {
         this.amount = amount;
+    }
+
+    public LoseGold(SpecialValue specialValue) {
+        this.specialValue = specialValue;
     }
 
     @Override

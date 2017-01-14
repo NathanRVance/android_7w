@@ -6,17 +6,17 @@ import net.dumtoad.srednow7.backend.Wonder;
 
 class WonderImpl implements Wonder {
 
-    private Enum name;
+    private String name;
     private Card.Resource resource;
     private CardList stages = new CardListImpl();
 
-    private WonderImpl(Enum name, Card.Resource resource) {
+    private WonderImpl(String name, Card.Resource resource) {
         this.name = name;
         this.resource = resource;
     }
 
     @Override
-    public Enum getEnum() {
+    public String getName() {
         return name;
     }
 
@@ -34,7 +34,7 @@ class WonderImpl implements Wonder {
 
         WonderImpl wonder;
 
-        public Builder(Enum name, Card.Resource res) {
+        public Builder(String name, Card.Resource res) {
             wonder = new WonderImpl(name, res);
         }
 

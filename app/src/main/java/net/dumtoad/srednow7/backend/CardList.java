@@ -7,5 +7,5 @@ public interface CardList extends List<Card>, Serializable {
 
     void sort();
 
-    Card get(Enum name);
+    Card get(String name);
 }

@@ -5,6 +5,8 @@ public interface Score {
 
     int getMilitaryVps();
 
+    int[] getMilitaryVictories();
+
     int getMilitaryLosses();
 
     int getGoldVps();

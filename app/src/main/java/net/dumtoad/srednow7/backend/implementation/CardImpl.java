@@ -5,17 +5,20 @@ import net.dumtoad.srednow7.backend.CardList;
 import net.dumtoad.srednow7.backend.Game;
 import net.dumtoad.srednow7.backend.Player;
 import net.dumtoad.srednow7.backend.ResQuant;
+import net.dumtoad.srednow7.backend.implementation.action.Action;
 import net.dumtoad.srednow7.backend.implementation.variableResource.StandardResource;
 import net.dumtoad.srednow7.backend.implementation.variableResource.ResourceStrategy;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import static net.dumtoad.srednow7.backend.Card.TradeType.ONECHEAPER;
+
 class CardImpl implements Card {
 
     private Type type;
-    private Enum name;
-    private List<Enum> makesFreeEnum;
+    private String name;
+    private List<String> makesFreeName;
     private CardList makesFree = new CardListImpl();
     private CardList makesThisFree = new CardListImpl();
     private String message;
@@ -24,17 +27,37 @@ class CardImpl implements Card {
     private TradeType tradeType;
     private List<Game.Direction> tradeDirections;
     private List<Attribute> attributes;
+    private List<Action> actions;
+    private int era;
+    private int[] playerCutoffs;
+    private List<Generate.Expansion> expansions;
 
     private CardImpl(Builder builder) {
         type = builder.type;
         name = builder.name;
-        makesFreeEnum = builder.makesFreeEnum;
+        makesFreeName = builder.makesFreeName;
         message = builder.message;
         costs = builder.costs;
         products = builder.products;
         tradeType = builder.tradeType;
         tradeDirections = builder.tradeDirections;
         attributes = builder.attributes;
+        actions = builder.actions;
+        era = builder.era;
+        playerCutoffs = builder.playerCutoffs;
+        expansions = builder.expansions;
+    }
+
+    int getEra() {
+        return era;
+    }
+
+    int[] getPlayerCutoffs() {
+        return playerCutoffs;
+    }
+
+    List<Generate.Expansion> getExpansions() {
+        return expansions;
     }
 
     @Override
@@ -52,10 +75,17 @@ class CardImpl implements Card {
         return attributes.contains(attribute);
     }
 
+    @Override
+    public void performActions(Player player) {
+        for(Action action : actions) {
+            action.act(player);
+        }
+    }
+
     void resolveCoupons() {
         makesFree = new CardListImpl();
-        for (Enum e : makesFreeEnum) {
-            CardImpl madeFree = Generate.findCardByName(e);
+        for (String s : makesFreeName) {
+            CardImpl madeFree = Generate.findCardByName(s);
             makesFree.add(madeFree);
             madeFree.madeFreeBy(this);
         }
@@ -66,7 +96,7 @@ class CardImpl implements Card {
     }
 
     @Override
-    public Enum getEnum() {
+    public String getName() {
         return name;
     }
 
@@ -83,6 +113,11 @@ class CardImpl implements Card {
     @Override
     public boolean providesTrade(Game.Direction direction, TradeType type) {
         return type == tradeType && tradeDirections.contains(direction);
+    }
+
+    @Override
+    public boolean makesTradeCheaper(Game.Direction direction) {
+        return tradeType == ONECHEAPER && tradeDirections.contains(direction);
     }
 
     @Override
@@ -109,16 +144,20 @@ class CardImpl implements Card {
     public static class Builder implements Card.Builder {
 
         private Type type;
-        private Enum name;
+        private String name;
         private String message = "";
         private ResourceStrategy costs = new StandardResource();
         private ResourceStrategy products = new StandardResource();
         private TradeType tradeType;
         private List<Game.Direction> tradeDirections = new ArrayList<>();
-        private List<Enum> makesFreeEnum = new ArrayList<>();
+        private List<String> makesFreeName = new ArrayList<>();
         private List<Attribute> attributes = new ArrayList<>();
+        private List<Action> actions = new ArrayList<>();
+        private int era = -1;
+        private int[] playerCutoffs = new int[0];
+        private List<Generate.Expansion> expansions = new ArrayList<>();
 
-        public Builder(Type type, Enum name) {
+        public Builder(Type type, String name) {
             this.type = type;
             this.name = name;
         }
@@ -154,14 +193,35 @@ class CardImpl implements Card {
         }
 
         @Override
-        public Builder setMakesFree(Enum card) {
-            this.makesFreeEnum.add(card);
+        public Builder setMakesFree(String card) {
+            this.makesFreeName.add(card);
             return this;
         }
 
         @Override
         public Builder addAttribute(Attribute attribute) {
             this.attributes.add(attribute);
+            return this;
+        }
+
+        @Override
+        public Card.Builder addAction(Action action) {
+            actions.add(action);
+            return this;
+        }
+
+        Card.Builder setEra(int era) {
+            this.era = era;
+            return this;
+        }
+
+        Card.Builder setPlayerCutoffs(int[] playerCutoffs) {
+            this.playerCutoffs = playerCutoffs;
+            return this;
+        }
+
+        Card.Builder addExpansion(Generate.Expansion expansion) {
+            expansions.add(expansion);
             return this;
         }
 

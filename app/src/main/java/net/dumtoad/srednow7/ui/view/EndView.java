@@ -69,7 +69,7 @@ public class EndView extends GameView {
             SpannableStringBuilder sb = new SpannableStringBuilder();
             sb.append(ps.player.getName())
                     .append(" (")
-                    .append(UIUtil.formatEnum(ps.player.getWonder().getEnum(), Card.Type.STAGE))
+                    .append(UIUtil.formatName(ps.player.getWonder().getName(), Card.Type.STAGE))
                     .append(") VPs: ")
                     .append(String.valueOf(ps.score))
                     .append("\n");

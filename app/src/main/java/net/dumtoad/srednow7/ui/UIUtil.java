@@ -92,7 +92,7 @@ public class UIUtil {
 
     public static CharSequence getSummary(Wonder wonder) {
         SpannableStringBuilder sb = new SpannableStringBuilder();
-        sb.append(formatEnum(wonder.getEnum(), Card.Type.STAGE));
+        sb.append(formatName(wonder.getName(), Card.Type.STAGE));
         sb.append('\n');
         sb.append("produces: ");
         ForegroundColorSpan fcs = new ForegroundColorSpan(getColorId(wonder.getResource().toString()));
@@ -188,7 +188,7 @@ public class UIUtil {
             sb.append("Free if owned:\n");
             for (Card c : card.makeThisFree()) {
                 sb.append(" ");
-                sb.append(formatEnum(c.getEnum(), c.getType()));
+                sb.append(formatName(c.getName(), c.getType()));
                 sb.append("\n");
             }
         }
@@ -197,7 +197,7 @@ public class UIUtil {
             sb.append("Makes free:\n");
             for (Card c : card.makesFree()) {
                 sb.append(" ");
-                sb.append(formatEnum(c.getEnum(), c.getType()));
+                sb.append(formatName(c.getName(), c.getType()));
                 sb.append("\n");
             }
         }
@@ -220,10 +220,10 @@ public class UIUtil {
         }
     }
 
-    public static CharSequence formatEnum(Enum name, Card.Type type) {
+    public static CharSequence formatName(String name, Card.Type type) {
         SpannableStringBuilder sb = new SpannableStringBuilder();
         ForegroundColorSpan fcs = new ForegroundColorSpan(getColorId(type.toString()));
-        appendSb(sb, name.name().replace("_", " "), fcs);
+        appendSb(sb, name.replace("_", " "), fcs);
         return sb;
     }
 

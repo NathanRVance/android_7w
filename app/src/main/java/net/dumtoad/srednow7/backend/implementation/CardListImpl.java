@@ -35,9 +35,9 @@ public class CardListImpl implements CardList {
     }
 
     @Override
-    public Card get(Enum name) {
+    public Card get(String name) {
         for (Card card : this) {
-            if (card.getEnum() == name) {
+            if (card.getName().equals(name)) {
                 return card;
             }
         }
@@ -45,20 +45,20 @@ public class CardListImpl implements CardList {
     }
 
     private synchronized void writeObject(ObjectOutputStream s) throws IOException {
-        Enum[] names = new Enum[size()];
+        String[] names = new String[size()];
         for (int i = 0; i < size(); i++) {
-            names[i] = get(i).getEnum();
+            names[i] = get(i).getName();
         }
         s.writeObject(names);
     }
 
     private void readObject(ObjectInputStream s) throws IOException, ClassNotFoundException {
         cards = new ArrayList<>();
-        Enum[] names = (Enum[]) s.readObject();
+        String[] names = (String[]) s.readObject();
         List<Card> cards = Generate.getAllCards();
-        for (Enum name : names) {
+        for (String name : names) {
             for (Card card : cards) {
-                if (card.getEnum() == name) {
+                if (card.getName().equals(name)) {
                     add(card);
                     break;
                 }

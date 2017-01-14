@@ -79,7 +79,7 @@ public class TabletView extends GameView {
         activity.findViewById(R.id.hand).setEnabled(false);
 
         Player player = playerViewing;
-        ((TextView) activity.findViewById(R.id.title)).setText(player.getWonder().getEnum().toString().replace("_", " "));
+        ((TextView) activity.findViewById(R.id.title)).setText(player.getWonder().getName().replace("_", " "));
     }
 
 }

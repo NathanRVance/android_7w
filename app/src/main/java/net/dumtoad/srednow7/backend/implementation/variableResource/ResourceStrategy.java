@@ -15,7 +15,8 @@ public interface ResourceStrategy {
 
     enum ResourceStyle {
         STANDARD,
-        STOLEN_SCIENCE
+        STOLEN_SCIENCE,
+        SOMETHING_ALREADY_PRODUCED
     }
 
 }

@@ -43,14 +43,14 @@ class SetupImpl implements Setup {
 
     private void writeObject(ObjectOutputStream s) throws IOException {
         s.defaultWriteObject();
-        s.writeObject(wonderSides[side].getEnum());
+        s.writeObject(wonderSides[side].getName());
     }
 
     private void readObject(ObjectInputStream s) throws IOException, ClassNotFoundException {
         s.defaultReadObject();
-        Enum name = (Enum) s.readObject();
+        String name = (String) s.readObject();
         for (Wonder[] wonder : Generate.getWonders()) {
-            if (wonder[0].getEnum() == name) {
+            if (wonder[0].getName().equals(name)) {
                 wonderSides = wonder;
                 break;
             }

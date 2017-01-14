@@ -183,6 +183,15 @@ public class PlayerImpl implements Player {
     }
 
     @Override
+    public boolean canBuildWonderFree() {
+        for(Card card : played) {
+            if(card.providesAttribute(Card.Attribute.FREE_WONDER))
+                return true;
+        }
+        return false;
+    }
+
+    @Override
     public TradeBackend getTradeBackend() {
         return tradeBackend;
     }
@@ -204,7 +213,8 @@ public class PlayerImpl implements Player {
         gold += amount;
     }
 
-    private void addGoldBuffer(int amount) {
+    @Override
+    public void addGoldBuffer(int amount) {
         playBuffer.goldSelf += amount;
     }
 
@@ -273,13 +283,13 @@ public class PlayerImpl implements Player {
 
         private void writeObject(ObjectOutputStream s) throws IOException {
             s.defaultWriteObject();
-            Enum name = (card == null) ? null : card.getEnum();
+            String name = (card == null) ? null : card.getName();
             s.writeObject(name);
         }
 
         private void readObject(ObjectInputStream s) throws IOException, ClassNotFoundException {
             s.defaultReadObject();
-            card = Generate.getAllCards().get((Enum) s.readObject());
+            card = Generate.getAllCards().get((String) s.readObject());
         }
     }
 }

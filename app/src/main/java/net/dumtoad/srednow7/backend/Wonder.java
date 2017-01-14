@@ -2,7 +2,7 @@ package net.dumtoad.srednow7.backend;
 
 public interface Wonder {
 
-    Enum getEnum();
+    String getName();
 
     Card.Resource getResource();
 

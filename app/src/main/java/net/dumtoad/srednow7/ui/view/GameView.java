@@ -30,7 +30,7 @@ public abstract class GameView extends RelativeLayout {
         this.playerTurn = playerTurn;
         this.playerViewing = playerViewing;
 
-        String wonderName = playerViewing.getWonder().getEnum().toString().replace("_", " ");
+        String wonderName = playerViewing.getWonder().getName().replace("_", " ");
         if (!UIUtil.isTablet()) {
             String[] parts = wonderName.split(" ");
             wonderName = parts[parts.length - 1];
