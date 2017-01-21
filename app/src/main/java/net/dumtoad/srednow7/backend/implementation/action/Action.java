@@ -6,4 +6,6 @@ public interface Action {
 
     void act(Player player);
 
+    int getPrecidence();
+
 }

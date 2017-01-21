@@ -35,6 +35,11 @@ public class SomethingNotProduced implements ResourceStrategy {
     }
 
     @Override
+    public ResQuant getResourcesNotSpecial() {
+        return new ResQuantImpl();
+    }
+
+    @Override
     public ResourceStyle getStyle() {
         return ResourceStyle.SOMETHING_ALREADY_PRODUCED;
     }

@@ -6,7 +6,7 @@ import net.dumtoad.srednow7.backend.implementation.GameImpl;
 
 public class AddGoldAdjacent implements Action {
 
-    int amount;
+    private int amount;
 
     public AddGoldAdjacent(int amount) {
         this.amount = amount;
@@ -15,7 +15,12 @@ public class AddGoldAdjacent implements Action {
     @Override
     public void act(Player player) {
         for(Game.Direction direction : Game.Direction.values()) {
-            GameImpl.INSTANCE.getPlayerDirection(player, direction).addGoldBuffer(amount);
+            GameImpl.INSTANCE.getPlayerDirection(player, direction).addGold(amount);
         }
+    }
+
+    @Override
+    public int getPrecidence() {
+        return 0;
     }
 }

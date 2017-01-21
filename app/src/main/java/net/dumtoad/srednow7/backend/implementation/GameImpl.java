@@ -7,15 +7,16 @@ import net.dumtoad.srednow7.backend.Player;
 import net.dumtoad.srednow7.backend.Setup;
 import net.dumtoad.srednow7.backend.Wonder;
 import net.dumtoad.srednow7.bus.Bus;
-import net.dumtoad.srednow7.ui.UI;
+import net.dumtoad.srednow7.bus.DisplayFactory;
+import net.dumtoad.srednow7.bus.SaveUtil;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Random;
-import java.util.Set;
 
 public class GameImpl implements Game {
     private static final long serialVersionUID = -1169145061029792425L;
@@ -27,16 +28,16 @@ public class GameImpl implements Game {
     private int era;
     private int round;
     private CardList discards = new CardListImpl();
-    private Set<Generate.Expansion> expansions;
 
     public GameImpl() {
         INSTANCE = this;
     }
 
     @Override
-    public void initialize(CharSequence[] playerNames, boolean[] ais, Set<Generate.Expansion> expansions) {
-        this.expansions = expansions;
-        Generate.initialize(playerNames.length, expansions);
+    public void initialize() {
+        String[] playerNames = SaveUtil.getPlayerNames();
+        boolean[] ais = SaveUtil.getIsAI();
+        Generate.initialize();
         players = new ArrayList<>();
         for (int playerID = 0; playerID < playerNames.length; playerID++) {
             players.add(new PlayerImpl(playerNames[playerID], ais[playerID]));
@@ -57,7 +58,8 @@ public class GameImpl implements Game {
             if (players.get(playerID).isAI()) {
                 players.get(playerID).getAI().selectWonderSide(playerID);
             } else {
-                Bus.bus.getUI().display(UI.DisplayType.WonderSideSelect, playerID);
+                Bus.bus.getUI().display(Card.Resource.GOLD,
+                        DisplayFactory.getDisplay(DisplayFactory.DisplayType.WonderSideSelect, playerID));
             }
         }
     }
@@ -110,6 +112,8 @@ public class GameImpl implements Game {
     }
 
     private boolean playDiscard() {
+        if (round >= Generate.getCardsPerPlayer()) endEra();
+
         for (PlayerImpl player : players) {
             if (player.isPlayDiscard() && !discards.isEmpty()) {
                 doTurn(player, discards);
@@ -122,7 +126,7 @@ public class GameImpl implements Game {
     private boolean play7thCard() {
         boolean someonePlayed = false;
         for (PlayerImpl player : players) {
-            if (player.canPlay7thCard()) {
+            if (player.hasAttribute(Card.Attribute.PLAY_7TH_CARD)) {
                 doTurn(player, hands.get(players.indexOf(player)));
                 someonePlayed = true;
             }
@@ -139,7 +143,8 @@ public class GameImpl implements Game {
         }
         era++;
         if (era == 3) {
-            Bus.bus.getUI().display(UI.DisplayType.EndOfGame, 0);
+            Bus.bus.getUI().display(Card.Resource.GOLD,
+                    DisplayFactory.getDisplay(DisplayFactory.DisplayType.EndOfGame, 0));
             Bus.bus.deleteSave();
         } else {
             for (CardList cardList : hands) {
@@ -152,7 +157,7 @@ public class GameImpl implements Game {
 
     synchronized void finishedTurn(PlayerImpl playerFinished) {
         playerFinished.finishTurn();
-        Bus.bus.saveToMemory();
+        //Bus.bus.saveToMemory(); //Move this somewhere better
         boolean done = true;
         for (PlayerImpl player : players) {
             done &= player.hasFinishedTurn();
@@ -161,12 +166,32 @@ public class GameImpl implements Game {
             for (PlayerImpl player : players) {
                 player.resolveBuild();
             }
+            resolveActions();
+            Bus.bus.saveToMemory();
             startRound();
         }
     }
 
+    private void resolveActions() {
+        List<PlayerImpl> actors = new ArrayList<>();
+        for (PlayerImpl player : players) {
+            if (player.getActionPrecidence() >= 0) {
+                actors.add(player);
+            }
+        }
+        Collections.sort(actors, (player, t1) -> {
+            if (player.getActionPrecidence() > t1.getActionPrecidence())
+                return 1;
+            if (player.getActionPrecidence() == t1.getActionPrecidence())
+                return 0;
+            return -1;
+        });
+        for(PlayerImpl player : actors) {
+            player.resolveAction();
+        }
+    }
+
     private void doTurn(PlayerImpl player, CardList hand) {
-        int playerID = players.indexOf(player);
         player.setHand(hand);
         player.startTurn();
         if (player.isAI()) {
@@ -175,7 +200,8 @@ public class GameImpl implements Game {
             });
             thread.start();
         } else {
-            Bus.bus.getUI().display(UI.DisplayType.Turn, playerID);
+            Bus.bus.getUI().display(Card.Resource.GOLD,
+                    DisplayFactory.getDisplay(DisplayFactory.DisplayType.Turn, players.indexOf(player)));
         }
     }
 
@@ -221,8 +247,11 @@ public class GameImpl implements Game {
 
     @Override
     public void startNewGame() {
-        Bus.bus.getUI().invalidateView();
-        Bus.bus.getUI().display(UI.DisplayType.Setup, 0);
+        Bus.bus.getUI().reset();
+        Bus.bus.getUI().initDisplayQueue(Card.Resource.GOLD,
+                DisplayFactory.getDisplay(DisplayFactory.DisplayType.Blank, 0));
+        Bus.bus.getUI().display(Card.Resource.GOLD,
+                DisplayFactory.getDisplay(DisplayFactory.DisplayType.Setup, 0));
     }
 
     @Override
@@ -236,15 +265,11 @@ public class GameImpl implements Game {
     }
 
     private void writeObject(ObjectOutputStream s) throws IOException {
-        s.writeInt(players.size());
-        s.writeObject(expansions);
         s.defaultWriteObject();
     }
 
     private void readObject(ObjectInputStream s) throws IOException, ClassNotFoundException {
-        int numPlayers = s.readInt();
-        expansions = (Set<Generate.Expansion>) s.readObject();
-        Generate.initialize(numPlayers, expansions);
+        Generate.initialize(); //Must be done first so that cards are regenerated
         s.defaultReadObject();
         INSTANCE = this;
         for (int i = 0; i < players.size(); i++) {

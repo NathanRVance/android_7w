@@ -1,6 +1,5 @@
 package net.dumtoad.srednow7.backend;
 
-import net.dumtoad.srednow7.backend.implementation.action.Action;
 import net.dumtoad.srednow7.backend.implementation.variableResource.ResourceStrategy;
 
 public interface Card {
@@ -11,11 +10,15 @@ public interface Card {
 
     Type getType();
 
+    int getEra();
+
     boolean providesTrade(Game.Direction direction, TradeType type);
 
     boolean makesTradeCheaper(Game.Direction direction);
 
     ResQuant getProducts(Player player);
+
+    ResQuant getProductsNotSpecial();
 
     ResourceStrategy.ResourceStyle getProductionStyle();
 
@@ -29,7 +32,13 @@ public interface Card {
 
     boolean providesAttribute(Attribute attribute);
 
-    void performActions(Player player);
+    void performAction(Player player);
+
+    //Actions will be performed in order of precidence (low to high), with ties ordered arbitrarily.
+    //0 is minimum, max is Integer.MAX_VALUE.
+    int getActionPrecidence();
+
+    ResponseCallback getCallback();
 
     enum Type {
         STAGE,
@@ -73,24 +82,8 @@ public interface Card {
         DOVE
     }
 
-    interface Builder {
-        Builder setMessage(String message);
-
-        Builder setCosts(ResourceStrategy costs);
-
-        Builder setProducts(ResourceStrategy products);
-
-        Builder setTradeType(TradeType tradeType);
-
-        Builder addTradeDirection(Game.Direction direction);
-
-        Builder setMakesFree(String card);
-
-        Builder addAttribute(Attribute attribute);
-
-        Builder addAction(Action action);
-
-        Card build();
+    interface ResponseCallback {
+        void callback(int playerID, String response);
     }
 
 }

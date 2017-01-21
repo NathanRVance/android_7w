@@ -84,7 +84,7 @@ public class PlayerImpl implements Player {
                 } else if (tradeBackend.canAfford(card)) {
                     setToBeBuilt(card, tradeBackend.getGoldSpent(Game.Direction.EAST),
                             tradeBackend.getGoldSpent(Game.Direction.WEST));
-                } else if ((canPlay1Free() && !playedFree)) {
+                } else if ((hasAttribute(Card.Attribute.PLAY_1_FREE) && !playedFree)) {
                     setPlayedFree(true);
                     setToBeBuilt(card, 0, 0);
                 } else {
@@ -103,7 +103,10 @@ public class PlayerImpl implements Player {
                 Card stage = nextWonderStage();
                 if (stage == null) {
                     return CardActionResult.ALREADY_BUILT_ALL_WONDER_STAGES;
-                } else if (tradeBackend.canAfford(stage)) {
+                } else if (tradeBackend.canAfford(stage) || hasAttribute(Card.Attribute.FREE_WONDER)) {
+                    if(hasAttribute(Card.Attribute.FREE_WONDER) && tradeBackend.hasTrade()) {
+                        return CardActionResult.TRADED_WHEN_CAN_BUILD_FREE;
+                    }
                     setToBeBuilt(stage, tradeBackend.getGoldSpent(Game.Direction.EAST),
                             tradeBackend.getGoldSpent(Game.Direction.WEST));
                 } else {
@@ -132,7 +135,7 @@ public class PlayerImpl implements Player {
             return CardActionResult.TRADED_WHEN_CAN_BUILD_FREE;
         } else if (tradeBackend.overpaid(card)) {
             return CardActionResult.OVERPAID;
-        } else if (!(hasCoupon || tradeBackend.canAfford(card) || (canPlay1Free() && !playedFree))) {
+        } else if (!(hasCoupon || tradeBackend.canAfford(card) || (hasAttribute(Card.Attribute.PLAY_1_FREE) && !playedFree))) {
             return CardActionResult.INSUFFICIENT_RESOURCES;
         }
         return CardActionResult.OK;
@@ -156,18 +159,18 @@ public class PlayerImpl implements Player {
     }
 
     @Override
-    public boolean canPlay7thCard() {
-        for (Card card : played) {
-            if (card.providesAttribute(Card.Attribute.PLAY_7TH_CARD))
+    public boolean hasAttribute(Card.Attribute attribute) {
+        for(int era = 0; era < 3; era++) {
+            if(hasAttribute(attribute, era))
                 return true;
         }
         return false;
     }
 
     @Override
-    public boolean canPlay1Free() {
+    public boolean hasAttribute(Card.Attribute attribute, int era) {
         for (Card card : played) {
-            if (card.providesAttribute(Card.Attribute.PLAY_1_FREE))
+            if (card.getEra() == era && card.providesAttribute(attribute))
                 return true;
         }
         return false;
@@ -183,24 +186,17 @@ public class PlayerImpl implements Player {
     }
 
     @Override
-    public boolean canBuildWonderFree() {
-        for(Card card : played) {
-            if(card.providesAttribute(Card.Attribute.FREE_WONDER))
-                return true;
-        }
-        return false;
-    }
-
-    @Override
     public TradeBackend getTradeBackend() {
         return tradeBackend;
     }
 
-    boolean isAI() {
+    @Override
+    public boolean isAI() {
         return isAI;
     }
 
-    AI getAI() {
+    @Override
+    public AI getAI() {
         return ai;
     }
 
@@ -209,7 +205,12 @@ public class PlayerImpl implements Player {
         return gold;
     }
 
-    private void addGold(int amount) {
+    @Override
+    public void incurDebt(int amount) {
+        score.incurDebt(amount);
+    }
+
+    public void addGold(int amount) {
         gold += amount;
     }
 
@@ -237,8 +238,22 @@ public class PlayerImpl implements Player {
             addGold(playBuffer.card.getCosts(this).get(Card.Resource.GOLD) * -1);
         }
         addGold(playBuffer.goldSelf);
-        playBuffer.clear();
+        //playBuffer.clear();
         tradeBackend.clear();
+    }
+
+    int getActionPrecidence() {
+        if(playBuffer.card == null) {
+            return -1;
+        }
+        return playBuffer.card.getActionPrecidence();
+    }
+
+    void resolveAction() {
+        if(playBuffer.card != null) {
+            playBuffer.card.performAction(this);
+        }
+        playBuffer.clear();
     }
 
     void startTurn() {
@@ -257,12 +272,14 @@ public class PlayerImpl implements Player {
         s.defaultWriteObject();
         s.writeInt(score.getMilitaryLosses());
         s.writeObject(score.getMilitaryVictories());
+        s.writeInt(score.getDebt());
     }
 
     private void readObject(ObjectInputStream s) throws IOException, ClassNotFoundException {
         s.defaultReadObject();
         ai = new AIImpl(this);
         score = new ScoreImpl(this, s.readInt(), (int[]) s.readObject());
+        score.incurDebt(s.readInt());
         tradeBackend.setPlayer(this);
     }
 

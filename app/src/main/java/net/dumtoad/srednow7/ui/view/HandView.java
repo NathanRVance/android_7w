@@ -11,8 +11,8 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import net.dumtoad.srednow7.R;
-import net.dumtoad.srednow7.backend.Game;
 import net.dumtoad.srednow7.backend.Card;
+import net.dumtoad.srednow7.backend.Game;
 import net.dumtoad.srednow7.backend.Player;
 import net.dumtoad.srednow7.bus.Bus;
 import net.dumtoad.srednow7.ui.dialog.HelpDialog;
@@ -53,7 +53,7 @@ public class HandView extends GameView {
         Player player = playerViewing;
         for (Card card : player.getHand()) {
             boolean isPlayDiscard = player.isPlayDiscard();
-            CardView cv = new CardView(card, activity, player, true, isPlayDiscard);
+            CardView cv = new CardView(card, activity, player, true, isPlayDiscard, getQueueID());
             if (!(isPlayDiscard || player.hasCouponFor(card) || player.canAffordBuild(card))) {
                 //Darken it slightly
                 cv.getBackground().setColorFilter(ContextCompat.getColor(activity, R.color.gray), PorterDuff.Mode.MULTIPLY);

@@ -23,7 +23,9 @@ import net.dumtoad.srednow7.backend.Player;
 import net.dumtoad.srednow7.backend.ResQuant;
 import net.dumtoad.srednow7.backend.Wonder;
 import net.dumtoad.srednow7.backend.implementation.CardListImpl;
+import net.dumtoad.srednow7.backend.implementation.Generate;
 import net.dumtoad.srednow7.backend.implementation.ResQuantImpl;
+import net.dumtoad.srednow7.bus.SaveUtil;
 
 import java.util.List;
 
@@ -87,6 +89,10 @@ public class UIUtil {
 
         sb.append("Net military points: ").append(String.valueOf(player.getScore().getMilitaryVps()));
 
+        if(SaveUtil.getExpansions().contains(Generate.Expansion.Cities)) {
+            sb.append("\nDebt: ").append(String.valueOf(player.getScore().getDebt()));
+        }
+
         return sb;
     }
 
@@ -135,21 +141,22 @@ public class UIUtil {
         }
 
         numNonZero = 0;
-        for (Integer i : card.getProducts(player).values()) {
+        ResQuant products = card.getProductsNotSpecial();
+        for (Integer i : products.values()) {
             if (!i.equals(0))
                 numNonZero++;
         }
         if (numNonZero != 0) {
             sb.append("Produces:\n");
             int i = 1;
-            for (Card.Resource product : card.getProducts(player).keySet()) {
-                if (card.getProducts(player).get(product).equals(0))
+            for (Card.Resource product : products.keySet()) {
+                if (products.get(product).equals(0))
                     continue;
                 sb.append(" ");
                 fcs = new ForegroundColorSpan(getColorId(product.toString()));
                 appendSb(sb, product.toString().toLowerCase(), fcs);
                 sb.append(": ");
-                sb.append(card.getProducts(player).get(product).toString());
+                sb.append(products.get(product).toString());
                 if (i < numNonZero && isBaseResource(product.toString())) {
                     sb.append("\tor");
                 }

@@ -17,13 +17,15 @@ import android.widget.TextView;
 import net.dumtoad.srednow7.R;
 import net.dumtoad.srednow7.backend.implementation.Generate;
 import net.dumtoad.srednow7.bus.Bus;
+import net.dumtoad.srednow7.bus.SaveUtil;
 import net.dumtoad.srednow7.ui.dialog.EditTextDialog;
 import net.dumtoad.srednow7.ui.dialog.HelpDialog;
 import net.dumtoad.srednow7.ui.view.SetupPlayerItem;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.Set;
+
+import static net.dumtoad.srednow7.bus.DisplayFactory.QUEUE_ID;
 
 public class SetupFragment extends Fragment {
 
@@ -31,7 +33,7 @@ public class SetupFragment extends Fragment {
     private ArrayList<SetupPlayerItem> setupItems;
     private String[] names = new String[]{"Player 1", "Player 2", "Player 3", "Player 4", "Player 5", "Player 6", "Player 7"};
     private boolean[] ais = new boolean[]{false, true, true, true, true, true, true};
-    private Set<Generate.Expansion> expansions = new HashSet<>();
+    private Set<Generate.Expansion> expansions;
     private LinearLayout playerSelectLayout;
     private LinearLayout optionsLayout;
     private Button addButton;
@@ -47,6 +49,16 @@ public class SetupFragment extends Fragment {
         if (frag != null) {
             ((EditTextDialog) frag).dismiss();
         }
+
+        //Set names, ais, numPlayers, and expansions to what was used last time
+        String[] n = SaveUtil.getPlayerNames();
+        if (n.length >= 3 && n.length <= 7) {
+            numPlayers = n.length;
+            System.arraycopy(n, 0, names, 0, n.length);
+            boolean[] a = SaveUtil.getIsAI();
+            System.arraycopy(a, 0, ais, 0, a.length);
+        }
+        expansions = SaveUtil.getExpansions();
 
         final View view = inflater.inflate(R.layout.setup, container, false);
         playerSelectLayout = (LinearLayout) view.findViewById(R.id.player_select_layout);
@@ -85,7 +97,11 @@ public class SetupFragment extends Fragment {
             if (numPlayers == 3)
                 subtractButton.setEnabled(false);
         });
-        subtractButton.setEnabled(false);
+
+        if(numPlayers == 3)
+            subtractButton.setEnabled(false);
+        if(numPlayers == 7)
+            addButton.setEnabled(false);
 
         players.setOnClickListener(v -> {
             options.setEnabled(true);
@@ -111,29 +127,32 @@ public class SetupFragment extends Fragment {
             System.arraycopy(names, 0, playerNames, 0, numPlayers);
             boolean[] isAi = new boolean[numPlayers];
             System.arraycopy(ais, 0, isAi, 0, numPlayers);
-            Bus.bus.getGame().initialize(playerNames, isAi, expansions);
-            Bus.bus.getUI().invalidateView();
+            SaveUtil.savePlayerNames(playerNames);
+            SaveUtil.saveIsAI(isAi);
+            SaveUtil.saveExtensions(expansions);
+            Bus.bus.getGame().initialize();
+            Bus.bus.getUI().invalidateView((Enum) getArguments().getSerializable(QUEUE_ID));
         });
 
         if (savedInstanceState != null) {
             restoreState(savedInstanceState);
         } else {
-            addSetupItem();
-            addSetupItem();
-            addSetupItem();
+            for(int i = 0; i < numPlayers; i++) {
+                addSetupItem();
+            }
         }
 
-        for(Generate.Expansion expansion : Generate.Expansion.values()) {
+        for (Generate.Expansion expansion : Generate.Expansion.values()) {
             CheckBox checkBox = new CheckBox(getActivity());
             checkBox.setText(expansion.toString());
             checkBox.setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources().getDimension(R.dimen.textsize));
-            if(expansions.contains(expansion)) {
+            if (expansions.contains(expansion)) {
                 checkBox.setChecked(true);
             } else {
                 checkBox.setChecked(false);
             }
             checkBox.setOnClickListener(v -> {
-                if(checkBox.isChecked())
+                if (checkBox.isChecked())
                     expansions.add(expansion);
                 else
                     expansions.remove(expansion);
@@ -156,11 +175,11 @@ public class SetupFragment extends Fragment {
             addSetupItem();
         }
 
-        for(String exp : savedInstanceState.getStringArrayList("expansions")) {
+        for (String exp : savedInstanceState.getStringArrayList("expansions")) {
             expansions.add(Generate.Expansion.valueOf(exp));
         }
 
-        if(savedInstanceState.getBoolean("isOptions")) {
+        if (savedInstanceState.getBoolean("isOptions")) {
             options.performClick();
         }
     }
@@ -171,9 +190,9 @@ public class SetupFragment extends Fragment {
         outState.putStringArray("names", names);
         outState.putBooleanArray("ais", ais);
         outState.putInt("numPlayers", numPlayers);
-        outState.putBoolean("isOptions", ! options.isEnabled());
+        outState.putBoolean("isOptions", !options.isEnabled());
         ArrayList<String> exps = new ArrayList<>();
-        for(Generate.Expansion expansion : expansions) {
+        for (Generate.Expansion expansion : expansions) {
             exps.add(expansion.toString());
         }
         outState.putStringArrayList("expansions", exps);

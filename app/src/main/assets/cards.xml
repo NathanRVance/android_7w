@@ -1014,6 +1014,9 @@
         <!--Cities expansions-->
         <card name="Hideout" type="BLACK" era="0">
             <expansions>Cities</expansions>
+            <message>
+                All other players lose 1 gold.
+            </message>
             <products>
                 <VP>2</VP>
             </products>
@@ -1023,6 +1026,9 @@
         </card>
         <card name="Gambling_Den" type="BLACK" era="0">
             <expansions>Cities</expansions>
+            <message>
+                Adjacent players each get 1 gold.
+            </message>
             <products>
                 <GOLD>6</GOLD>
             </products>
@@ -1035,6 +1041,9 @@
             <costs>
                 <CLAY>1</CLAY>
             </costs>
+            <message>
+                Exempt from battle this era.
+            </message>
             <products>
                 <VP>1</VP>
             </products>
@@ -1047,6 +1056,9 @@
             <costs>
                 <GOLD>1</GOLD>
             </costs>
+            <message>
+                All trades to the east are 1 gold cheaper.
+            </message>
             <trade>
                 <type>ONECHEAPER</type>
                 <direction>EAST</direction>
@@ -1057,6 +1069,9 @@
             <costs>
                 <GOLD>1</GOLD>
             </costs>
+            <message>
+                All trades to the west are 1 gold cheaper.
+            </message>
             <trade>
                 <type>ONECHEAPER</type>
                 <direction>WEST</direction>
@@ -1068,6 +1083,9 @@
                 <GOLD>1</GOLD>
                 <ORE>1</ORE>
             </costs>
+            <message>
+                Copy one science product from any other player.
+            </message>
             <products>
                 <stealScience/>
             </products>
@@ -1086,6 +1104,9 @@
             <costs>
                 <GOLD>2</GOLD>
             </costs>
+            <message>
+                Provides an additional resource that you already produce.
+            </message>
             <products>
                 <somethingIProduceAlready/>
             </products>
@@ -1106,6 +1127,9 @@
                 <WOOD>1</WOOD>
                 <GLASS>1</GLASS>
             </costs>
+            <message>
+                All other players lose 2 gold.
+            </message>
             <products>
                 <VP>3</VP>
             </products>
@@ -1119,6 +1143,9 @@
                 <GOLD>1</GOLD>
                 <PAPER>1</PAPER>
             </costs>
+            <message>
+                Wonder stages are now free.
+            </message>
             <products>
                 <VP>2</VP>
             </products>
@@ -1143,6 +1170,9 @@
                 <GLASS>1</GLASS>
                 <CLOTH>1</CLOTH>
             </costs>
+            <message>
+                All other players lose 1 gold for each military victory they have.
+            </message>
             <products>
                 <VP>4</VP>
             </products>
@@ -1163,6 +1193,9 @@
                 <CLAY>1</CLAY>
                 <PAPER>1</PAPER>
             </costs>
+            <message>
+                Exempt from battle this era.
+            </message>
             <products>
                 <VP>2</VP>
             </products>
@@ -1176,6 +1209,9 @@
                 <ORE>1</ORE>
                 <CLOTH>1</CLOTH>
             </costs>
+            <message>
+                Produces a resource you do not yet produce.
+            </message>
             <products>
                 <somethingIDontProduce/>
             </products>
@@ -1197,6 +1233,9 @@
             <costs>
                 <GOLD>1</GOLD>
             </costs>
+            <message>
+                Adjacent players each get 2 gold.
+            </message>
             <products>
                 <GOLD>9</GOLD>
             </products>
@@ -1211,6 +1250,9 @@
                 <STONE>1</STONE>
                 <CLAY>1</CLAY>
             </costs>
+            <message>
+                Copy one science product from any other player.
+            </message>
             <products>
                 <stealScience/>
             </products>
@@ -1223,6 +1265,9 @@
                 <GLASS>1</GLASS>
                 <CLOTH>1</CLOTH>
             </costs>
+            <message>
+                1 vp for each military victory by adjacent players.
+            </message>
             <products>
                 <VP>
                     <militaryVictories>
@@ -1241,6 +1286,9 @@
                 <GLASS>1</GLASS>
                 <CLOTH>1</CLOTH>
             </costs>
+            <message>
+                All other players lose 3 gold.
+            </message>
             <products>
                 <VP>5</VP>
             </products>
@@ -1255,6 +1303,9 @@
                 <WOOD>1</WOOD>
                 <PAPER>1</PAPER>
             </costs>
+            <message>
+                1 vp for each black card built by adjacent players.
+            </message>
             <products>
                 <VP>
                     <dependsPlayed>
@@ -1273,6 +1324,9 @@
                 <ORE>2</ORE>
                 <WOOD>2</WOOD>
             </costs>
+            <message>
+                1 gold and 1 vp for each military victory.
+            </message>
             <products>
                 <VP>
                     <militaryVictories>
@@ -1299,6 +1353,9 @@
                 <ORE>1</ORE>
                 <CLOTH>1</CLOTH>
             </costs>
+            <message>
+                All other players lose 3 gold.
+            </message>
             <products>
                 <VP>4</VP>
             </products>
@@ -1312,6 +1369,9 @@
                 <STONE>1</STONE>
                 <PAPER>1</PAPER>
             </costs>
+            <message>
+                1 gold and 1 vp for each black card.
+            </message>
             <products>
                 <VP>
                     <dependsPlayed>
@@ -1341,6 +1401,9 @@
                 <PAPER>1</PAPER>
                 <GLASS>1</GLASS>
             </costs>
+            <message>
+                All other players lose 1 gold for each completed wonder stage.
+            </message>
             <products>
                 <VP>4</VP>
             </products>
@@ -1374,6 +1437,9 @@
                 <ORE>2</ORE>
                 <GLASS>1</GLASS>
             </costs>
+            <message>
+                Copy one science product from any other player.
+            </message>
             <products>
                 <stealScience/>
             </products>
@@ -1386,6 +1452,9 @@
                 <CLOTH>1</CLOTH>
                 <GLASS>1</GLASS>
             </costs>
+            <message>
+                All other players lose 1 gold for each military victory.
+            </message>
             <products>
                 <VP>5</VP>
             </products>
@@ -1407,6 +1476,9 @@
                 <CLOTH>1</CLOTH>
                 <PAPER>1</PAPER>
             </costs>
+            <message>
+                Exempt from battle this era.
+            </message>
             <products>
                 <VP>3</VP>
             </products>
@@ -1864,6 +1936,137 @@
                     <products>
                         <VP>7</VP>
                     </products>
+                </card>
+            </side>
+        </wonder>
+        <wonder name="The_Al-Khazneh_of_Petra" resource="CLAY">
+            <expansions>Cities</expansions>
+            <side>
+                <card name="Stage_1" type="STAGE">
+                    <costs>
+                        <WOOD>1</WOOD>
+                        <STONE>1</STONE>
+                    </costs>
+                    <products>
+                        <VP>3</VP>
+                    </products>
+                </card>
+                <card name="Stage_2" type="STAGE">
+                    <costs>
+                        <GOLD>7</GOLD>
+                    </costs>
+                    <products>
+                        <VP>7</VP>
+                    </products>
+                </card>
+                <card name="Stage_3" type="STAGE">
+                    <costs>
+                        <WOOD>1</WOOD>
+                        <PAPER>1</PAPER>
+                        <STONE>2</STONE>
+                    </costs>
+                    <products>
+                        <VP>7</VP>
+                    </products>
+                </card>
+            </side>
+            <side>
+                <card name="Stage_1" type="STAGE">
+                    <costs>
+                        <CLAY>2</CLAY>
+                        <ORE>2</ORE>
+                    </costs>
+                    <products>
+                        <VP>3</VP>
+                    </products>
+                    <message>
+                        All other players lose 2 gold.
+                    </message>
+                    <action>
+                        <loseGold>2</loseGold>
+                    </action>
+                </card>
+                <card name="Stage_2" type="STAGE">
+                    <costs>
+                        <GOLD>14</GOLD>
+                    </costs>
+                    <products>
+                        <VP>14</VP>
+                    </products>
+                </card>
+            </side>
+        </wonder>
+        <wonder name="Hagia Sophia of Byzantium" resource="STONE">
+            <expansions>Cities</expansions>
+            <side>
+                <card name="Stage_1" type="STAGE">
+                    <costs>
+                        <ORE>1</ORE>
+                        <CLAY>1</CLAY>
+                    </costs>
+                    <products>
+                        <VP>3</VP>
+                    </products>
+                </card>
+                <card name="Stage_2" type="STAGE">
+                    <costs>
+                        <PAPER>1</PAPER>
+                        <WOOD>2</WOOD>
+                    </costs>
+                    <products>
+                        <VP>2</VP>
+                    </products>
+                    <message>
+                        Exempt from battle this era.
+                    </message>
+                    <attribute>
+                        DOVE
+                    </attribute>
+                </card>
+                <card name="Stage_3" type="STAGE">
+                    <costs>
+                        <GLASS>1</GLASS>
+                        <CLOTH>1</CLOTH>
+                        <CLAY>2</CLAY>
+                    </costs>
+                    <products>
+                        <VP>7</VP>
+                    </products>
+                </card>
+            </side>
+            <side>
+                <card name="Stage_1" type="STAGE">
+                    <costs>
+                        <GLASS>1</GLASS>
+                        <PAPER>1</PAPER>
+                        <ORE>1</ORE>
+                        <WOOD>1</WOOD>
+                    </costs>
+                    <products>
+                        <VP>3</VP>
+                    </products>
+                    <message>
+                        Exempt from battle this era.
+                    </message>
+                    <attribute>
+                        DOVE
+                    </attribute>
+                </card>
+                <card name="Stage_2" type="STAGE">
+                    <costs>
+                        <CLAY>1</CLAY>
+                        <CLOTH>1</CLOTH>
+                        <ORE>2</ORE>
+                    </costs>
+                    <products>
+                        <VP>4</VP>
+                    </products>
+                    <message>
+                        Exempt from battle this era.
+                    </message>
+                    <attribute>
+                        DOVE
+                    </attribute>
                 </card>
             </side>
         </wonder>

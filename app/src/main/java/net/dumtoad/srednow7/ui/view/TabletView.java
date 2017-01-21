@@ -13,7 +13,7 @@ import net.dumtoad.srednow7.R;
 import net.dumtoad.srednow7.backend.Game;
 import net.dumtoad.srednow7.backend.Player;
 import net.dumtoad.srednow7.bus.Bus;
-import net.dumtoad.srednow7.ui.UIFacade;
+import net.dumtoad.srednow7.bus.DisplayFactory;
 import net.dumtoad.srednow7.ui.dialog.HelpDialog;
 import net.dumtoad.srednow7.ui.fragment.GameFragment;
 
@@ -35,7 +35,7 @@ public class TabletView extends GameView {
 
         ((ViewGroup) findViewById(R.id.wonder_view)).addView(new WonderView(activity, playerTurn, playerViewing));
         ((ViewGroup) findViewById(R.id.summary_view)).addView(new SummaryView(activity, playerTurn, playerViewing));
-        GameFragment gameFragment = (GameFragment) activity.getFragmentManager().findFragmentByTag(UIFacade.FRAGMENT_TAG);
+        GameFragment gameFragment = (GameFragment) activity.getFragmentManager().findFragmentByTag(DisplayFactory.FRAGMENT_TAG);
         View handView = gameFragment.getHandTradeView();
         if (handView instanceof SummaryView) {
             //We already have one of those

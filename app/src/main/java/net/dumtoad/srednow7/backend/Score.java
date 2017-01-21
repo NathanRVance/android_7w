@@ -21,5 +21,7 @@ public interface Score {
 
     int getScienceVps();
 
+    int getDebt();
+
     int getTotalVPs();
 }

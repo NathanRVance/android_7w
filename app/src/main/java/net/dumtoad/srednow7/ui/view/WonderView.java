@@ -37,7 +37,7 @@ public class WonderView extends GameView {
         });
 
         for (Card card : playerViewing.getWonder().getStages()) {
-            CardView cv = new CardView(card, activity, playerViewing, false, false);
+            CardView cv = new CardView(card, activity, playerViewing, false, false, getQueueID());
             if (!playerViewing.getPlayedCards().contains(card)) {
                 cv.setText(activity.getString(R.string.not_built, cv.getText()));
             }
@@ -46,7 +46,7 @@ public class WonderView extends GameView {
 
         for (Card card : playerViewing.getPlayedCards()) {
             if (card.getType() == Card.Type.STAGE) continue;
-            CardView cv = new CardView(card, activity, playerViewing, false, false);
+            CardView cv = new CardView(card, activity, playerViewing, false, false, getQueueID());
             content.addView(cv);
         }
     }

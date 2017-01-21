@@ -27,11 +27,16 @@ public class StandardResource implements ResourceStrategy {
 
     @Override
     public ResQuant getResources(Game game, Player player) {
-        ResQuant ret = new ResQuantImpl().addResources(resources);
+        ResQuant ret = getResourcesNotSpecial();
         for(Card.Resource res : special.keySet()) {
             ret.put(res, special.get(res).getSpecialValue(game, player));
         }
         return ret;
+    }
+
+    @Override
+    public ResQuant getResourcesNotSpecial() {
+        return new ResQuantImpl().addResources(resources);
     }
 
     @Override

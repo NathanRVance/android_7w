@@ -16,10 +16,10 @@ import net.dumtoad.srednow7.R;
 import net.dumtoad.srednow7.backend.Card;
 import net.dumtoad.srednow7.backend.Player;
 import net.dumtoad.srednow7.bus.Bus;
-import net.dumtoad.srednow7.ui.UIFacade;
+import net.dumtoad.srednow7.bus.DisplayFactory;
+import net.dumtoad.srednow7.ui.UIUtil;
 import net.dumtoad.srednow7.ui.dialog.HelpDialog;
 import net.dumtoad.srednow7.ui.fragment.GameFragment;
-import net.dumtoad.srednow7.ui.UIUtil;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -63,7 +63,7 @@ public class EndView extends GameView {
         }
         Collections.sort(scores);
 
-        final GameFragment gameFragment = (GameFragment) activity.getFragmentManager().findFragmentByTag(UIFacade.FRAGMENT_TAG);
+        final GameFragment gameFragment = (GameFragment) activity.getFragmentManager().findFragmentByTag(DisplayFactory.FRAGMENT_TAG);
 
         for (final PlayerScore ps : scores) {
             SpannableStringBuilder sb = new SpannableStringBuilder();

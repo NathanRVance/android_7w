@@ -6,8 +6,8 @@ import net.dumtoad.srednow7.backend.Game;
 import net.dumtoad.srednow7.backend.Player;
 import net.dumtoad.srednow7.backend.ResQuant;
 import net.dumtoad.srednow7.backend.implementation.action.Action;
-import net.dumtoad.srednow7.backend.implementation.variableResource.StandardResource;
 import net.dumtoad.srednow7.backend.implementation.variableResource.ResourceStrategy;
+import net.dumtoad.srednow7.backend.implementation.variableResource.StandardResource;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,10 +27,11 @@ class CardImpl implements Card {
     private TradeType tradeType;
     private List<Game.Direction> tradeDirections;
     private List<Attribute> attributes;
-    private List<Action> actions;
+    private Action action;
     private int era;
     private int[] playerCutoffs;
     private List<Generate.Expansion> expansions;
+    private ResponseCallback callback;
 
     private CardImpl(Builder builder) {
         type = builder.type;
@@ -42,13 +43,15 @@ class CardImpl implements Card {
         tradeType = builder.tradeType;
         tradeDirections = builder.tradeDirections;
         attributes = builder.attributes;
-        actions = builder.actions;
+        action = builder.action;
         era = builder.era;
         playerCutoffs = builder.playerCutoffs;
         expansions = builder.expansions;
+        callback = builder.callback;
     }
 
-    int getEra() {
+    @Override
+    public int getEra() {
         return era;
     }
 
@@ -76,10 +79,19 @@ class CardImpl implements Card {
     }
 
     @Override
-    public void performActions(Player player) {
-        for(Action action : actions) {
-            action.act(player);
-        }
+    public void performAction(Player player) {
+        action.act(player);
+    }
+
+    @Override
+    public int getActionPrecidence() {
+        if (action == null) return -1;
+        return action.getPrecidence();
+    }
+
+    @Override
+    public ResponseCallback getCallback() {
+        return callback;
     }
 
     void resolveCoupons() {
@@ -126,6 +138,11 @@ class CardImpl implements Card {
     }
 
     @Override
+    public ResQuant getProductsNotSpecial() {
+        return products.getResourcesNotSpecial();
+    }
+
+    @Override
     public ResourceStrategy.ResourceStyle getProductionStyle() {
         return products.getStyle();
     }
@@ -141,7 +158,7 @@ class CardImpl implements Card {
     }
 
 
-    public static class Builder implements Card.Builder {
+    static class Builder {
 
         private Type type;
         private String name;
@@ -152,81 +169,78 @@ class CardImpl implements Card {
         private List<Game.Direction> tradeDirections = new ArrayList<>();
         private List<String> makesFreeName = new ArrayList<>();
         private List<Attribute> attributes = new ArrayList<>();
-        private List<Action> actions = new ArrayList<>();
+        private Action action = null;
         private int era = -1;
         private int[] playerCutoffs = new int[0];
         private List<Generate.Expansion> expansions = new ArrayList<>();
+        private ResponseCallback callback;
 
-        public Builder(Type type, String name) {
+        Builder(Type type, String name) {
             this.type = type;
             this.name = name;
         }
 
-        @Override
-        public Builder setMessage(String message) {
+        Builder setMessage(String message) {
             this.message = message;
             return this;
         }
 
-        @Override
-        public Builder setCosts(ResourceStrategy costs) {
+        Builder setCosts(ResourceStrategy costs) {
             this.costs = costs;
             return this;
         }
 
-        @Override
-        public Builder setProducts(ResourceStrategy products) {
+        Builder setProducts(ResourceStrategy products) {
             this.products = products;
             return this;
         }
 
-        @Override
-        public Builder setTradeType(TradeType tradeType) {
+        Builder setTradeType(TradeType tradeType) {
             this.tradeType = tradeType;
             return this;
         }
 
-        @Override
-        public Builder addTradeDirection(Game.Direction direction) {
+        Builder addTradeDirection(Game.Direction direction) {
             this.tradeDirections.add(direction);
             return this;
         }
 
-        @Override
-        public Builder setMakesFree(String card) {
+        Builder setMakesFree(String card) {
             this.makesFreeName.add(card);
             return this;
         }
 
-        @Override
-        public Builder addAttribute(Attribute attribute) {
+        Builder addAttribute(Attribute attribute) {
             this.attributes.add(attribute);
             return this;
         }
 
-        @Override
-        public Card.Builder addAction(Action action) {
-            actions.add(action);
+        Builder setAction(Action action) {
+            this.action = action;
             return this;
         }
 
-        Card.Builder setEra(int era) {
+        Builder setEra(int era) {
             this.era = era;
             return this;
         }
 
-        Card.Builder setPlayerCutoffs(int[] playerCutoffs) {
+        Builder setPlayerCutoffs(int[] playerCutoffs) {
             this.playerCutoffs = playerCutoffs;
             return this;
         }
 
-        Card.Builder addExpansion(Generate.Expansion expansion) {
+        Builder addExpansion(Generate.Expansion expansion) {
             expansions.add(expansion);
             return this;
         }
 
-        @Override
-        public CardImpl build() {
+        Builder setCallback(ResponseCallback callback) {
+            this.callback = callback;
+            return this;
+        }
+
+        CardImpl build() {
             return new CardImpl(this);
         }
     }

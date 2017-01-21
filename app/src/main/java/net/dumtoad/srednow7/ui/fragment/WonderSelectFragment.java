@@ -22,7 +22,8 @@ import net.dumtoad.srednow7.ui.LeftRightSwipe;
 import net.dumtoad.srednow7.ui.UIUtil;
 import net.dumtoad.srednow7.ui.dialog.HelpDialog;
 
-import static net.dumtoad.srednow7.ui.UIFacade.PLAYER_ID;
+import static net.dumtoad.srednow7.bus.DisplayFactory.PLAYER_ID;
+import static net.dumtoad.srednow7.bus.DisplayFactory.QUEUE_ID;
 
 public class WonderSelectFragment extends Fragment implements LeftRightSwipe {
 
@@ -90,7 +91,7 @@ public class WonderSelectFragment extends Fragment implements LeftRightSwipe {
 
         view.findViewById(R.id.ok).setOnClickListener(v -> {
             setup.finish();
-            Bus.bus.getUI().invalidateView();
+            Bus.bus.getUI().invalidateView((Enum) getArguments().getSerializable(QUEUE_ID));
         });
 
         MainActivity.getMainActivity().registerLeftRightSwipe(this);

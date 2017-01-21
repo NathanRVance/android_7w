@@ -9,10 +9,12 @@ import android.widget.Button;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import net.dumtoad.srednow7.MainActivity;
 import net.dumtoad.srednow7.R;
 import net.dumtoad.srednow7.backend.Game;
 import net.dumtoad.srednow7.backend.Player;
 import net.dumtoad.srednow7.bus.Bus;
+import net.dumtoad.srednow7.bus.DisplayFactory;
 import net.dumtoad.srednow7.ui.UIUtil;
 
 public abstract class GameView extends RelativeLayout {
@@ -55,4 +57,10 @@ public abstract class GameView extends RelativeLayout {
     }
 
     protected abstract void populateContent(ViewGroup content);
+
+    protected Enum getQueueID() {
+        return (Enum) MainActivity.getMainActivity().getFragmentManager()
+                .findFragmentByTag(DisplayFactory.FRAGMENT_TAG).getArguments()
+                .getSerializable(DisplayFactory.QUEUE_ID);
+    }
 }

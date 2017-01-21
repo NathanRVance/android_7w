@@ -21,7 +21,7 @@ import net.dumtoad.srednow7.ui.view.TabletView;
 import net.dumtoad.srednow7.ui.view.TradeView;
 import net.dumtoad.srednow7.ui.view.WonderView;
 
-import static net.dumtoad.srednow7.ui.UIFacade.PLAYER_ID;
+import static net.dumtoad.srednow7.bus.DisplayFactory.PLAYER_ID;
 
 public class GameFragment extends Fragment implements LeftRightSwipe {
 

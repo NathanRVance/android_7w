@@ -4,17 +4,16 @@ import java.io.Serializable;
 
 public interface UI extends Serializable {
 
-    void display(DisplayType type, int playerID);
+    void initDisplayQueue(Enum queueID, Display defaultDisplay);
 
-    void invalidateView();
+    void display(Enum queueID, Display display);
+
+    void invalidateView(Enum queueID);
 
     void reset();
 
-    enum DisplayType {
-        Setup,
-        WonderSideSelect,
-        Turn,
-        EndOfGame
+    interface Display extends Serializable {
+        void show(Enum queueID);
     }
 
 }

@@ -48,6 +48,11 @@ class AIImpl implements AI {
         doAction(actions.get(0), actions.size());
     }
 
+    @Override
+    public int loseGold(int amountToLose) {
+        return amountToLose;
+    }
+
     private void updateScientist() {
         if (player.getWonder().getResource() == Card.Resource.CLOTH
                 || player.getWonder().getResource() == Card.Resource.PAPER

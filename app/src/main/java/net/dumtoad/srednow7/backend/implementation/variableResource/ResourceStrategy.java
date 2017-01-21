@@ -9,6 +9,8 @@ public interface ResourceStrategy {
 
     ResQuant getResources(Game game, Player player);
 
+    ResQuant getResourcesNotSpecial();
+
     ResourceStyle getStyle();
 
     boolean isSpecialIn(Card.Resource resource);

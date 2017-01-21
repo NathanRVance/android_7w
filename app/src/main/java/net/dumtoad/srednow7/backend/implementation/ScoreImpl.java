@@ -13,6 +13,7 @@ class ScoreImpl implements Score {
     private Player player;
     private int militaryLosses = 0;
     private int[] militaryVictories = new int[3];
+    private int debt = 0;
 
     ScoreImpl(Player player) {
         this(player, 0, new int[3]);
@@ -36,6 +37,9 @@ class ScoreImpl implements Score {
             playerMilitary += card.getProducts(player).get(Card.Resource.SHIELD);
         }
         for (Game.Direction direction : Game.Direction.values()) {
+            if(GameImpl.INSTANCE.getPlayerDirection(player, direction).hasAttribute(Card.Attribute.DOVE, era)) {
+                continue;
+            }
             int otherMilitary = 0;
             for (Card card : GameImpl.INSTANCE.getPlayerDirection(player, direction).getPlayedCards()) {
                 otherMilitary += card.getProducts(player).get(Card.Resource.SHIELD);
@@ -170,6 +174,15 @@ class ScoreImpl implements Score {
     }
 
     @Override
+    public int getDebt() {
+        return debt;
+    }
+
+    void incurDebt(int amount) {
+        debt += amount;
+    }
+
+    @Override
     public int getTotalVPs() {
         int vps = getMilitaryVps();
         vps += getGoldVps();
@@ -178,6 +191,7 @@ class ScoreImpl implements Score {
         vps += getCommercialVps();
         vps += getGuildVps();
         vps += getScienceVps();
+        vps -= getDebt();
         return vps;
     }
 }

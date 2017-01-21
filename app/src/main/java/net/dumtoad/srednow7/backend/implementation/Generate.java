@@ -18,6 +18,7 @@ import net.dumtoad.srednow7.backend.implementation.variableResource.SomethingAlr
 import net.dumtoad.srednow7.backend.implementation.variableResource.SomethingNotProduced;
 import net.dumtoad.srednow7.backend.implementation.variableResource.StandardResource;
 import net.dumtoad.srednow7.backend.implementation.variableResource.StealScience;
+import net.dumtoad.srednow7.bus.SaveUtil;
 
 import org.jdom2.Document;
 import org.jdom2.Element;
@@ -39,9 +40,9 @@ public class Generate {
     private static Set<Expansion> expansions;
     private static List<CardImpl> allCards;
 
-    static void initialize(int numPlayers, Set<Expansion> expansions) {
-        Generate.numPlayers = numPlayers;
-        Generate.expansions = expansions;
+    static void initialize() {
+        numPlayers = SaveUtil.getPlayerNames().length;
+        expansions = SaveUtil.getExpansions();
         Document doc = null;
         try {
             doc = new SAXBuilder().build(MainActivity.getMainActivity().getAssets().open("cards.xml"));
@@ -90,7 +91,7 @@ public class Generate {
         return cardsPerPlayer;
     }
 
-    static CardList getAllCards() {
+    public static CardList getAllCards() {
         CardList ret = new CardListImpl();
         ret.addAll(allCards);
         return ret;
@@ -100,7 +101,7 @@ public class Generate {
         for (CardImpl card : allCards)
             if (card.getName().equals(name))
                 return card;
-        throw new RuntimeException("That shouldn't have happended!");
+        throw new RuntimeException("Can't find card named " + name);
     }
 
     private static List<List<CardImpl>> getCardsFromXML(Document doc, int cardsPerEra) {
@@ -150,11 +151,24 @@ public class Generate {
 
         Element root = doc.getRootElement();
         for (Element wonder : root.getChildren("wonders").get(0).getChildren()) {
+
+            if(wonder.getChild("expansions") != null) {
+                boolean usingAllRequiredExpansions = true;
+                for(String expansion : wonder.getChild("expansions").getTextNormalize().split(" ")) {
+                    boolean usingExpansion = false;
+                    for(Expansion exp : expansions) {
+                        usingExpansion |= exp.name().equals(expansion);
+                    }
+                    usingAllRequiredExpansions &= usingExpansion;
+                }
+                if(! usingAllRequiredExpansions) continue; //This isn't the wonder we are looking for.
+            }
+
             Wonder[] sides = new Wonder[2];
             for (int side = 0; side < sides.length; side++) {
                 WonderImpl.Builder builder = new WonderImpl.Builder(
                         wonder.getAttributeValue("name"), Card.Resource.valueOf(wonder.getAttributeValue("resource")));
-                for (Element stage : wonder.getChildren().get(side).getChildren()) {
+                for (Element stage : wonder.getChildren("side").get(side).getChildren()) {
                     builder.addStage(getCard(stage));
                 }
                 sides[side] = builder.build();
@@ -213,7 +227,7 @@ public class Generate {
                     break;
                 case "action":
                     for (Element action : component.getChildren()) {
-                        builder.addAction(getAction(action));
+                        builder.setAction(getAction(action, builder));
                     }
                     break;
                 default:
@@ -274,13 +288,17 @@ public class Generate {
         }
     }
 
-    private static Action getAction(Element action) {
+    private static Action getAction(Element action, CardImpl.Builder builder) {
         switch (action.getName()) {
             case "loseGold":
+                LoseGold loseGold;
                 if (action.getChildren().size() == 1) {
-                    return new LoseGold(getSpecialValue(action.getChildren().get(0)));
+                    loseGold = new LoseGold(getSpecialValue(action.getChildren().get(0)), builder.build().getName());
+                } else {
+                    loseGold = new LoseGold(Integer.parseInt(action.getTextNormalize()), builder.build().getName());
                 }
-                return new LoseGold(Integer.parseInt(action.getTextNormalize()));
+                builder.setCallback(loseGold);
+                return loseGold;
             case "addGoldAdjacent":
                 return new AddGoldAdjacent(Integer.parseInt(action.getTextNormalize()));
             default:

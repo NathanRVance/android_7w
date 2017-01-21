@@ -34,17 +34,21 @@ public interface Player extends Serializable {
 
     boolean hasCouponFor(Card card);
 
-    boolean canPlay7thCard();
+    boolean hasAttribute(Card.Attribute attribute);
 
-    boolean canPlay1Free();
+    boolean hasAttribute(Card.Attribute attribute, int era);
 
     boolean isPlayDiscard();
 
-    boolean canBuildWonderFree();
-
     TradeBackend getTradeBackend();
 
+    boolean isAI();
+
+    AI getAI();
+
     int getGold();
+
+    void incurDebt(int amount);
 
     void addGoldBuffer(int amount);
 

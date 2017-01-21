@@ -12,14 +12,19 @@ import net.dumtoad.srednow7.backend.Player;
 import net.dumtoad.srednow7.bus.Bus;
 import net.dumtoad.srednow7.ui.UIUtil;
 
+import static net.dumtoad.srednow7.bus.DisplayFactory.QUEUE_ID;
+
 public class CardView extends Button {
+
+    private Enum queueID;
 
     public CardView(Context context) {
         super(context);
     }
 
-    public CardView(Card card, Context context, Player player, boolean buildable, boolean freePlay) {
+    public CardView(Card card, Context context, Player player, boolean buildable, boolean freePlay, Enum queueID) {
         super(context);
+        this.queueID = queueID;
         setText(UIUtil.formatName(card.getName(), card.getType()));
         setTextSize(TypedValue.COMPLEX_UNIT_PX, context.getResources().getDimension(R.dimen.textsize));
         if (buildable) build(card, player, freePlay);
@@ -29,7 +34,7 @@ public class CardView extends Button {
     private void requestAction(Player player, Player.CardAction action, Card card) {
         Player.CardActionResult result = player.requestCardAction(action, card);
         if (result == Player.CardActionResult.OK) {
-            Bus.bus.getUI().invalidateView();
+            Bus.bus.getUI().invalidateView(queueID);
         } else {
             String error;
             switch (result) {

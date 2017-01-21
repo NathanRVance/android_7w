@@ -29,6 +29,11 @@ public class StealScience implements ResourceStrategy {
     }
 
     @Override
+    public ResQuant getResourcesNotSpecial() {
+        return new ResQuantImpl();
+    }
+
+    @Override
     public ResourceStyle getStyle() {
         return ResourceStyle.STOLEN_SCIENCE;
     }
